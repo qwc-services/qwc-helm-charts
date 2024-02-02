@@ -1,0 +1,136 @@
+# Default values for qwc.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: sourcepole/qwc-qgis-server
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 3.28-plugins
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 15
+  periodSeconds: 5
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 15
+  periodSeconds: 5
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Mandatory volumes needed on the output Deployment definition.
+volumes:
+  - name: qwc-project-resources-ro
+    # dev mode ONLY
+    hostPath:
+      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc-resources
+      type: Directory
+    # # prod example, see https://kubernetes.io/docs/concepts/storage/volumes/#volume-types
+    # nfs:
+    #   server: 192.168.0.40
+    #   path: /document
+    #   readOnly: true
+
+# Additional volumes on the output Deployment definition:
+# None
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+qwc-db:
+  volumeDbDataPath: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/db/
+  volumes:
+    - name: qwc-db-init
+      # dev mode ONLY
+      hostPath:
+        path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/db-init/setup-qwc.sh
+        type: File
+    - name: qwc-db-data
+      persistentVolumeClaim:
+        claimName: qwc-test-qwc-db
+
+      # # dev mode ONLY
+      # hostPath:
+      #   path: volumes/db
+      #   type: Directory
