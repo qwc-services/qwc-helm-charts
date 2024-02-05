@@ -49,5 +49,5 @@ apt install helm
 #### Run
 
 ```bash
-helm upgrade --debug --kubeconfig ~/.kube/config -f values.yaml -f secret-values.yaml --install qwc-test . --set  qwc-db.volumes[0].hostPath.path=$(pwd)/volumes/db-init/setup-qwc.sh | less -i
+helm upgrade --debug --kubeconfig ~/.kube/config -f values.yaml -f secret-values.yaml --install qwc-test . --set  qwcDb.volumes[0].hostPath.path=$(pwd)/volumes/db-init/setup-qwc.sh | less -i
 ```

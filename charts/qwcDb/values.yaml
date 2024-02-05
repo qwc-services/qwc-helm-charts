@@ -1,4 +1,4 @@
-# Default values for qwc-db.
+# Default values for qwcDb.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -60,19 +60,17 @@ readinessProbe:
   periodSeconds: 10
 
 # Mandatory volumes needed on the output Deployment definition.
-volume-db-data-path: TO_BE_SET
-
 volumes:
-  - name: qwc-db-init
-    # # dev mode ONLY
+  # - name: qwcdb-init
+    # # dev mode ONLY: hostPath or emptyDir
     # hostPath:
     #   path: ./volumes/db-init/setup-qwc.sh
     #   type: File
-  - name: qwc-db-data
-    # # dev mode ONLY
-    # hostPath:
-    #   path: ./volumes/db
-    #   type: Directory
+
+  # - name: qwcdb-data
+  #   persistentVolumeClaim:
+  #     claimName: "{{ include 'qwcDb.fullname' . }}"
+
     # # prod example, see https://kubernetes.io/docs/concepts/storage/volumes/#volume-types
     # nfs:
     #   server: 192.168.0.40

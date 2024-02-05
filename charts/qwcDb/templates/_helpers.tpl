@@ -1,8 +1,8 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "qwc.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- define "qwcDb.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" | lower }}
 {{- end }}
 
 {{/*
@@ -10,15 +10,15 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "qwc.fullname" -}}
+{{- define "qwcDb.fullname" -}}
 {{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" | lower }}
 {{- else }}
 {{- $name := default .Chart.Name .Values.nameOverride }}
 {{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" | lower }}
 {{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" | lower }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "qwc.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- define "qwcDb.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" | lower }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "qwc.labels" -}}
-helm.sh/chart: {{ include "qwc.chart" . }}
-{{ include "qwc.selectorLabels" . }}
+{{- define "qwcDb.labels" -}}
+helm.sh/chart: {{ include "qwcDb.chart" . }}
+{{ include "qwcDb.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "qwc.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "qwc.name" . }}
+{{- define "qwcDb.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "qwcDb.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "qwc.serviceAccountName" -}}
+{{- define "qwcDb.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "qwc.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "qwcDb.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -64,6 +64,6 @@ Create the name of the service account to use
 {{/*
 Create the name of the secret for pg_service.conf
 */}}
-{{- define "qwc.pgServiceConfSecret" -}}
-{{- printf "%s-secret-pg-service-ro" (include "qwc.fullname" .) }}
+{{- define "qwcDb.secrets" -}}
+{{- printf "%s-secret" (include "qwcDb.fullname" .) }}
 {{- end }}

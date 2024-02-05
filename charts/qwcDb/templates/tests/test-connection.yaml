@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "qwc.fullname" . }}-test-connection"
+  name: "{{ include "qwcDb.fullname" . }}-test-connection"
   labels:
-    {{- include "qwc.labels" . | nindent 4 }}
+    {{- include "qwcDb.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test
 spec:
@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "qwc.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ include "qwcDb.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never

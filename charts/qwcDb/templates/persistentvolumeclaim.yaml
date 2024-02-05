@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "qwc-db.fullname" . }}
+  name: {{ include "qwcDb.fullname" . }}-claim
   labels:
-    {{- include "qwc-db.labels" . | nindent 4 }}
+    {{- include "qwcDb.labels" . | nindent 4 }}
 spec:
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 8Gi
+      storage: 30Gi
 #   storageClassName: slow
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "qwc-db.name" . }}
+      app.kubernetes.io/name: {{ include "qwcDb.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
 

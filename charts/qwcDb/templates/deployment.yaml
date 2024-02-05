@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "qwc-db.fullname" . }}
+  name: {{ include "qwcDb.fullname" . }}
   labels:
-    {{- include "qwc-db.labels" . | nindent 4 }}
+    {{- include "qwcDb.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "qwc-db.selectorLabels" . | nindent 6 }}
+      {{- include "qwcDb.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -16,7 +16,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "qwc-db.labels" . | nindent 8 }}
+        {{- include "qwcDb.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -25,13 +25,13 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "qwc-db.serviceAccountName" . }}
+      serviceAccountName: {{ include "qwcDb.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
 
 
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name | lower }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -46,12 +46,12 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "qwc-db.secrets" . }}
+                  name: {{ include "qwcDb.secrets" . }}
                   key: postgresPassword
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "qwc-db.secrets" . }}
+                  name: {{ include "qwcDb.secrets" . }}
                   key: postgresUser
 
           livenessProbe:
@@ -62,10 +62,10 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
 
           volumeMounts:
-            - name: qwc-db-init
-              mountPath: /docker-entrypoint-initdb.d/99_init-data.sh
-              readOnly: true
-            - name: qwc-db-data
+            # - name: qwcdb-init
+            #   mountPath: /docker-entrypoint-initdb.d/99_init-data.sh
+            #   readOnly: true
+            - name: qwcdb-data
               mountPath: /var/lib/postgresql/docker
               readOnly: false
           {{- with .Values.volumeMounts }}
