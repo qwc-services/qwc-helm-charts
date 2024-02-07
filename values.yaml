@@ -30,6 +30,12 @@ qwcQgisServer:
 qwcDb:
   image:
     tag: 15
+
+  # used by qwc-base-db-migrate
+  pgServiceConfSecret:
+    name: qwc-test-secret-pg-service
+    key: pg_service_ro.conf
+
   # dbSecret:
   #   user:
   #     name: qwc-test-qwcdb-secret
@@ -41,7 +47,7 @@ qwcDb:
 
 qwcConfigService:
   image:
-    tag: v2023.11.30-noqgis
+    tag: v2024.01.22-noqgis
 
   pgServiceConfSecret:
     name: qwc-test-secret-pg-service

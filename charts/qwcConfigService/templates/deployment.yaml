@@ -46,10 +46,12 @@ spec:
               protocol: TCP
 
           env:
+            - name: PGSERVICEFILE
+              value: /config/pg_service.conf
             - name: INPUT_CONFIG_PATH
-              value: "/srv/qwc_service/config-in"
+              value: "/config/config-in"
             - name: OUTPUT_CONFIG_PATH
-              value: "/srv/qwc_service/config-out"
+              value: "/config/config-out"
             - name: GENERATE_DYNAMIC_KVRELS
               value: "1"
             - name: JWT_SECRET_KEY
@@ -77,16 +79,16 @@ spec:
               mountPath: /usr/local/bin/
               readOnly: true
             - name: vol-pg-service-conf-ro
-              mountPath: /srv/
+              mountPath: /config/
               readOnly: true
             - name: vol-project-resources-ro
               mountPath: /data/
               readOnly: true
             - name: vol-config-in-ro
-              mountPath: /srv/qwc_service/config-in/
+              mountPath: /config/config-in/
               readOnly: true
             - name: vol-config-out-rw
-              mountPath: /srv/qwc_service/config-out/
+              mountPath: /config/config-out/
               readOnly: false
             - name: vol-qwc-app-ro
               mountPath: /qwc2/

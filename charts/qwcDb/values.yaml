@@ -6,7 +6,13 @@ image:
   repository: sourcepole/qwc-base-db
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "15"
+
+migrateImage:
+  repository: sourcepole/qwc-base-db-migrate
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: v2023.10.28
 
 imagePullSecrets: []
 nameOverride: ""
@@ -19,6 +25,11 @@ dbSecret:
   password:
     # name: secret config name. If empty, will use the one included in this chart.
     key: postgresUser
+
+# used by qwc-base-db-migrate
+pgServiceConfSecret:
+  # name: name_of_secret
+  # key: file_key_within_secret
 
 service:
   type: ClusterIP
