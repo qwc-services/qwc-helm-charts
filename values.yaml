@@ -2,41 +2,47 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+global:
+  db:
+    hostname: qwc-test-qwcdb
+    port: 5432
+
+volumePaths:
+    - name: vol-db-data-rw
+      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/db/
+    - name: vol-project-resources-ro
+      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc-resources/
+    - name: vol-config-in-ro
+      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/config-in/
+    - name: vol-config-generated
+      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/config/
+    - name: vol-qwc-app-ro
+      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc2/
 
 qwcQgisServer:
   image:
     tag: 3.28-plugins
 
-  db:
-    hostname: qwc-test-qwcdb
-
-  # Mandatory volumes needed on the output Deployment definition.
-  volumeResourcePath: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc-resources
-  volumes:
-    - name: qwc-project-resources-ro
-      persistentVolumeClaim:
-        claimName: qwc-test-qwcqgisserver-claim
-      # dev mode ONLY
-      # hostPath:
-      #   path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc-resources
-      #   type: Directory
-      # # prod example, see https://kubernetes.io/docs/concepts/storage/volumes/#volume-types
-      # nfs:
-      #   server: 192.168.0.40
-      #   path: /document
-      #   readOnly: true
+  pgServiceConfSecret:
+    name: qwc-test-secret-pg-service
+    key: pg_service_ro.conf
 
 qwcDb:
-  volumeDataPath: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/db/
-  volumes:
-    # - name: qwcdb-init
-    #   emptyDir:
-    #     sizeLimit: 10Mi
-    - name: qwcdb-data
-      persistentVolumeClaim:
-        claimName: qwc-test-qwcdb-claim
-      #
-      # hostPath:
-      #   path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/db-init/setup-qwc.sh
-      #   type: File
+  image:
+    tag: 15
+  # dbSecret:
+  #   user:
+  #     name: qwc-test-qwcdb-secret
+  #     key: postgresPassword
+  #   password:
+  #     name: qwc-test-qwcdb-secret
+  #     key: postgresUser
+
+
+qwcConfigService:
+  image:
+    tag: v2023.11.30-noqgis
+
+  pgServiceConfSecret:
+    name: qwc-test-secret-pg-service
+    key: pg_service_ro.conf

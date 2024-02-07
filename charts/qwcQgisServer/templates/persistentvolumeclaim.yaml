@@ -7,13 +7,9 @@ metadata:
 spec:
   accessModes:
     - ReadOnlyMany
-  volumeMode: Filesystem
   resources:
     requests:
-      storage: 8Gi
-#   storageClassName: slow
+      storage: 10Gi
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "qwcQgisServer.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-
+      {{- include "qwcQgisServer.projectResourceVolumeLabels" . | nindent 6 }}

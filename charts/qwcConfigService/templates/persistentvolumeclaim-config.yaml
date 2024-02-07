@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "qwcConfigService.configVolumeClaim" . }}
+  labels:
+    {{- include "qwcConfigService.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  selector:
+    matchLabels:
+      {{- include "qwcConfigService.configVolumeLabels" . | nindent 6 }}

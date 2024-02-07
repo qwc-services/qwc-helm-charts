@@ -1,19 +1,26 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ include "qwcQgisServer.fullname" .Subcharts.qwcQgisServer }}
+  name: {{ include "qwc.fullname" . }}-resources
   labels:
-    {{- include "qwcQgisServer.labels" .Subcharts.qwcQgisServer | nindent 4 }}
+    {{- include "qwc.labels" . | nindent 4 }}
+    {{- include "qwcQgisServer.projectResourceVolumeLabels" .Subcharts.qwcQgisServer | nindent 4 }}
 spec:
   capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
+    storage: 20Gi
   accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Delete
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
+
   local:
-    path: {{ .Values.qwcQgisServer.volumeResourcePath }}
+    path:
+  {{- range .Values.volumePaths }}
+  {{- if eq .name "vol-project-resources-ro" -}}
+    {{ printf " %s" .path }}
+  {{- end }}
+  {{- end }}
+
   nodeAffinity:
     required:
       nodeSelectorTerms:

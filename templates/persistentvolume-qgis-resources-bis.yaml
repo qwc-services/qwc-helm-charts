@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "qwc.fullname" . }}-resources-bis
+  labels:
+    {{- include "qwc.labels" . | nindent 4 }}
+    {{- include "qwcConfigService.projectResourceVolumeLabels" .Subcharts.qwcConfigService | nindent 4 }}
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+
+  local:
+    path:
+  {{- range .Values.volumePaths }}
+  {{- if eq .name "vol-project-resources-ro" -}}
+    {{ printf " %s" .path }}
+  {{- end }}
+  {{- end }}
+
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: NotIn
+          values:
+          - SpecificOne

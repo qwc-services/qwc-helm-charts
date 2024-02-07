@@ -46,13 +46,13 @@ spec:
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "qwcDb.secrets" . }}
-                  key: postgresPassword
+                  name: {{ .Values.dbSecret.password.name | default (include "qwcDb.secrets" .) }}
+                  key: {{ .Values.dbSecret.password.key }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "qwcDb.secrets" . }}
-                  key: postgresUser
+                  name: {{ .Values.dbSecret.user.name | default (include "qwcDb.secrets" .) }}
+                  key: {{ .Values.dbSecret.user.key }}
 
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
@@ -65,15 +65,18 @@ spec:
             # - name: qwcdb-init
             #   mountPath: /docker-entrypoint-initdb.d/99_init-data.sh
             #   readOnly: true
-            - name: qwcdb-data
+            - name: vol-db-data-rw
               mountPath: /var/lib/postgresql/docker
               readOnly: false
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
 
-      {{- with .Values.volumes }}
       volumes:
+        - name: vol-db-data-rw
+          persistentVolumeClaim:
+            claimName: {{ include "qwcDb.fullname" . }}-claim
+      {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
 

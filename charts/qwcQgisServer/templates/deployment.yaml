@@ -1,3 +1,6 @@
+{{ $dbHostname := (default .Values.global.db.hostname .Values.db.hostname) }}
+{{ $dbPort := (default .Values.global.db.port .Values.db.port) }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -38,7 +41,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
+            - name: http-1080
               containerPort: 1080
               protocol: TCP
 
@@ -54,10 +57,10 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
 
           volumeMounts:
-            - name: qwc-pg-service-conf-ro
-              mountPath: /etc/postgresql-common/pg_service.conf
+            - name: vol-pg-service-conf-ro
+              mountPath: /etc/postgresql-common/
               readOnly: true
-            - name: qwc-project-resources-ro
+            - name: vol-project-resources-ro
               mountPath: /data/
               readOnly: true
           {{- with .Values.volumeMounts }}
@@ -68,15 +71,22 @@ spec:
       initContainers:
         - name: wait-for-db
           image: busybox:1.28
-          command: ['sh', '-c', "until nc -z {{ .Values.db.hostname }} {{ .Values.db.port }} >/dev/null 2>&1; do echo waiting for qwcDb; sleep 2; done"]
+          command:
+            - 'sh'
+            - '-c'
+            - "until nc -z {{ $dbHostname }} {{ $dbPort }} >/dev/null 2>&1; do echo waiting for qwcDb; sleep 2; done"
 
       volumes:
-        # - name: qwc-project-resources-ro
-        #         defined in values.yaml
-        - name: qwc-pg-service-conf-ro
+        - name: vol-pg-service-conf-ro
           secret:
-            secretName: {{ include "qwcQgisServer.pgServiceConfSecret" . }}
+            secretName: {{ .Values.pgServiceConfSecret.name }}
             optional: false
+            items:
+              - key: {{ .Values.pgServiceConfSecret.key }}
+                path: pg_service.conf
+        - name: vol-project-resources-ro
+          persistentVolumeClaim:
+            claimName: {{ include "qwcQgisServer.fullname" . }}-claim
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

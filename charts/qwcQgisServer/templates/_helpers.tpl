@@ -51,6 +51,15 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Selector labels for resource volume
+*/}}
+{{- define "qwcQgisServer.projectResourceVolumeLabels" -}}
+app.kubernetes.io/part-of: qwc
+app.kubernetes.io/instance: {{ .Release.Name }}
+volume-name: qgis-project-resources
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "qwcQgisServer.serviceAccountName" -}}
@@ -59,11 +68,4 @@ Create the name of the service account to use
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
-{{- end }}
-
-{{/*
-Create the name of the secret for pg_service.conf
-*/}}
-{{- define "qwcQgisServer.pgServiceConfSecret" -}}
-{{- printf "%s-secret-pg-service-ro" (include "qwcQgisServer.fullname" .) }}
 {{- end }}

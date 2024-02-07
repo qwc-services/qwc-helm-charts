@@ -10,13 +10,67 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
 
-db:
-  hostname: qwcdb
-  port: 5432
+db: {}
+  # hostname: TO_BE_DEFINED
+  # port: 5432
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http-1080
+  initialDelaySeconds: 15
+  periodSeconds: 5
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http-1080
+  initialDelaySeconds: 15
+  periodSeconds: 5
+
+
+pgServiceConfSecret:
+  # name: name_of_secret
+  # key: file_key_within_secret
+
+# Additional volumes on the output Deployment definition:
+volumes: []
+# None
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+ingress:
+  enabled: false
+  className: nginx
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -43,26 +97,6 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-service:
-  type: ClusterIP
-  port: 80
-
-ingress:
-  enabled: false
-  className: nginx
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
 resources: {}
 
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -75,52 +109,6 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
-livenessProbe:
-  httpGet:
-    path: /
-    port: http
-  initialDelaySeconds: 15
-  periodSeconds: 5
-
-readinessProbe:
-  httpGet:
-    path: /
-    port: http
-  initialDelaySeconds: 15
-  periodSeconds: 5
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
-# Mandatory volumes needed on the output Deployment definition.
-volumes:
-  - name: qwc-project-resources-ro
-    persistentVolumeClaim:
-      claimName: "{{ include 'qwcQgisServer.fullname' . }}"
-    # # dev mode ONLY
-    # hostPath:
-    #   path: ./volumes/qwc-resources
-    #   type: Directory
-    # # prod example, see https://kubernetes.io/docs/concepts/storage/volumes/#volume-types
-    # nfs:
-    #   server: 192.168.0.40
-    #   path: /document
-    #   readOnly: true
-
-  # - name: qwc-pg-service-conf-ro
-  #   Forced to secret conf in deployement
-
-
-# Additional volumes on the output Deployment definition:
-# None
-
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
 
 nodeSelector: {}
 

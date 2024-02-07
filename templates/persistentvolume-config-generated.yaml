@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "qwc.fullname" . }}-config-generated
+  labels:
+    {{- include "qwc.labels" . | nindent 4 }}
+    {{- include "qwcConfigService.configVolumeLabels" .Subcharts.qwcConfigService | nindent 4 }}
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+
+  local:
+    path:
+  {{- range .Values.volumePaths }}
+  {{- if eq .name "vol-config-generated" -}}
+    {{ printf " %s" .path }}
+  {{- end }}
+  {{- end }}
+
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: NotIn
+          values:
+          - SpecificOne

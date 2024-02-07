@@ -11,6 +11,6 @@ spec:
       # 1080 to avoid root permission under 1024
       targetPort: 1080
       protocol: TCP
-      name: http
+      name: http-1080
   selector:
     {{- include "qwcQgisServer.selectorLabels" . | nindent 4 }}

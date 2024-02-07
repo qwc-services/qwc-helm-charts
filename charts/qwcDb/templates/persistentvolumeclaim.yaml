@@ -7,13 +7,10 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  volumeMode: Filesystem
+  storageClassName: local-storage
   resources:
     requests:
       storage: 30Gi
-#   storageClassName: slow
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "qwcDb.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-
+      {{- include "qwcDb.pgDataVolumeLabels" .Subcharts.qwcDb | nindent 4 }}

@@ -51,6 +51,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Selector labels for project resource volume
+*/}}
+{{- define "qwcDb.pgDataVolumeLabels" -}}
+app.kubernetes.io/part-of: qwc
+app.kubernetes.io/instance: {{ .Release.Name }}
+volume-name: pg-data
+{{- end }}
+
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "qwcDb.serviceAccountName" -}}
