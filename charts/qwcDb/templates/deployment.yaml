@@ -68,6 +68,7 @@ spec:
             - name: vol-db-data-rw
               mountPath: /var/lib/postgresql/docker
               readOnly: false
+              subPath: data
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
