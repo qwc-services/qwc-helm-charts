@@ -9,7 +9,7 @@ spec:
     spec:
       restartPolicy: OnFailure
       containers:
-        - name: {{ .Chart.Name | lower }}-migrate
+        - name: {{ .Chart.Name | lower }}-db-migrate
           image: "{{ .Values.migrateImage.repository }}:{{ .Values.migrateImage.tag }}"
           imagePullPolicy: {{ .Values.migrateImage.pullPolicy }}
 
