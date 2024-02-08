@@ -23,13 +23,15 @@ service:
   port: 80
 
 livenessProbe:
-  tcpSocket:
+  httpGet:
+    path: /maps?tenant=default
     port: http-9090
   initialDelaySeconds: 15
   periodSeconds: 5
 
 readinessProbe:
-  tcpSocket:
+  httpGet:
+    path: /maps?tenant=default
     port: http-9090
   initialDelaySeconds: 15
   periodSeconds: 5

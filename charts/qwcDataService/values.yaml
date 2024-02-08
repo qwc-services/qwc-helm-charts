@@ -23,13 +23,15 @@ service:
   port: 80
 
 livenessProbe:
-  tcpSocket:
+  httpGet:
+    path: /healthz
     port: http-9090
   initialDelaySeconds: 15
   periodSeconds: 5
 
 readinessProbe:
-  tcpSocket:
+  httpGet:
+    path: /ready
     port: http-9090
   initialDelaySeconds: 15
   periodSeconds: 5
