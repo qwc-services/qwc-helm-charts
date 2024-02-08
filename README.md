@@ -4,8 +4,11 @@ Repo: <https://artifacthub.io/packages/helm/>
 
 ## TODO
 
-* how the databases are created?
-* how the users are created?
+* CONFIG_PATH instead of INPUT_CONFIG_PATH
+* /qwc_cfg instead of /config
+* qwc2 assets/dist mount points demo vs client
+* admin ui
+* auth
 
 ## Dev side
 
@@ -52,5 +55,11 @@ microk8s kubectl get all --all-namespaces
 #### Run
 
 ```bash
-helm upgrade --debug --kubeconfig ~/.kube/config -f values.yaml -f secret-values.yaml --install qwc-test . --set  qwcDb.volumes[0].hostPath.path=$(pwd)/volumes/db-init/setup-qwc.sh | less -i
+helm upgrade --debug --kubeconfig ~/.kube/config -f values.yaml -f secret-values.yaml --install qwc-test . | less -i
 ```
+
+To set values onthefly: `--set  qwcDb.volumes[0].hostPath.path=$(pwd)/volumes/db-init/setup-qwc.sh`
+
+### Test
+
+* Qgis Server : <http://QGIS_SERVER_HOST/ows/qwc_demo?service=WMS&request=GetCapabilities>
