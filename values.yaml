@@ -90,7 +90,7 @@ qwcDataService:
 
 qwcMapViewer:
   image:
-    tag: v2023.11.22
+    tag: v2024.01.22
 
   pgServiceConfSecret:
     name: qwc-test-global-secret

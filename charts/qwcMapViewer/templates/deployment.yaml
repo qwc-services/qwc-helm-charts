@@ -48,7 +48,7 @@ spec:
           env:
             - name: PGSERVICEFILE
               value: /config/pg_service.conf
-            - name: INPUT_CONFIG_PATH
+            - name: CONFIG_PATH
               value: "/config/config"
             - name: SERVICE_MOUNTPOINT
               value: '/'
@@ -77,9 +77,16 @@ spec:
             - name: vol-pg-service-conf-ro
               mountPath: /config/
               readOnly: true
+
             - name: vol-qwc-app-ro
-              mountPath: /qwc2/
+              mountPath: /qwc2/assets
               readOnly: true
+              subPath: assets
+
+            # - name: vol-qwc-app-ro
+            #   mountPath: /qwc2/
+            #   readOnly: true
+
             - name: vol-config-generated-ro
               mountPath: /config/config/
               readOnly: true
