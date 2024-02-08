@@ -87,3 +87,14 @@ qwcDataService:
   jwtSecret:
     name: qwc-test-global-secret
     key: jwtSecretKey
+
+qwcMapViewer:
+  image:
+    tag: v2023.11.22
+
+  pgServiceConfSecret:
+    name: qwc-test-global-secret
+    key: pg_service_rw.conf
+  jwtSecret:
+    name: qwc-test-global-secret
+    key: jwtSecretKey

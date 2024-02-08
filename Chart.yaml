@@ -39,3 +39,6 @@ dependencies:
   - name: qwcDataService
     version: "*"
     repository: "file://charts/qwcDataService"
+  - name: qwcMapViewer
+    version: "*"
+    repository: "file://charts/qwcMapViewer"

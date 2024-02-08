@@ -1,0 +1,129 @@
+{{ $dbHostname := (default .Values.global.db.hostname .Values.db.hostname) }}
+{{ $dbPort := (default .Values.global.db.port .Values.db.port) }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qwcMapViewer.fullname" . }}
+  labels:
+    {{- include "qwcMapViewer.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "qwcMapViewer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "qwcMapViewer.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "qwcMapViewer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
+      containers:
+        - name: {{ .Chart.Name | lower }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http-9090
+              containerPort: 9090
+              protocol: TCP
+
+          env:
+            - name: PGSERVICEFILE
+              value: /config/pg_service.conf
+            - name: INPUT_CONFIG_PATH
+              value: "/config/config"
+            - name: SERVICE_MOUNTPOINT
+              value: '/'
+
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.jwtSecret.name }}
+                  key: {{ .Values.jwtSecret.key }}
+            - name: JWT_COOKIE_CSRF_PROTECT
+              value: "True"
+            - name: SERVICE_UID
+              value: "1000"
+            - name: SERVICE_GID
+              value: "1000"
+
+
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          volumeMounts:
+            - name: vol-pg-service-conf-ro
+              mountPath: /config/
+              readOnly: true
+            - name: vol-qwc-app-ro
+              mountPath: /qwc2/
+              readOnly: true
+            - name: vol-config-generated-ro
+              mountPath: /config/config/
+              readOnly: true
+          {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.28
+          command:
+            - 'sh'
+            - '-c'
+            - "until nc -z {{ $dbHostname }} {{ $dbPort }} >/dev/null 2>&1; do echo waiting for qwcDb; sleep 2; done"
+
+      volumes:
+        - name: vol-pg-service-conf-ro
+          secret:
+            secretName: {{ .Values.pgServiceConfSecret.name }}
+            optional: false
+            items:
+              - key: {{ .Values.pgServiceConfSecret.key }}
+                path: pg_service.conf
+
+        - name: vol-config-generated-ro
+          persistentVolumeClaim:
+            claimName: {{ include "qwcMapViewer.configVolumeClaim" . }}
+        - name: vol-qwc-app-ro
+          persistentVolumeClaim:
+            claimName: {{ include "qwcMapViewer.qwcAppVolumeClaim" . }}
+      {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
