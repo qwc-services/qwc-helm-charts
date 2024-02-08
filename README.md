@@ -4,8 +4,6 @@ Repo: <https://artifacthub.io/packages/helm/>
 
 ## TODO
 
-* CONFIG_PATH instead of INPUT_CONFIG_PATH
-* /qwc_cfg instead of /config
 * qwc2 assets/dist mount points demo vs client
 * admin ui
 * auth

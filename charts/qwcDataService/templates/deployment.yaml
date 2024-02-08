@@ -47,9 +47,9 @@ spec:
 
           env:
             - name: PGSERVICEFILE
-              value: /config/pg_service.conf
-            - name: INPUT_CONFIG_PATH
-              value: "/config/config"
+              value: /qwc_cfg/pg_service.conf
+            - name: CONFIG_PATH
+              value: "/qwc_cfg/config"
             - name: SERVICE_MOUNTPOINT
               value: '/api/v1/data'
             - name: ATTACHMENTS_BASE_DIR
@@ -79,13 +79,13 @@ spec:
 
           volumeMounts:
             - name: vol-pg-service-conf-ro
-              mountPath: /config/
+              mountPath: /qwc_cfg/
               readOnly: true
             - name: vol-attachment-rw
               mountPath: /attachments/
               readOnly: true
             - name: vol-config-generated-ro
-              mountPath: /config/config/
+              mountPath: /qwc_cfg/config/
               readOnly: true
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}

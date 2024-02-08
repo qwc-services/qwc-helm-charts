@@ -53,11 +53,11 @@ spec:
             - name: QWC_CONFIG_HOST
               value: {{ .Release.Name }}-qwcconfigservice
             - name: PGSERVICEFILE
-              value: /config/pg_service.conf
+              value: /qwc_cfg/pg_service.conf
             - name: INPUT_CONFIG_PATH
-              value: "/config/config-in"
+              value: "/qwc_cfg/config-in"
             - name: OUTPUT_CONFIG_PATH
-              value: "/config/config-out"
+              value: "/qwc_cfg/config-out"
             - name: GENERATE_DYNAMIC_KVRELS
               value: "1"
             - name: JWT_SECRET_KEY
@@ -82,16 +82,16 @@ spec:
 
           volumeMounts:
             - name: vol-pg-service-conf-ro
-              mountPath: /config/
+              mountPath: /qwc_cfg/
               readOnly: true
             - name: vol-project-resources-ro
               mountPath: /data/
               readOnly: true
             - name: vol-config-in-rw
-              mountPath: /config/config-in/
+              mountPath: /qwc_cfg/config-in/
               readOnly: false
             - name: vol-config-out-rw
-              mountPath: /config/config-out/
+              mountPath: /qwc_cfg/config-out/
               readOnly: false
             - name: vol-qwc-app-ro
               mountPath: /qwc2/
@@ -100,7 +100,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
 
-          command: ["/config/config-in/entrypoint.sh"]
+          command: ["/qwc_cfg/config-in/entrypoint.sh"]
 
 
       initContainers:

@@ -47,9 +47,9 @@ spec:
 
           env:
             - name: PGSERVICEFILE
-              value: /config/pg_service.conf
+              value: /qwc_cfg/pg_service.conf
             - name: CONFIG_PATH
-              value: "/config/config"
+              value: "/qwc_cfg/config"
             - name: SERVICE_MOUNTPOINT
               value: '/'
 
@@ -75,7 +75,7 @@ spec:
 
           volumeMounts:
             - name: vol-pg-service-conf-ro
-              mountPath: /config/
+              mountPath: /qwc_cfg/
               readOnly: true
 
             - name: vol-qwc-app-ro
@@ -88,7 +88,7 @@ spec:
             #   readOnly: true
 
             - name: vol-config-generated-ro
-              mountPath: /config/config/
+              mountPath: /qwc_cfg/config/
               readOnly: true
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}

@@ -15,11 +15,11 @@ spec:
 
           env:
             - name: PGSERVICEFILE
-              value: /config/pg_service.conf
+              value: /qwc_cfg/pg_service.conf
 
           volumeMounts:
             - name: vol-pg-service-conf-ro
-              mountPath: /config/
+              mountPath: /qwc_cfg/
               readOnly: true
 
       initContainers:
