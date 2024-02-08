@@ -1,0 +1,9 @@
+### Default values for linter:
+global:
+  postgresqlSecrets:
+    mainPassword: blah
+    mainUser: blah
+
+pgServiceConfSecret:
+  name: secret-name
+  key: pg_service.conf

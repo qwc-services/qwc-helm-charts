@@ -22,3 +22,20 @@ version: 0.1.0
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "2023.11.30"
+
+dependencies:
+  - name: qwcDb
+    version: "*"
+    repository: "file://charts/qwcDb"
+  - name: qwcQgisServer
+    version: "*"
+    repository: "file://charts/qwcQgisServer"
+  - name: qwcConfigService
+    version: "*"
+    repository: "file://charts/qwcConfigService"
+  - name: qwcOgcService
+    version: "*"
+    repository: "file://charts/qwcOgcService"
+  - name: qwcDataService
+    version: "*"
+    repository: "file://charts/qwcDataService"
