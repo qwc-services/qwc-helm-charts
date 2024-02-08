@@ -1,0 +1,12 @@
+### Default values for linter:
+global:
+  db:
+    hostname: qwc-test-qwcdb
+    port: 5432
+
+pgServiceConfSecret:
+  name: secret-name
+  key: pg_service.conf
+jwtSecret:
+  name: secret-name
+  key: jwtSecretKey

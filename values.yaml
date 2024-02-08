@@ -7,6 +7,7 @@ global:
     hostname: qwc-test-qwcdb
     port: 5432
 
+
 volumePaths:
     - name: vol-db-data-rw
       path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/db/
@@ -18,6 +19,8 @@ volumePaths:
       path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/config/
     - name: vol-qwc-app-ro
       path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc2/
+    - name: vol-attachment-rw
+      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/attachments/
 
 qwcQgisServer:
   image:
@@ -74,3 +77,13 @@ qwcOgcService:
     name: qwc-test-global-secret
     key: jwtSecretKey
 
+qwcDataService:
+  image:
+    tag: v2023.11.30.1
+
+  pgServiceConfSecret:
+    name: qwc-test-global-secret
+    key: pg_service_rw.conf
+  jwtSecret:
+    name: qwc-test-global-secret
+    key: jwtSecretKey
