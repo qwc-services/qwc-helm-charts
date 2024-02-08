@@ -12,15 +12,15 @@
         }
       },
       "config": {
-        "default_qgis_server_url": "http://qwc-qgis-server/ows/$tenant$/"
+        "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/$tenant$/"
       }
     },
     {
       "name": "mapViewer",
       "generator_config": {
         "qwc2_config": {
-          "qwc2_config_file": "/srv/qwc_service/config-in/$tenant$/config.json",
-          "qwc2_index_file": "/srv/qwc_service/config-in/$tenant$/index.html"
+          "qwc2_config_file": "{{INPUT_CONFIG_PATH}}/$tenant$/config.json",
+          "qwc2_index_file": "{{INPUT_CONFIG_PATH}}/$tenant$/index.html"
         }
       },
       "config": {
@@ -42,7 +42,7 @@
     {
       "name": "featureInfo",
       "config": {
-        "default_qgis_server_url": "http://qwc-qgis-server/ows/$tenant$/",
+        "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/$tenant$/",
         "skip_empty_attributes": false
       },
       "resources": {
@@ -52,7 +52,7 @@
     {
       "name": "print",
       "config": {
-        "ogc_service_url": "http://qwc-ogc-service:9090/",
+        "ogc_service_url": "http://{{QWC_OGC_HOST}}:9090/",
         "qgis_server_version": "3.16"
       }
     },
@@ -60,7 +60,7 @@
       "name": "adminGui",
       "config": {
         "db_url": "postgresql:///?service=qwc_configdb",
-        "config_generator_service_url": "http://qwc-config-service:9090",
+        "config_generator_service_url": "http://{{QWC_CONFIG_HOST}}:9090",
         "totp_enabled": false,
         "user_info_fields": [],
         "proxy_url_whitelist": [],
@@ -69,14 +69,14 @@
           "themes",
           "config_editor"
         ],
-        "input_config_path": "/srv/qwc_service/config-in",
+        "input_config_path": "{{INPUT_CONFIG_PATH}}",
         "qwc2_path": "/qwc2/$tenant$",
         "#ows_service_url": "/$tenant$/ows",
         "#ogc_service_url": "/$tenant$/ows/",
         "qgs_resources_path": "/qgs-resources/$tenant$",
         "info_templates_path": "/info_templates",
         "ows_prefix": "/ows/$tenant$",
-        "default_qgis_server_url": "http://qwc-qgis-server/ows/$tenant$/"
+        "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/$tenant$/"
       }
     },
     {
@@ -108,9 +108,9 @@
     {
       "name": "legend",
       "config": {
-        "default_qgis_server_url": "http://qwc-qgis-server/ows/$tenant$/",
+        "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/$tenant$/",
         "legend_images_path": "/legends/"
       }
-    }  
+    }
   ]
 }

@@ -46,6 +46,12 @@ spec:
               protocol: TCP
 
           env:
+            - name: QGIS_SERVER_HOST
+              value: {{ .Release.Name }}-qwcqgisserver
+            - name: QWC_OGC_HOST
+              value: {{ .Release.Name }}-qwcogcservice
+            - name: QWC_CONFIG_HOST
+              value: {{ .Release.Name }}-qwcconfigservice
             - name: PGSERVICEFILE
               value: /config/pg_service.conf
             - name: INPUT_CONFIG_PATH
@@ -75,18 +81,15 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
 
           volumeMounts:
-            - name: vol-entrypoint-ro
-              mountPath: /usr/local/bin/
-              readOnly: true
             - name: vol-pg-service-conf-ro
               mountPath: /config/
               readOnly: true
             - name: vol-project-resources-ro
               mountPath: /data/
               readOnly: true
-            - name: vol-config-in-ro
+            - name: vol-config-in-rw
               mountPath: /config/config-in/
-              readOnly: true
+              readOnly: false
             - name: vol-config-out-rw
               mountPath: /config/config-out/
               readOnly: false
@@ -96,6 +99,8 @@ spec:
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
+
+          command: ["/config/config-in/entrypoint.sh"]
 
 
       initContainers:
@@ -114,17 +119,10 @@ spec:
             items:
               - key: {{ .Values.pgServiceConfSecret.key }}
                 path: pg_service.conf
-        - name: vol-entrypoint-ro
-          configMap:
-            name: {{ include "qwcConfigService.fullname" . }}-entrypoint
-            items:
-              - key: qwc-config-service-entrypoint.sh
-                path: entrypoint.sh
-
         - name: vol-project-resources-ro
           persistentVolumeClaim:
             claimName: {{ include "qwcConfigService.projectResourceVolumeClaim" . }}
-        - name: vol-config-in-ro
+        - name: vol-config-in-rw
           persistentVolumeClaim:
             claimName: {{ include "qwcConfigService.configInputVolumeClaim" . }}
         - name: vol-config-out-rw

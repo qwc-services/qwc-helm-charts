@@ -9,6 +9,7 @@ spec:
   capacity:
     storage: 10Gi
   accessModes:
+    - ReadWriteOnce
     - ReadOnlyMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage

@@ -40,11 +40,14 @@ microk8s kubectl get all --all-namespaces
 
 #### Installation
 
-As `root`:
+* As `root`:
 
-```bash
-apt install helm
-```
+  ```bash
+  apt install helm
+  ```
+
+* Adjust `values.yaml`
+* copy `config-in.sample` volume: `cp -a volumes/config-in.sample volumes/config-in`
 
 #### Run
 

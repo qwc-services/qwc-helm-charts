@@ -3,7 +3,7 @@
   "service": "config-generator",
   "config": {
     "tenant": "default",
-    "default_qgis_server_url": "http://qwc-qgis-server/ows/",
+    "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/",
     "config_db_url": "postgresql:///?service=qwc_configdb",
     "permissions_default_allow": true,
     "validate_schema": true,
@@ -14,37 +14,91 @@
     "autogen_keyvaltable_datasets": false
   },
   "themesConfig": {
-    "defaultScales": [100000000, 50000000, 25000000, 10000000, 4000000, 2000000, 1000000, 400000, 200000, 80000, 40000, 20000, 10000, 8000, 6000, 4000, 2000, 1000, 500, 250, 100],
-    "defaultPrintGrid": [{"s": 10000000, "x": 1000000, "y": 1000000}, {"s": 1000000, "x": 100000, "y": 100000}, {"s": 100000, "x": 10000, "y": 10000}, {"s": 10000, "x": 1000, "y": 1000}, {"s": 1000, "x": 100, "y": 100}, {"s": 100, "x": 10, "y": 10}],
-    "defaultWMSVersion":"1.3.0",
+    "defaultScales": [
+      100000000,
+      50000000,
+      25000000,
+      10000000,
+      4000000,
+      2000000,
+      1000000,
+      400000,
+      200000,
+      80000,
+      40000,
+      20000,
+      10000,
+      8000,
+      6000,
+      4000,
+      2000,
+      1000,
+      500,
+      250,
+      100
+    ],
+    "defaultPrintGrid": [
+      {
+        "s": 10000000,
+        "x": 1000000,
+        "y": 1000000
+      },
+      {
+        "s": 1000000,
+        "x": 100000,
+        "y": 100000
+      },
+      {
+        "s": 100000,
+        "x": 10000,
+        "y": 10000
+      },
+      {
+        "s": 10000,
+        "x": 1000,
+        "y": 1000
+      },
+      {
+        "s": 1000,
+        "x": 100,
+        "y": 100
+      },
+      {
+        "s": 100,
+        "x": 10,
+        "y": 10
+      }
+    ],
+    "defaultWMSVersion": "1.3.0",
     "defaultBackgroundLayers": [],
-    "defaultSearchProviders": ["coordinates"],
+    "defaultSearchProviders": [
+      "coordinates"
+    ],
     "defaultMapCrs": "EPSG:3857",
     "defaultTheme": "Demo",
     "themes": {
-    "items": [
-    ],
-    "backgroundLayers": [
+      "items": [],
+      "backgroundLayers": [
         {
-        "name": "mapnik",
-        "title": "Open Street Map",
-        "type": "osm",
-        "source": "osm",
-        "attribution": "OpenStreetMap contributors",
-        "attributionUrl": "https://www.openstreetmap.org/copyright",
-        "thumbnail": "img/mapthumbs/mapnik.jpg"
+          "name": "mapnik",
+          "title": "Open Street Map",
+          "type": "osm",
+          "source": "osm",
+          "attribution": "OpenStreetMap contributors",
+          "attributionUrl": "https://www.openstreetmap.org/copyright",
+          "thumbnail": "img/mapthumbs/mapnik.jpg"
         },
         {
-        "type": "wmts",
-        "url": "http://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpeg",
-        "title": "Blue Marble",
-        "name": "bluemarble",
-        "tileMatrixPrefix": "",
-        "tileMatrixSet": "GoogleMapsCompatible_Level8",
-        "originX": -20037508.34278925,
-        "originY": 20037508.34278925,
-        "projection:": "EPSG:3857",
-        "resolutions": [
+          "type": "wmts",
+          "url": "http://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.jpeg",
+          "title": "Blue Marble",
+          "name": "bluemarble",
+          "tileMatrixPrefix": "",
+          "tileMatrixSet": "GoogleMapsCompatible_Level8",
+          "originX": -20037508.34278925,
+          "originY": 20037508.34278925,
+          "projection:": "EPSG:3857",
+          "resolutions": [
             156543.03390625,
             78271.516953125,
             39135.7584765625,
@@ -53,17 +107,16 @@
             4891.9698095703125,
             2445.9849047851562,
             1222.9924523925781
-        ],
-        "tileSize": [
+          ],
+          "tileSize": [
             256,
             256
-        ],
-        "thumbnail": "img/mapthumbs/default.jpg"
+          ],
+          "thumbnail": "img/mapthumbs/default.jpg"
         }
-    ]
+      ]
     }
-  }
-  ,
+  },
   "services": [
     {
       "name": "ogc",
@@ -77,15 +130,15 @@
         }
       },
       "config": {
-        "default_qgis_server_url": "http://qwc-qgis-server/ows/"
+        "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/"
       }
     },
     {
       "name": "mapViewer",
       "generator_config": {
         "qwc2_config": {
-          "qwc2_config_file": "/srv/qwc_service/config-in/default/config.json",
-          "qwc2_index_file": "/srv/qwc_service/config-in/default/index.html"
+          "qwc2_config_file": "{{INPUT_CONFIG_PATH}}/default/config.json",
+          "qwc2_index_file": "{{INPUT_CONFIG_PATH}}/default/index.html"
         }
       },
       "config": {
@@ -107,7 +160,7 @@
     {
       "name": "featureInfo",
       "config": {
-        "default_qgis_server_url": "http://qwc-qgis-server/ows/",
+        "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/",
         "skip_empty_attributes": false
       },
       "resources": {
@@ -192,7 +245,7 @@
                   "display_field": "name",
                   "info_template": {
                     "type": "wms",
-                    "wms_url": "http://qwc-qgis-server/ows/qwc_demo",
+                    "wms_url": "http://{{QGIS_SERVER_HOST}}/ows/qwc_demo",
                     "template": "<div><h2>Demo Template</h2>Pos: {{ x }}, {{ y }}<br>Name: {{ feature.Name }}</div>"
                   }
                 }
@@ -205,7 +258,7 @@
     {
       "name": "print",
       "config": {
-        "ogc_service_url": "http://qwc-ogc-service:9090/",
+        "ogc_service_url": "http://{{QWC_OGC_HOST}}:9090/",
         "qgis_server_version": "3.16"
       }
     },
@@ -254,7 +307,7 @@
       "name": "adminGui",
       "config": {
         "db_url": "postgresql:///?service=qwc_configdb",
-        "config_generator_service_url": "http://qwc-config-service:9090",
+        "config_generator_service_url": "http://{{QWC_CONFIG_HOST}}:9090",
         "totp_enabled": false,
         "user_info_fields": [],
         "proxy_url_whitelist": [],
@@ -263,13 +316,13 @@
           "themes",
           "config_editor"
         ],
-        "input_config_path": "/srv/qwc_service/config-in",
+        "input_config_path": "{{INPUT_CONFIG_PATH}}",
         "qwc2_path": "/qwc2",
         "qgs_resources_path": "/qgs-resources",
         "ogc_service_url": "/ows",
         "info_templates_path": "/info_templates",
         "ows_prefix": "/ows",
-        "default_qgis_server_url": "http://qwc-qgis-server/ows/"
+        "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/"
       }
     },
     {
@@ -311,7 +364,7 @@
     {
       "name": "legend",
       "config": {
-        "default_qgis_server_url": "http://qwc-qgis-server/ows/",
+        "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/",
         "legend_images_path": "/legends/"
       }
     }

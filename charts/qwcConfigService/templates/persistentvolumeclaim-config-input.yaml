@@ -6,7 +6,7 @@ metadata:
     {{- include "qwcConfigService.labels" . | nindent 4 }}
 spec:
   accessModes:
-    - ReadOnlyMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 10Gi
