@@ -43,6 +43,10 @@ spec:
               protocol: TCP
 
           env:
+            - name: PGSERVICEFILE
+              value: /config/pg_service.conf
+            - name: INPUT_CONFIG_PATH
+              value: "/config/config"
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -66,10 +70,10 @@ spec:
 
           volumeMounts:
             - name: vol-pg-service-conf-rw
-              mountPath: /srv/
+              mountPath: /config/
               readOnly: true
             - name: vol-config-ro
-              mountPath: /srv/qwc_service/config/
+              mountPath: /config/config/
               readOnly: true
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
