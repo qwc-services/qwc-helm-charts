@@ -24,8 +24,11 @@ qwcQgisServer:
     tag: 3.28-plugins
 
   pgServiceConfSecret:
-    name: qwc-test-secret-pg-service
+    name: qwc-test-global-secret
     key: pg_service_ro.conf
+  jwtSecret:
+    name: qwc-test-global-secret
+    key: jwtSecretKey
 
 qwcDb:
   image:
@@ -33,8 +36,11 @@ qwcDb:
 
   # used by qwc-base-db-migrate
   pgServiceConfSecret:
-    name: qwc-test-secret-pg-service
+    name: qwc-test-global-secret
     key: pg_service_ro.conf
+  jwtSecret:
+    name: qwc-test-global-secret
+    key: jwtSecretKey
 
   # dbSecret:
   #   user:
@@ -50,8 +56,11 @@ qwcConfigService:
     tag: v2024.01.22-noqgis
 
   pgServiceConfSecret:
-    name: qwc-test-secret-pg-service
+    name: qwc-test-global-secret
     key: pg_service_ro.conf
+  jwtSecret:
+    name: qwc-test-global-secret
+    key: jwtSecretKey
 
 
 qwcOgcService:
@@ -59,5 +68,9 @@ qwcOgcService:
     tag: v2023.10.20
 
   pgServiceConfSecret:
-    name: qwc-test-secret-pg-service
+    name: qwc-test-global-secret
     key: pg_service_rw.conf
+  jwtSecret:
+    name: qwc-test-global-secret
+    key: jwtSecretKey
+

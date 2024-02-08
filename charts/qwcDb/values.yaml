@@ -26,10 +26,12 @@ dbSecret:
     # name: secret config name. If empty, will use the one included in this chart.
     key: postgresUser
 
-# used by qwc-base-db-migrate
+# ====== Access to pg_service.conf secret (used by db migration job)
 pgServiceConfSecret:
-  # name: name_of_secret
-  # key: file_key_within_secret
+  # === secret name
+  # name:
+  # === file key within secret
+  # key:
 
 service:
   type: ClusterIP

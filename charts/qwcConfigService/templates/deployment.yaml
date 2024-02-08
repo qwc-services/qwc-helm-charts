@@ -57,8 +57,8 @@ spec:
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "qwcConfigService.secrets" . }}
-                  key: jwtSecretKey
+                  name: {{ .Values.jwtSecret.name }}
+                  key: {{ .Values.jwtSecret.key }}
             - name: JWT_COOKIE_CSRF_PROTECT
               value: "True"
             - name: SERVICE_UID

@@ -35,9 +35,19 @@ readinessProbe:
   initialDelaySeconds: 15
   periodSeconds: 5
 
+# ====== Access to pg_service.conf secret
 pgServiceConfSecret:
-  # name: name_of_secret
-  # key: file_key_within_secret
+  # === secret name
+  # name:
+  # === file key within secret
+  # key:
+
+# ====== Access to JWT secret
+jwtSecret:
+  # === secret name
+  # name:
+  # === jwt key name within secret
+  # key:
 
 # Additional volumes on the output Deployment definition:
 volumes: []

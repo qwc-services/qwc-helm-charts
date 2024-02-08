@@ -92,6 +92,6 @@ Create the name of the service account to use
 {{/*
 Create the name of the secret for pg_service.conf
 */}}
-{{- define "qwc.pgServiceConfSecret" -}}
-{{- printf "%s-secret-pg-service" (include "qwc.fullname" .) }}
+{{- define "qwc.globalSecret" -}}
+{{- printf "%s-global-secret" (include "qwc.fullname" .) }}
 {{- end }}
