@@ -1,15 +1,14 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ include "qwc.fullname" . }}-config-ogc
+  name: {{ include "qwc.fullname" . }}-resources-cfg
   labels:
     {{- include "qwc.labels" . | nindent 4 }}
-    {{- include "qwcOgcService.configVolumeLabels" .Subcharts.qwcOgcService | nindent 4 }}
+    {{- include "qwcConfigService.projectResourceVolumeLabels" .Subcharts.qwcConfigService | nindent 4 }}
 spec:
   capacity:
-    storage: 10Gi
+    storage: 20Gi
   accessModes:
-    - ReadWriteOnce
     - ReadOnlyMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
@@ -17,7 +16,7 @@ spec:
   local:
     path:
   {{- range .Values.volumePaths }}
-  {{- if eq .name "vol-config-generated" -}}
+  {{- if eq .name "vol-project-resources-ro" -}}
     {{ printf " %s" .path }}
   {{- end }}
   {{- end }}

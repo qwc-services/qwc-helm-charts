@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ include "qwc.fullname" . }}-qwc-app
+  name: {{ include "qwc.fullname" . }}-config-gen-ogc
   labels:
     {{- include "qwc.labels" . | nindent 4 }}
-    {{- include "qwcConfigService.qwcAppVolumeLabels" .Subcharts.qwcConfigService | nindent 4 }}
+    {{- include "qwcOgcService.configVolumeLabels" .Subcharts.qwcOgcService | nindent 4 }}
 spec:
   capacity:
     storage: 10Gi
@@ -17,7 +17,7 @@ spec:
   local:
     path:
   {{- range .Values.volumePaths }}
-  {{- if eq .name "vol-qwc-app-ro" -}}
+  {{- if eq .name "vol-config-generated" -}}
     {{ printf " %s" .path }}
   {{- end }}
   {{- end }}

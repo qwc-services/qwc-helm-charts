@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ include "qwc.fullname" . }}-config-data
+  name: {{ include "qwc.fullname" . }}-config-gen-map
   labels:
     {{- include "qwc.labels" . | nindent 4 }}
-    {{- include "qwcDataService.configVolumeLabels" .Subcharts.qwcOgcService | nindent 4 }}
+    {{- include "qwcMapViewer.configVolumeLabels" .Subcharts.qwcMapViewer | nindent 4 }}
 spec:
   capacity:
     storage: 10Gi
