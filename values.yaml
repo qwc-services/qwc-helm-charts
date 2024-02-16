@@ -7,20 +7,27 @@ global:
     hostname: qwc-test-qwcdb
     port: 5432
 
-
 volumePaths:
-    - name: vol-db-data-rw
-      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/db/
-    - name: vol-project-resources-ro
-      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc-resources/
-    - name: vol-config-in-ro
-      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/config-in/
-    - name: vol-config-generated
-      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/config/
-    - name: vol-qwc-app-ro
-      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc2/
-    - name: vol-attachment-rw
-      path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/attachments/
+  - name: vol-db-data-rw
+    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/db/
+
+  - name: vol-project-resources-ro
+    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc-resources/
+
+  - name: vol-config-in-ro
+    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/config-in/
+
+  - name: vol-config-generated
+    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/config/
+
+  - name: vol-qwc-app-ro
+    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc2/
+
+  - name: vol-attachment-rw
+    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/attachments/
+
+  - name: vol-info-template
+    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/info-templates/
 
 qwcQgisServer:
   image:
@@ -53,7 +60,6 @@ qwcDb:
   #     name: qwc-test-qwcdb-secret
   #     key: postgresUser
 
-
 qwcConfigService:
   image:
     tag: v2024.01.22-noqgis
@@ -64,7 +70,6 @@ qwcConfigService:
   jwtSecret:
     name: qwc-test-global-secret
     key: jwtSecretKey
-
 
 qwcOgcService:
   image:
@@ -95,6 +100,17 @@ qwcMapViewer:
   pgServiceConfSecret:
     name: qwc-test-global-secret
     key: pg_service_rw.conf
+  jwtSecret:
+    name: qwc-test-global-secret
+    key: jwtSecretKey
+
+qwcAdminUI:
+  image:
+    tag: v2024.01.22
+
+  pgServiceConfSecret:
+    name: qwc-test-global-secret
+    key: pg_service_ro.conf
   jwtSecret:
     name: qwc-test-global-secret
     key: jwtSecretKey

@@ -1,0 +1,162 @@
+{{ $dbHostname := (default .Values.global.db.hostname .Values.db.hostname) }}
+{{ $dbPort := (default .Values.global.db.port .Values.db.port) }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qwcAdminUI.fullname" . }}
+  labels:
+    {{- include "qwcAdminUI.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "qwcAdminUI.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "qwcAdminUI.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "qwcAdminUI.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
+      containers:
+        - name: {{ .Chart.Name | lower }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http-9090
+              containerPort: 9090
+              protocol: TCP
+
+          env:
+            - name: PGSERVICEFILE
+              value: /qwc_cfg/pg_service.conf
+            - name: INPUT_CONFIG_PATH # TODO BBL
+              value: "/qwc_cfg/config-in"
+            - name: CONFIG_PATH
+              value: "/qwc_cfg/config-out"
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.jwtSecret.name }}
+                  key: {{ .Values.jwtSecret.key }}
+            - name: JWT_COOKIE_CSRF_PROTECT
+              value: "False"
+            - name: SERVICE_UID
+              value: "1000"
+            - name: SERVICE_GID
+              value: "1000"
+            - name: USER_INFO_FIELDS
+              value: '[{"title": "Surname", "name": "surname", "type": "text", "required": true}, {"title": "First name", "name": "first_name", "type": "text", "required": true}, {"title": "Street", "name": "street", "type": "text"}, {"title": "ZIP", "name": "zip", "type": "text"}, {"title": "City", "name": "city", "type": "text"}]'
+            - name: GROUP_REGISTRATION_ENABLED
+              value: 'True'
+            - name: DEFAULT_LOCALE
+              value: 'en'
+            - name: MAIL_SUPPRESS_SEND
+              value: 'True'
+            - name: MAIL_DEFAULT_SENDER
+              value: 'from@example.com'
+            - name: SERVICE_MOUNTPOINT
+              value: '/admin'
+            - name: SKIP_LOGIN
+              value: 'True'
+            # - name: AUTH_PATH
+            #   value: "http://{{ .Release.Name }}-qwcauthservice:9090/auth"
+
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          volumeMounts:
+            - name: vol-pg-service-conf-ro
+              mountPath: /qwc_cfg/
+              readOnly: true
+            - name: vol-config-in-rw
+              mountPath: /qwc_cfg/config-in/
+              readOnly: false
+            - name: vol-config-out-rw
+              mountPath: /qwc_cfg/config-out/
+              readOnly: false
+            - name: vol-project-resources-rw
+              mountPath: /qgs-resources/
+              readOnly: false
+            - name: vol-qwc-app-rw
+              mountPath: /qwc2/
+              readOnly: false
+            - name: vol-info-template-rw
+              mountPath: /info_templates/
+              readOnly: false
+          {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          # command: ["/qwc_cfg/config-in/entrypoint.sh"]
+
+
+      # initContainers: # TODO BBL
+      #   - name: wait-for-db
+      #     image: busybox:1.28
+      #     command:
+      #       - 'sh'
+      #       - '-c'
+      #       - "until nc -z {{ $dbHostname }} {{ $dbPort }} >/dev/null 2>&1; do echo waiting for qwcDb; sleep 2; done"
+
+      volumes:
+        - name: vol-pg-service-conf-ro
+          secret:
+            secretName: {{ .Values.pgServiceConfSecret.name }}
+            optional: false
+            items:
+              - key: {{ .Values.pgServiceConfSecret.key }}
+                path: pg_service.conf
+        - name: vol-config-in-rw
+          persistentVolumeClaim:
+            claimName: {{ include "qwcAdminUI.configInputVolumeClaim" . }}
+        - name: vol-config-out-rw
+          persistentVolumeClaim:
+            claimName: {{ include "qwcAdminUI.configVolumeClaim" . }}
+        - name: vol-project-resources-rw
+          persistentVolumeClaim:
+            claimName: {{ include "qwcAdminUI.projectResourceVolumeClaim" . }}
+        - name: vol-qwc-app-rw
+          persistentVolumeClaim:
+            claimName: {{ include "qwcAdminUI.qwcAppVolumeClaim" . }}
+        - name: vol-info-template-rw
+          persistentVolumeClaim:
+            claimName: {{ include "qwcAdminUI.infoTemplateVolumeClaim" . }}
+      {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

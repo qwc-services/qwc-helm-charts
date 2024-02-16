@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "qwcAdminUI.fullname" . }}-test-connection"
+  labels:
+    {{- include "qwcAdminUI.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "qwcAdminUI.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

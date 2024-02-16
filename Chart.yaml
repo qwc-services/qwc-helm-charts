@@ -42,3 +42,6 @@ dependencies:
   - name: qwcMapViewer
     version: "*"
     repository: "file://charts/qwcMapViewer"
+  - name: qwcAdminUI
+    version: "*"
+    repository: "file://charts/qwcAdminUI"
