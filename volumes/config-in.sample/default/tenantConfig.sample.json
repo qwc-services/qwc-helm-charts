@@ -143,14 +143,14 @@
       },
       "config": {
         "qwc2_path": "/qwc2/",
-        "auth_service_url": "/auth/",
-        "data_service_url": "/api/v1/data/",
+        "auth_service_url": "http://{{QWC_AUTH_HOST}}:9090/auth/",
+        "data_service_url": "http://{{QWC_DATA_HOST}}:9090/api/v1/data/",
         "#document_service_url": "/api/v1/document/",
         "elevation_service_url": "/elevation/",
         "info_service_url": "/api/v1/featureinfo/",
         "legend_service_url": "/api/v1/legend/",
         "mapinfo_service_url": "/api/v1/mapinfo/",
-        "ogc_service_url": "/ows/",
+        "ogc_service_url": "http://{{QWC_OGC_HOST}}:9090/ows/",
         "permalink_service_url": "/api/v1/permalink/",
         "#print_service_url": "/api/v1/print/",
         "search_service_url": "/api/v2/search/",
@@ -258,7 +258,7 @@
     {
       "name": "print",
       "config": {
-        "ogc_service_url": "http://{{QWC_OGC_HOST}}:9090/",
+        "ogc_service_url": "http://{{QWC_OGC_HOST}}:9090/ows/",
         "qgis_server_version": "3.16"
       }
     },
@@ -307,7 +307,7 @@
       "name": "adminGui",
       "config": {
         "db_url": "postgresql:///?service=qwc_configdb",
-        "config_generator_service_url": "http://{{QWC_CONFIG_HOST}}:9090",
+        "config_generator_service_url": "http://{{QWC_CONFIG_HOST}}:9090/",
         "totp_enabled": false,
         "user_info_fields": [],
         "proxy_url_whitelist": [],
@@ -319,7 +319,7 @@
         "input_config_path": "{{INPUT_CONFIG_PATH}}",
         "qwc2_path": "/qwc2",
         "qgs_resources_path": "/qgs-resources",
-        "ogc_service_url": "/ows",
+        "ogc_service_url": "http://{{QGIS_SERVER_HOST}}/ows/",
         "info_templates_path": "/info_templates",
         "ows_prefix": "/ows",
         "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/"

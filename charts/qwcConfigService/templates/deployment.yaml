@@ -48,10 +48,14 @@ spec:
           env:
             - name: QGIS_SERVER_HOST
               value: {{ .Release.Name }}-qwcqgisserver
-            - name: QWC_OGC_HOST
-              value: {{ .Release.Name }}-qwcogcservice
+            - name: QWC_AUTH_HOST
+              value: {{ .Release.Name }}-qwcauthservice
             - name: QWC_CONFIG_HOST
               value: {{ .Release.Name }}-qwcconfigservice
+            - name: QWC_DATA_HOST
+              value: {{ .Release.Name }}-qwcdataservice
+            - name: QWC_OGC_HOST
+              value: {{ .Release.Name }}-qwcogcservice
             - name: PGSERVICEFILE
               value: /qwc_cfg/pg_service.conf
             - name: INPUT_CONFIG_PATH
