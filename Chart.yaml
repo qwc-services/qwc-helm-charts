@@ -45,3 +45,6 @@ dependencies:
   - name: qwcAdminUI
     version: "*"
     repository: "file://charts/qwcAdminUI"
+  - name: qwcAuthService
+    version: "*"
+    repository: "file://charts/qwcAuthService"

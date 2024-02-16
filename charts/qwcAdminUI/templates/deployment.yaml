@@ -75,10 +75,10 @@ spec:
               value: 'from@example.com'
             - name: SERVICE_MOUNTPOINT
               value: '/admin'
-            - name: SKIP_LOGIN
-              value: 'True'
-            # - name: AUTH_PATH
-            #   value: "http://{{ .Release.Name }}-qwcauthservice:9090/auth"
+            # - name: SKIP_LOGIN
+            #   value: 'True'
+            - name: AUTH_PATH
+              value: "http://{{ .Release.Name }}-qwcauthservice:9090/auth"
 
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}

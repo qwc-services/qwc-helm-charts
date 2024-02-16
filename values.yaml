@@ -114,3 +114,14 @@ qwcAdminUI:
   jwtSecret:
     name: qwc-test-global-secret
     key: jwtSecretKey
+
+qwcAuthService:
+  image:
+    tag: v2024.01.22
+
+  pgServiceConfSecret:
+    name: qwc-test-global-secret
+    key: pg_service_ro.conf
+  jwtSecret:
+    name: qwc-test-global-secret
+    key: jwtSecretKey
