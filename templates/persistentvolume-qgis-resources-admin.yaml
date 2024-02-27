@@ -4,7 +4,7 @@ metadata:
   name: {{ include "qwc.fullname" . }}-resources-bis
   labels:
     {{- include "qwc.labels" . | nindent 4 }}
-    {{- include "qwcConfigService.projectResourceVolumeLabels" .Subcharts.qwcConfigService | nindent 4 }}
+    {{- include "qwcAdminUI.projectResourceVolumeLabels" .Subcharts.qwcAdminUI | nindent 4 }}
 spec:
   capacity:
     storage: 20Gi
