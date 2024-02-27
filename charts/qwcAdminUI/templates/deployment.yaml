@@ -78,7 +78,7 @@ spec:
             # - name: SKIP_LOGIN
             #   value: 'True'
             - name: AUTH_PATH
-              value: "http://{{ .Release.Name }}-qwcauthservice:9090/auth"
+              value: "/auth"
 
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}

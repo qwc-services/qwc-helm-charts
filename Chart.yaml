@@ -48,3 +48,6 @@ dependencies:
   - name: qwcAuthService
     version: "*"
     repository: "file://charts/qwcAuthService"
+  - name: qwc-api-gateway
+    version: "*"
+    repository: "file://charts/qwc-api-gateway"

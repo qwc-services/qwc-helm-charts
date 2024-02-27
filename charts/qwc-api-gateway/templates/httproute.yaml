@@ -1,0 +1,51 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: {{ include "qwcapigateway.fullname" . }}-route80
+  labels:
+    {{- include "qwcapigateway.labels" . | nindent 4 }}
+spec:
+  parentRefs:
+    - name: {{ include "qwcapigateway.fullname" . }}
+  hostnames:
+    - {{ .Values.hostname }}
+  rules:
+    - matches: # qwc-authservice
+      - path:
+          type: PathPrefix
+          value: /auth/
+      backendRefs:
+        - name: {{ .Release.Name }}-qwcauthservice
+          port: 80
+
+    - matches: # qwc-ogcservice
+      - path:
+          type: PathPrefix
+          value: /ows/
+      backendRefs:
+        - name: {{ .Release.Name }}-qwcogcservice
+          port: 80
+
+    - matches: # qwc-dataservice
+      - path:
+          type: PathPrefix
+          value: /api/v1/data/
+      backendRefs:
+        - name: {{ .Release.Name }}-qwcdataservice
+          port: 80
+
+    - matches: # qwc-adminui
+      - path:
+          type: PathPrefix
+          value: /admin/
+      backendRefs:
+        - name: {{ .Release.Name }}-qwcadminui
+          port: 80
+
+    - matches: # qwc-mapviewer
+      - path:
+          type: PathPrefix
+          value: /
+      backendRefs:
+        - name: {{ .Release.Name }}-qwcmapviewer
+          port: 80

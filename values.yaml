@@ -9,25 +9,25 @@ global:
 
 volumePaths:
   - name: vol-db-data-rw
-    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/db/
+    path: /data/
 
   - name: vol-project-resources-ro
-    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc-resources/
+    path: /data/qwc-resources/
 
   - name: vol-config-in-ro
-    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/config-in/
+    path: /data/config-in/
 
   - name: vol-config-generated
-    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/config/
+    path: /data/config/
 
   - name: vol-qwc-app-ro
-    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/qwc2/
+    path: /data/qwc2/
 
   - name: vol-attachment-rw
-    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/attachments/
+    path: /data/attachments/
 
   - name: vol-info-template
-    path: /home/bde/prog/2306_10_grandlyon_geonet/qwc-helm/volumes/info-templates/
+    path: /data/info-templates/
 
 qwcQgisServer:
   image:
@@ -64,6 +64,8 @@ qwcConfigService:
   image:
     tag: v2024.01.22-noqgis
 
+  apiGatewayHostname: qwc.local
+
   pgServiceConfSecret:
     name: qwc-test-global-secret
     key: pg_service_ro.conf
@@ -99,7 +101,7 @@ qwcMapViewer:
 
   pgServiceConfSecret:
     name: qwc-test-global-secret
-    key: pg_service_rw.conf
+    key: pg_service_ro.conf
   jwtSecret:
     name: qwc-test-global-secret
     key: jwtSecretKey
@@ -125,3 +127,6 @@ qwcAuthService:
   jwtSecret:
     name: qwc-test-global-secret
     key: jwtSecretKey
+
+qwc-api-gateway:
+  hostname: qwc.local

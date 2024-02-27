@@ -49,13 +49,13 @@ spec:
             - name: QGIS_SERVER_HOST
               value: {{ .Release.Name }}-qwcqgisserver
             - name: QWC_AUTH_HOST
-              value: {{ .Release.Name }}-qwcauthservice
+              value: {{ .Values.apiGatewayHostname }}
             - name: QWC_CONFIG_HOST
               value: {{ .Release.Name }}-qwcconfigservice
             - name: QWC_DATA_HOST
-              value: {{ .Release.Name }}-qwcdataservice
+              value: {{ .Values.apiGatewayHostname }}
             - name: QWC_OGC_HOST
-              value: {{ .Release.Name }}-qwcogcservice
+              value: {{ .Values.apiGatewayHostname }}
             - name: PGSERVICEFILE
               value: /qwc_cfg/pg_service.conf
             - name: INPUT_CONFIG_PATH

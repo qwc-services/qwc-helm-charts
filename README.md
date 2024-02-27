@@ -61,3 +61,27 @@ To set values onthefly: `--set  qwcDb.volumes[0].hostPath.path=$(pwd)/volumes/db
 ### Test
 
 * Qgis Server : <http://QGIS_SERVER_HOST/ows/qwc_demo?service=WMS&request=GetCapabilities>
+
+### Gateway API
+
+<https://docs.nginx.com/nginx-gateway-fabric/installation/installing-ngf/helm/>
+
+Install Gateway API resources:
+
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml
+```
+
+Install NGINX Gateway Fabric
+
+```bash
+helm install ngf oci://ghcr.io/nginxinc/charts/nginx-gateway-fabric --create-namespace -n nginx-gateway --set service.type=NodePort
+```
+
+Wait for the deployment to be ready
+
+```bash
+kubectl wait --timeout=5m -n nginx-gateway deployment/ngf-nginx-gateway-fabric --for=condition=Available
+```
+
+<https://artifacthub.io/packages/helm/nginx-gateway-fabric/nginx-gateway-fabric>
