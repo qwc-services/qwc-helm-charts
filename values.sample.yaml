@@ -12,7 +12,7 @@ volumePaths:
     path: /data/
 
   - name: vol-project-resources-ro
-    path: /data/qgis-resources/
+    path: /data/qgs-resources/
 
   - name: vol-config-in-ro
     path: /data/config-in/
