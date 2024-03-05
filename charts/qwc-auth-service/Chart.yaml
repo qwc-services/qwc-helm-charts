@@ -1,5 +1,5 @@
 apiVersion: v2
-name: qwcAuthService
+name: qwc-auth-service
 description: A Helm chart for qwc (auth service component)
 
 # A chart can be either an 'application' or a 'library' chart.
