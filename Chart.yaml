@@ -39,9 +39,10 @@ dependencies:
     repository: "file://charts/qwc-config-service"
     alias: qwcConfigService
 
-  - name: qwcOgcService
+  - name: qwc-ogc-service
     version: "*"
-    repository: "file://charts/qwcOgcService"
+    repository: "file://charts/qwc-ogc-service"
+    alias: qwcOgcService
 
   - name: qwc-data-service
     version: "*"
