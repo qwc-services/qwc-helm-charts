@@ -1,5 +1,5 @@
 apiVersion: v2
-name: qwcQgisServer
+name: qwc-qgis-server
 description: A Helm chart for qwc (qgis server component)
 
 # A chart can be either an 'application' or a 'library' chart.

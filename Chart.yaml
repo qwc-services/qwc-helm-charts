@@ -30,9 +30,10 @@ dependencies:
     repository: "file://charts/qwc-db"
     alias: qwcDb
 
-  - name: qwcQgisServer
+  - name: qwc-qgis-server
     version: "*"
-    repository: "file://charts/qwcQgisServer"
+    repository: "file://charts/qwc-qgis-server"
+    alias: qwcQgisServer
 
   - name: qwc-config-service
     version: "*"
