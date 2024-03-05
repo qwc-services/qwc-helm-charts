@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "qwcAdminUI.fullname" . }}
+  name: {{ include "qwcAdminGUI.fullname" . }}
   labels:
-    {{- include "qwcAdminUI.labels" . | nindent 4 }}
+    {{- include "qwcAdminGUI.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "qwcAdminUI.fullname" . }}
+    name: {{ include "qwcAdminGUI.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

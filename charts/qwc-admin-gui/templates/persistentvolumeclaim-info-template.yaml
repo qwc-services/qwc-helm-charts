@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "qwcAdminGUI.infoTemplateVolumeClaim" . }}
+  labels:
+    {{- include "qwcAdminGUI.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  selector:
+    matchLabels:
+      {{- include "qwcAdminGUI.infoTemplateVolumeLabels" . | nindent 6 }}

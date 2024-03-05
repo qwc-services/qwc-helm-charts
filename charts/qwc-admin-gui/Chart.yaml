@@ -1,5 +1,5 @@
 apiVersion: v2
-name: qwcAdminUI
+name: qwc-admin-gui
 description: A Helm chart for qwc (admin web ui component)
 
 # A chart can be either an 'application' or a 'library' chart.

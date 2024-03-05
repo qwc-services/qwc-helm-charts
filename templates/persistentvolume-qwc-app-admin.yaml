@@ -4,7 +4,7 @@ metadata:
   name: {{ include "qwc.fullname" . }}-qwc-app-admin
   labels:
     {{- include "qwc.labels" . | nindent 4 }}
-    {{- include "qwcAdminUI.qwcAppVolumeLabels" .Subcharts.qwcAdminUI | nindent 4 }}
+    {{- include "qwcAdminGUI.qwcAppVolumeLabels" .Subcharts.qwcAdminGUI | nindent 4 }}
 spec:
   capacity:
     storage: 10Gi

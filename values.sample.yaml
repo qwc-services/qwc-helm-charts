@@ -106,7 +106,7 @@ qwcMapViewer:
     name: qwc-test-global-secret
     key: jwtSecretKey
 
-qwcAdminUI:
+qwcAdminGUI:
   image:
     tag: v2024.01.22
 

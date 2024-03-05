@@ -21,33 +21,44 @@ version: 1.0.0
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "2023.11.30"
+appVersion:
+  "2023.11.30"
 
+  # Aliases are needed to call chart functions from root chart and match internal chart function names in '_helpers.tpl'.
 dependencies:
   - name: qwcDb
     version: "*"
     repository: "file://charts/qwcDb"
+
   - name: qwcQgisServer
     version: "*"
     repository: "file://charts/qwcQgisServer"
+
   - name: qwcConfigService
     version: "*"
     repository: "file://charts/qwcConfigService"
+
   - name: qwcOgcService
     version: "*"
     repository: "file://charts/qwcOgcService"
+
   - name: qwcDataService
     version: "*"
     repository: "file://charts/qwcDataService"
+
   - name: qwcMapViewer
     version: "*"
     repository: "file://charts/qwcMapViewer"
-  - name: qwcAdminUI
+
+  - name: qwc-admin-gui
     version: "*"
-    repository: "file://charts/qwcAdminUI"
+    repository: "file://charts/qwc-admin-gui"
+    alias: qwcAdminGUI
+
   - name: qwcAuthService
     version: "*"
     repository: "file://charts/qwcAuthService"
+
   - name: qwc-api-gateway
     version: "*"
     repository: "file://charts/qwc-api-gateway"

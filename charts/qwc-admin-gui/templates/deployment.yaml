@@ -4,16 +4,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "qwcAdminUI.fullname" . }}
+  name: {{ include "qwcAdminGUI.fullname" . }}
   labels:
-    {{- include "qwcAdminUI.labels" . | nindent 4 }}
+    {{- include "qwcAdminGUI.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "qwcAdminUI.selectorLabels" . | nindent 6 }}
+      {{- include "qwcAdminGUI.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -21,7 +21,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "qwcAdminUI.labels" . | nindent 8 }}
+        {{- include "qwcAdminGUI.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -30,7 +30,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "qwcAdminUI.serviceAccountName" . }}
+      serviceAccountName: {{ include "qwcAdminGUI.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
 
@@ -131,19 +131,19 @@ spec:
                 path: pg_service.conf
         - name: vol-config-in-rw
           persistentVolumeClaim:
-            claimName: {{ include "qwcAdminUI.configInputVolumeClaim" . }}
+            claimName: {{ include "qwcAdminGUI.configInputVolumeClaim" . }}
         - name: vol-config-out-rw
           persistentVolumeClaim:
-            claimName: {{ include "qwcAdminUI.configVolumeClaim" . }}
+            claimName: {{ include "qwcAdminGUI.configVolumeClaim" . }}
         - name: vol-project-resources-rw
           persistentVolumeClaim:
-            claimName: {{ include "qwcAdminUI.projectResourceVolumeClaim" . }}
+            claimName: {{ include "qwcAdminGUI.projectResourceVolumeClaim" . }}
         - name: vol-qwc-app-ro
           persistentVolumeClaim:
-            claimName: {{ include "qwcAdminUI.qwcAppVolumeClaim" . }}
+            claimName: {{ include "qwcAdminGUI.qwcAppVolumeClaim" . }}
         - name: vol-info-template-rw
           persistentVolumeClaim:
-            claimName: {{ include "qwcAdminUI.infoTemplateVolumeClaim" . }}
+            claimName: {{ include "qwcAdminGUI.infoTemplateVolumeClaim" . }}
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

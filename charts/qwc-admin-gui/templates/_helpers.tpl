@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "qwcAdminUI.name" -}}
+{{- define "qwcAdminGUI.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" | lower }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "qwcAdminUI.fullname" -}}
+{{- define "qwcAdminGUI.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" | lower }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "qwcAdminUI.chart" -}}
+{{- define "qwcAdminGUI.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" | lower }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "qwcAdminUI.labels" -}}
-helm.sh/chart: {{ include "qwcAdminUI.chart" . }}
-{{ include "qwcAdminUI.selectorLabels" . }}
+{{- define "qwcAdminGUI.labels" -}}
+helm.sh/chart: {{ include "qwcAdminGUI.chart" . }}
+{{ include "qwcAdminGUI.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,15 +45,15 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "qwcAdminUI.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "qwcAdminUI.name" . }}
+{{- define "qwcAdminGUI.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "qwcAdminGUI.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Selector labels for project resource volume
 */}}
-{{- define "qwcAdminUI.projectResourceVolumeLabels" -}}
+{{- define "qwcAdminGUI.projectResourceVolumeLabels" -}}
 app.kubernetes.io/part-of: qwc
 app.kubernetes.io/instance: {{ .Release.Name }}
 volume-name: qgis-proj-res
@@ -62,14 +62,14 @@ volume-name: qgis-proj-res
 {{/*
 Claim name for project resource volume
 */}}
-{{- define "qwcAdminUI.projectResourceVolumeClaim" -}}
-{{- printf "%s-%s-claim" (include "qwcAdminUI.fullname" .) "qgis-proj-res" }}
+{{- define "qwcAdminGUI.projectResourceVolumeClaim" -}}
+{{- printf "%s-%s-claim" (include "qwcAdminGUI.fullname" .) "qgis-proj-res" }}
 {{- end }}
 
 {{/*
 Selector labels for config input volume
 */}}
-{{- define "qwcAdminUI.configInputVolumeLabels" -}}
+{{- define "qwcAdminGUI.configInputVolumeLabels" -}}
 app.kubernetes.io/part-of: qwc
 app.kubernetes.io/instance: {{ .Release.Name }}
 volume-name: config-input
@@ -78,14 +78,14 @@ volume-name: config-input
 {{/*
 Claim name for project resource volume
 */}}
-{{- define "qwcAdminUI.configInputVolumeClaim" -}}
-{{- printf "%s-%s-claim" (include "qwcAdminUI.fullname" .) "config-input" }}
+{{- define "qwcAdminGUI.configInputVolumeClaim" -}}
+{{- printf "%s-%s-claim" (include "qwcAdminGUI.fullname" .) "config-input" }}
 {{- end }}
 
 {{/*
 Selector labels for config output volume
 */}}
-{{- define "qwcAdminUI.configVolumeLabels" -}}
+{{- define "qwcAdminGUI.configVolumeLabels" -}}
 app.kubernetes.io/part-of: qwc
 app.kubernetes.io/instance: {{ .Release.Name }}
 volume-name: config
@@ -94,14 +94,14 @@ volume-name: config
 {{/*
 Claim name for project resource volume
 */}}
-{{- define "qwcAdminUI.configVolumeClaim" -}}
-{{- printf "%s-%s-claim" (include "qwcAdminUI.fullname" .) "config" }}
+{{- define "qwcAdminGUI.configVolumeClaim" -}}
+{{- printf "%s-%s-claim" (include "qwcAdminGUI.fullname" .) "config" }}
 {{- end }}
 
 {{/*
 Selector labels for qwc application volume
 */}}
-{{- define "qwcAdminUI.qwcAppVolumeLabels" -}}
+{{- define "qwcAdminGUI.qwcAppVolumeLabels" -}}
 app.kubernetes.io/part-of: qwc
 app.kubernetes.io/instance: {{ .Release.Name }}
 volume-name: qwc-app
@@ -110,14 +110,14 @@ volume-name: qwc-app
 {{/*
 Claim name for project resource volume
 */}}
-{{- define "qwcAdminUI.qwcAppVolumeClaim" -}}
-{{- printf "%s-%s-claim" (include "qwcAdminUI.fullname" .) "qwc-app" }}
+{{- define "qwcAdminGUI.qwcAppVolumeClaim" -}}
+{{- printf "%s-%s-claim" (include "qwcAdminGUI.fullname" .) "qwc-app" }}
 {{- end }}
 
 {{/*
 Selector labels for qwc application volume
 */}}
-{{- define "qwcAdminUI.infoTemplateVolumeLabels" -}}
+{{- define "qwcAdminGUI.infoTemplateVolumeLabels" -}}
 app.kubernetes.io/part-of: qwc
 app.kubernetes.io/instance: {{ .Release.Name }}
 volume-name: info-tpl
@@ -126,15 +126,15 @@ volume-name: info-tpl
 {{/*
 Claim name for project resource volume
 */}}
-{{- define "qwcAdminUI.infoTemplateVolumeClaim" -}}
-{{- printf "%s-%s-claim" (include "qwcAdminUI.fullname" .) "info-tpl" }}
+{{- define "qwcAdminGUI.infoTemplateVolumeClaim" -}}
+{{- printf "%s-%s-claim" (include "qwcAdminGUI.fullname" .) "info-tpl" }}
 {{- end }}
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "qwcAdminUI.serviceAccountName" -}}
+{{- define "qwcAdminGUI.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "qwcAdminUI.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "qwcAdminGUI.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -143,6 +143,6 @@ Create the name of the service account to use
 {{/*
 Create the name of the secret for pg_service.conf
 */}}
-{{- define "qwcAdminUI.secrets" -}}
-{{- printf "%s-secret" (include "qwcAdminUI.fullname" .) }}
+{{- define "qwcAdminGUI.secrets" -}}
+{{- printf "%s-secret" (include "qwcAdminGUI.fullname" .) }}
 {{- end }}
