@@ -34,9 +34,10 @@ dependencies:
     version: "*"
     repository: "file://charts/qwcQgisServer"
 
-  - name: qwcConfigService
+  - name: qwc-config-service
     version: "*"
-    repository: "file://charts/qwcConfigService"
+    repository: "file://charts/qwc-config-service"
+    alias: qwcConfigService
 
   - name: qwcOgcService
     version: "*"
