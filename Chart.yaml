@@ -49,9 +49,10 @@ dependencies:
     repository: "file://charts/qwc-data-service"
     alias: qwcDataService
 
-  - name: qwcMapViewer
+  - name: qwc-map-viewer
     version: "*"
-    repository: "file://charts/qwcMapViewer"
+    repository: "file://charts/qwc-map-viewer"
+    alias: qwcMapViewer
 
   - name: qwc-admin-gui
     version: "*"
