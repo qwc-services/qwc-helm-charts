@@ -100,7 +100,7 @@ spec:
             - name: vol-project-resources-rw
               mountPath: /qgs-resources/
               readOnly: false
-            - name: vol-qwc-app-rw
+            - name: vol-qwc-app-ro
               mountPath: /qwc2/
               readOnly: false
             - name: vol-info-template-rw
@@ -138,7 +138,7 @@ spec:
         - name: vol-project-resources-rw
           persistentVolumeClaim:
             claimName: {{ include "qwcAdminUI.projectResourceVolumeClaim" . }}
-        - name: vol-qwc-app-rw
+        - name: vol-qwc-app-ro
           persistentVolumeClaim:
             claimName: {{ include "qwcAdminUI.qwcAppVolumeClaim" . }}
         - name: vol-info-template-rw
