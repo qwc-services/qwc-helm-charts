@@ -1,5 +1,5 @@
 apiVersion: v2
-name: qwcDb
+name: qwc-db
 description: A Helm chart for qwc (database component)
 
 # A chart can be either an 'application' or a 'library' chart.

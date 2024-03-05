@@ -26,9 +26,10 @@ appVersion:
 
   # Aliases are needed to call chart functions from root chart and match internal chart function names in '_helpers.tpl'.
 dependencies:
-  - name: qwcDb
+  - name: qwc-db
     version: "*"
-    repository: "file://charts/qwcDb"
+    repository: "file://charts/qwc-db"
+    alias: qwcDb
 
   - name: qwcQgisServer
     version: "*"
