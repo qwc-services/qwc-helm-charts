@@ -63,7 +63,11 @@ volume-name: qgis-proj-res
 Claim name for project resource volume
 */}}
 {{- define "qwcAdminGUI.projectResourceVolumeClaim" -}}
+{{- if .Values.claimOverrides.projectResourceVolumeClaim }}
+{{- .Values.claimOverrides.projectResourceVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcAdminGUI.fullname" .) "qgis-proj-res" }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -79,7 +83,11 @@ volume-name: config-input
 Claim name for project resource volume
 */}}
 {{- define "qwcAdminGUI.configInputVolumeClaim" -}}
+{{- if .Values.claimOverrides.configInputVolumeClaim }}
+{{- .Values.claimOverrides.configInputVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcAdminGUI.fullname" .) "config-input" }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -95,7 +103,11 @@ volume-name: config
 Claim name for project resource volume
 */}}
 {{- define "qwcAdminGUI.configVolumeClaim" -}}
+{{- if .Values.claimOverrides.configVolumeClaim }}
+{{- .Values.claimOverrides.configVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcAdminGUI.fullname" .) "config" }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -111,7 +123,11 @@ volume-name: qwc-app
 Claim name for project resource volume
 */}}
 {{- define "qwcAdminGUI.qwcAppVolumeClaim" -}}
+{{- if .Values.claimOverrides.qwcAppVolumeClaim }}
+{{- .Values.claimOverrides.qwcAppVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcAdminGUI.fullname" .) "qwc-app" }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -127,8 +143,13 @@ volume-name: info-tpl
 Claim name for project resource volume
 */}}
 {{- define "qwcAdminGUI.infoTemplateVolumeClaim" -}}
+{{- if .Values.claimOverrides.infoTemplateVolumeClaim }}
+{{- .Values.claimOverrides.infoTemplateVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcAdminGUI.fullname" .) "info-tpl" }}
 {{- end }}
+{{- end }}
+
 {{/*
 Create the name of the service account to use
 */}}
