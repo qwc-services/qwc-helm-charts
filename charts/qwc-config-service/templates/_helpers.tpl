@@ -63,7 +63,11 @@ volume-name: qgis-proj-res
 Claim name for project resource volume
 */}}
 {{- define "qwcConfigService.projectResourceVolumeClaim" -}}
+{{- if .Values.claimOverrides.projectResourceVolumeClaim }}
+{{- .Values.claimOverrides.projectResourceVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcConfigService.fullname" .) "qgis-proj-res" }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -79,7 +83,11 @@ volume-name: config-input
 Claim name for project resource volume
 */}}
 {{- define "qwcConfigService.configInputVolumeClaim" -}}
+{{- if .Values.claimOverrides.configInputVolumeClaim }}
+{{- .Values.claimOverrides.configInputVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcConfigService.fullname" .) "config-input" }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -95,7 +103,11 @@ volume-name: config
 Claim name for project resource volume
 */}}
 {{- define "qwcConfigService.configVolumeClaim" -}}
+{{- if .Values.claimOverrides.configVolumeClaim }}
+{{- .Values.claimOverrides.configVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcConfigService.fullname" .) "config" }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -111,7 +123,11 @@ volume-name: qwc-app
 Claim name for project resource volume
 */}}
 {{- define "qwcConfigService.qwcAppVolumeClaim" -}}
+{{- if .Values.claimOverrides.qwcAppVolumeClaim }}
+{{- .Values.claimOverrides.qwcAppVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcConfigService.fullname" .) "qwc-app" }}
+{{- end }}
 {{- end }}
 
 {{/*

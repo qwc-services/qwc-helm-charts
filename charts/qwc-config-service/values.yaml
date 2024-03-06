@@ -53,6 +53,15 @@ jwtSecret:
   # === jwt key name within secret
   # key:
 
+# Overrides claim names.
+# If values are setted below, not claim will be created and the deployment will use the overriden claim names.
+claimOverrides:
+  {}
+  # configInputVolumeClaim: claim-01
+  # configVolumeClaim: claim-02
+  # qwcAppVolumeClaim: claim-03
+  # projectResourceVolumeClaim: claim-04
+
 # Additional volumes on the output Deployment definition:
 volumes: []
 # None
