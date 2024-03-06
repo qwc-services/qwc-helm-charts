@@ -141,5 +141,16 @@ qwcAuthService:
     name: my-qwc-instance-global-secret
     key: jwtSecretKey
 
+qwcPermalinkService:
+  image:
+    tag: v2024.03.04
+
+  pgServiceConfSecret:
+    name: qwc-test-global-secret
+    key: pg_service_ro.conf
+  jwtSecret:
+    name: qwc-test-global-secret
+    key: jwtSecretKey
+
 qwcApiGateway:
   hostname: qwc.local

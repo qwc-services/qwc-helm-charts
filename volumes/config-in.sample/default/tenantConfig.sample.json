@@ -151,7 +151,7 @@
         "legend_service_url": "/api/v1/legend/",
         "mapinfo_service_url": "/api/v1/mapinfo/",
         "ogc_service_url": "http://{{QWC_OGC_HOST}}/ows/",
-        "permalink_service_url": "/api/v1/permalink/",
+        "permalink_service_url": "http://{{QWC_PERMALINK_HOST}}/api/v1/permalink/",
         "#print_service_url": "/api/v1/print/",
         "search_service_url": "/api/v2/search/",
         "search_data_service_url": "/api/v2/search/geom/"

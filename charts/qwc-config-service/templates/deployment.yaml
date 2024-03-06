@@ -56,6 +56,8 @@ spec:
               value: {{ .Values.apiGatewayHostname }}
             - name: QWC_OGC_HOST
               value: {{ .Values.apiGatewayHostname }}
+            - name: QWC_PERMALINK_HOST
+              value: {{ .Values.apiGatewayHostname }}
             - name: PGSERVICEFILE
               value: /qwc_cfg/pg_service.conf
             - name: INPUT_CONFIG_PATH

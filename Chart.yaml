@@ -66,6 +66,11 @@ dependencies:
     repository: "file://charts/qwc-auth-service"
     alias: qwcAuthService
 
+  - name: qwc-permalink-service
+    version: "*"
+    repository: "file://charts/qwc-permalink-service"
+    alias: qwcPermalinkService
+
   - name: qwc-api-gateway
     version: "*"
     repository: "file://charts/qwc-api-gateway"

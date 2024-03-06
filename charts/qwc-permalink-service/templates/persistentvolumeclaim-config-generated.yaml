@@ -1,0 +1,17 @@
+{{ if not .Values.claimOverrides.configVolumeClaim }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "qwcPermalinkService.configVolumeClaim" . }}
+  labels:
+    {{- include "qwcPermalinkService.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  selector:
+    matchLabels:
+      {{- include "qwcPermalinkService.configVolumeLabels" . | nindent 6 }}
+{{ end }}
