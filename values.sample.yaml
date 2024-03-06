@@ -2,11 +2,26 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# ====================================
+# ================ GLOBAL VAR
+
 global:
   db:
     hostname: qwc-test-qwcdb
     port: 5432
 
+# ====================================
+# ================ VOLUMES
+#
+# In production mode:
+# * volumes are created by administrator and won't be created by this chart ==> `createVolumes: false`
+# * `volumePaths` should be empty
+#
+# In dev mode:
+# * volumes could be created by this chart with: `createVolumes: true`
+# * `volumePaths` must be defined
+
+createVolumes: true
 volumePaths:
   - name: vol-db-data-rw
     path: /data/
@@ -28,6 +43,9 @@ volumePaths:
 
   - name: vol-info-template
     path: /data/info-templates/
+
+# ====================================
+# ================ SUB CHARTS
 
 qwcQgisServer:
   image:

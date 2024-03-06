@@ -48,6 +48,13 @@ microk8s kubectl get all --all-namespaces
   ```
 
 * Adjust `values.yaml`
+  * In production mode:
+    * volumes are created by administrator and won't be created by this chart ==> `createVolumes: false`
+    * `volumePaths` should be empty
+  * In dev mode:
+    * volumes could be created by this chart with: `createVolumes: true`
+    * `volumePaths` must be defined
+
 * copy `config-in.sample` volume: `cp -a volumes/config-in.sample volumes/config-in`
 
 #### Run
