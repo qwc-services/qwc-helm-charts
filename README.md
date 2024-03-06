@@ -82,6 +82,14 @@ See also <https://artifacthub.io/packages/helm/nginx-gateway-fabric/nginx-gatewa
       * volumes could be created by this chart with: `createVolumes: true`
       * `volumePaths` must be defined
 
+  * adjust claims: claims are automatically generated for you can for each subchar define `claimOverrides` to define your own names, for example for qgis server:
+
+    ```yaml
+    qwcQgisServer:
+      claimOverrides:
+        projectResourceVolumeClaim: claim-01
+    ```
+
 * copy `config-in.sample` volume: `cp -a volumes/config-in.sample volumes/config-in`
 
 ### Deploy

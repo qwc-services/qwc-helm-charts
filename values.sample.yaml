@@ -61,6 +61,11 @@ qwcQgisServer:
     name: my-qwc-instance-global-secret
     key: jwtSecretKey
 
+  # -----------
+  # claim can be overridden:
+  # claimOverrides:
+  #     projectResourceVolumeClaim: claim-01
+
 qwcDb:
   image:
     tag: 15
