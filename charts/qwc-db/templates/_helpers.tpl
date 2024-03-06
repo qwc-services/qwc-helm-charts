@@ -51,6 +51,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Claim name for project resource volume
+*/}}
+{{- define "qwcDb.pgDataVolumeClaim" -}}
+{{- if .Values.claimOverrides.pgDataVolumeClaim }}
+{{- .Values.claimOverrides.pgDataVolumeClaim }}
+{{- else }}
+{{- printf "%s-%s-claim" (include "qwcDb.fullname" .) "pg" }}
+{{- end }}
+{{- end }}
+
+{{/*
 Selector labels for project resource volume
 */}}
 {{- define "qwcDb.pgDataVolumeLabels" -}}

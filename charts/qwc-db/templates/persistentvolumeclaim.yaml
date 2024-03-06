@@ -1,7 +1,8 @@
+{{ if not .Values.claimOverrides.pgDataVolumeClaim }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "qwcDb.fullname" . }}-claim
+  name: {{ include "qwcDb.pgDataVolumeClaim" . }}
   labels:
     {{- include "qwcDb.labels" . | nindent 4 }}
 spec:
@@ -14,3 +15,4 @@ spec:
   selector:
     matchLabels:
       {{- include "qwcDb.pgDataVolumeLabels" .Subcharts.qwcDb | nindent 4 }}
+{{ end }}

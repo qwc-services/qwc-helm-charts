@@ -52,6 +52,12 @@ readinessProbe:
 volumes: []
 # None
 
+# Overrides claim names.
+# If values are setted below, not claim will be created and the deployment will use the overriden claim names.
+claimOverrides:
+  {}
+  # pgDataVolumeClaim: claim-01
+
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: []
 
@@ -62,10 +68,12 @@ serviceAccount:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -73,7 +81,8 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
