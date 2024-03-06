@@ -1,7 +1,8 @@
+{{ if not .Values.claimOverrides.projectResourceVolumeClaim }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "qwcQgisServer.fullname" . }}-claim
+  name: {{ include "qwcQgisServer.projectResourceVolumeClaim" . }}
   labels:
     {{- include "qwcQgisServer.labels" . | nindent 4 }}
 spec:
@@ -13,3 +14,4 @@ spec:
   selector:
     matchLabels:
       {{- include "qwcQgisServer.projectResourceVolumeLabels" . | nindent 6 }}
+{{ end }}

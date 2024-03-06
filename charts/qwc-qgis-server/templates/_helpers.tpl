@@ -51,6 +51,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Claim name for project resource volume
+*/}}
+{{- define "qwcQgisServer.projectResourceVolumeClaim" -}}
+{{- if .Values.claimOverrides.projectResourceVolumeClaim }}
+{{- .Values.claimOverrides.projectResourceVolumeClaim }}
+{{- else }}
+{{- printf "%s-%s-claim" (include "qwcQgisServer.fullname" .) "qgis-proj-res" }}
+{{- end }}
+{{- end }}
+
+{{/*
 Selector labels for resource volume
 */}}
 {{- define "qwcQgisServer.projectResourceVolumeLabels" -}}
