@@ -63,7 +63,11 @@ volume-name: config
 Claim name for config output volume
 */}}
 {{- define "qwcDataService.configVolumeClaim" -}}
+{{- if .Values.claimOverrides.configVolumeClaim }}
+{{- .Values.claimOverrides.configVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcDataService.fullname" .) "config" }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -79,7 +83,11 @@ volume-name: attachment
 Claim name for attachment volume
 */}}
 {{- define "qwcDataService.attachmentVolumeClaim" -}}
+{{- if .Values.claimOverrides.attachmentVolumeClaim }}
+{{- .Values.claimOverrides.attachmentVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcDataService.fullname" .) "attachment" }}
+{{- end }}
 {{- end }}
 
 {{/*
