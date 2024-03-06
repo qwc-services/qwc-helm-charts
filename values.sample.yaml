@@ -1,13 +1,16 @@
+# ====================================
 # Default values for qwc.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+#
+# Note: the prefix 'my-qwc-instance' is the name of the helm instance used when installing the chart with this command:
+# `helm upgrade -f values.yaml -f secret-values.yaml --install my-qwc-instance .`
+# ====================================
 
 # ====================================
 # ================ GLOBAL VAR
 
 global:
   db:
-    hostname: qwc-test-qwcdb
+    hostname: my-qwc-instance-qwcdb
     port: 5432
 
 # ====================================
@@ -52,10 +55,10 @@ qwcQgisServer:
     tag: 3.28-plugins
 
   pgServiceConfSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: pg_service_ro.conf
   jwtSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: jwtSecretKey
 
 qwcDb:
@@ -64,19 +67,11 @@ qwcDb:
 
   # used by qwc-base-db-migrate
   pgServiceConfSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: pg_service_ro.conf
   jwtSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: jwtSecretKey
-
-  # dbSecret:
-  #   user:
-  #     name: qwc-test-qwcdb-secret
-  #     key: postgresPassword
-  #   password:
-  #     name: qwc-test-qwcdb-secret
-  #     key: postgresUser
 
 qwcConfigService:
   image:
@@ -85,10 +80,10 @@ qwcConfigService:
   apiGatewayHostname: qwc.local
 
   pgServiceConfSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: pg_service_ro.conf
   jwtSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: jwtSecretKey
 
 qwcOgcService:
@@ -96,10 +91,10 @@ qwcOgcService:
     tag: v2023.10.20
 
   pgServiceConfSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: pg_service_rw.conf
   jwtSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: jwtSecretKey
 
 qwcDataService:
@@ -107,10 +102,10 @@ qwcDataService:
     tag: v2023.11.30.1
 
   pgServiceConfSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: pg_service_rw.conf
   jwtSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: jwtSecretKey
 
 qwcMapViewer:
@@ -118,10 +113,10 @@ qwcMapViewer:
     tag: v2024.01.22
 
   pgServiceConfSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: pg_service_ro.conf
   jwtSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: jwtSecretKey
 
 qwcAdminGUI:
@@ -129,10 +124,10 @@ qwcAdminGUI:
     tag: v2024.01.22
 
   pgServiceConfSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: pg_service_ro.conf
   jwtSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: jwtSecretKey
 
 qwcAuthService:
@@ -140,10 +135,10 @@ qwcAuthService:
     tag: v2024.01.22
 
   pgServiceConfSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: pg_service_ro.conf
   jwtSecret:
-    name: qwc-test-global-secret
+    name: my-qwc-instance-global-secret
     key: jwtSecretKey
 
 qwcApiGateway:

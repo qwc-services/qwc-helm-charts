@@ -5,12 +5,10 @@ Repo: <https://artifacthub.io/packages/helm/>
 ## TODO
 
 * qwc2 assets/dist mount points demo vs client
-* admin ui
-* auth
 
 ## Dev side
 
-### Kubenetes
+### Kubernetes with microk8s
 
 #### Installation
 
@@ -37,38 +35,6 @@ microk8s kubectl get all --all-namespaces
 * retrieve dashboard IP: `microk8s kubectl get all --all-namespaces | grep 'service/kubernetes-dashboard'`
 * connect to dashboard via <https://IP> with obtained token
 
-### Helm
-
-#### Installation
-
-* As `root`:
-
-  ```bash
-  apt install helm
-  ```
-
-* Adjust `values.yaml`
-  * In production mode:
-    * volumes are created by administrator and won't be created by this chart ==> `createVolumes: false`
-    * `volumePaths` should be empty
-  * In dev mode:
-    * volumes could be created by this chart with: `createVolumes: true`
-    * `volumePaths` must be defined
-
-* copy `config-in.sample` volume: `cp -a volumes/config-in.sample volumes/config-in`
-
-#### Run
-
-```bash
-helm upgrade --debug --kubeconfig ~/.kube/config -f values.yaml -f secret-values.yaml --install qwc-test . | less -i
-```
-
-To set values onthefly: `--set  qwcDb.volumes[0].hostPath.path=$(pwd)/volumes/db-init/setup-qwc.sh`
-
-### Test
-
-* Qgis Server : <http://QGIS_SERVER_HOST/ows/qwc_demo?service=WMS&request=GetCapabilities>
-
 ### Gateway API
 
 <https://docs.nginx.com/nginx-gateway-fabric/installation/installing-ngf/helm/>
@@ -91,4 +57,41 @@ Wait for the deployment to be ready
 kubectl wait --timeout=5m -n nginx-gateway deployment/ngf-nginx-gateway-fabric --for=condition=Available
 ```
 
-<https://artifacthub.io/packages/helm/nginx-gateway-fabric/nginx-gateway-fabric>
+See also <https://artifacthub.io/packages/helm/nginx-gateway-fabric/nginx-gateway-fabric>
+
+### Chart installation
+
+#### Helm
+
+* As `root`:
+
+  ```bash
+  apt install helm
+  ```
+
+#### Setup
+
+* Adjust `values.yaml`
+  * adjust instance name: the prefix 'my-qwc-instance' is the name of the helm instance used when deploying the chart
+
+  * adjust volumes:
+    * In production mode:
+      * volumes are created by administrator and won't be created by this chart ==> `createVolumes: false`
+      * `volumePaths` should be empty
+    * In dev mode:
+      * volumes could be created by this chart with: `createVolumes: true`
+      * `volumePaths` must be defined
+
+* copy `config-in.sample` volume: `cp -a volumes/config-in.sample volumes/config-in`
+
+### Deploy
+
+```bash
+helm upgrade --debug -f values.yaml -f secret-values.yaml --install my-qwc-instance . | less -i
+```
+
+To set values onthefly: `--set  qwcDb.volumes[0].hostPath.path=$(pwd)/volumes/db-init/setup-qwc.sh`
+
+### Test
+
+* Qgis Server : <http://QGIS_SERVER_HOST/ows/qwc_demo?service=WMS&request=GetCapabilities>
