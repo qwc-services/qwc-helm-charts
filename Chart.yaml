@@ -68,3 +68,4 @@ dependencies:
   - name: qwc-api-gateway
     version: "*"
     repository: "file://charts/qwc-api-gateway"
+    alias: qwcApiGateway

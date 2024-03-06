@@ -128,5 +128,5 @@ qwcAuthService:
     name: qwc-test-global-secret
     key: jwtSecretKey
 
-qwc-api-gateway:
+qwcApiGateway:
   hostname: qwc.local
