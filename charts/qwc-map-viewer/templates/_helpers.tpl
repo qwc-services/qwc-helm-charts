@@ -63,7 +63,11 @@ volume-name: config
 Claim name for config output volume
 */}}
 {{- define "qwcMapViewer.configVolumeClaim" -}}
+{{- if .Values.claimOverrides.configVolumeClaim }}
+{{- .Values.claimOverrides.configVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcMapViewer.fullname" .) "config" }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -79,7 +83,11 @@ volume-name: qwc-app
 Claim name for project resource volume
 */}}
 {{- define "qwcMapViewer.qwcAppVolumeClaim" -}}
+{{- if .Values.claimOverrides.qwcAppVolumeClaim }}
+{{- .Values.claimOverrides.qwcAppVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcMapViewer.fullname" .) "qwc-app" }}
+{{- end }}
 {{- end }}
 
 {{/*
