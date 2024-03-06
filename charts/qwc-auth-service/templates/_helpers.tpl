@@ -63,7 +63,11 @@ volume-name: config
 Claim name for config output volume
 */}}
 {{- define "qwcAuthService.configVolumeClaim" -}}
+{{- if .Values.claimOverrides.configVolumeClaim }}
+{{- .Values.claimOverrides.configVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcAuthService.fullname" .) "config" }}
+{{- end }}
 {{- end }}
 
 {{/*
