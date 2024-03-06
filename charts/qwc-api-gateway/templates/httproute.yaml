@@ -34,12 +34,12 @@ spec:
         - name: {{ .Release.Name }}-qwcdataservice
           port: 80
 
-    - matches: # qwc-adminui
+    - matches: # qwc-admingui
       - path:
           type: PathPrefix
           value: /admin/
       backendRefs:
-        - name: {{ .Release.Name }}-qwcadminui
+        - name: {{ .Release.Name }}-qwcadmingui
           port: 80
 
     - matches: # qwc-mapviewer
