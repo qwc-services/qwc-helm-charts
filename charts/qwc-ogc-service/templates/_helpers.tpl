@@ -63,7 +63,11 @@ volume-name: config
 Claim name for project resource volume
 */}}
 {{- define "qwcOgcService.configVolumeClaim" -}}
+{{- if .Values.claimOverrides.configVolumeClaim }}
+{{- .Values.claimOverrides.configVolumeClaim }}
+{{- else }}
 {{- printf "%s-%s-claim" (include "qwcOgcService.fullname" .) "config" }}
+{{- end }}
 {{- end }}
 
 {{/*
