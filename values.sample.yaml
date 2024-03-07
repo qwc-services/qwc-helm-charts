@@ -13,6 +13,16 @@ global:
     hostname: my-qwc-instance-qwcdb
     port: 5432
 
+  env:
+    serviceUID: 1000
+    serviceGID: 1000
+
+    jwtSecret:
+      name: my-qwc-instance-global-secret
+      key: jwtSecretKey
+
+    jwtCookieCSRFProtect: true
+
 # ====================================
 # ================ VOLUMES
 #
@@ -131,9 +141,12 @@ qwcAdminGUI:
   pgServiceConfSecret:
     name: my-qwc-instance-global-secret
     key: pg_service_ro.conf
-  jwtSecret:
-    name: my-qwc-instance-global-secret
-    key: jwtSecretKey
+
+  ## ENV vars
+  # env:
+  #   userInfoFields: '[{"title": "Surname", "name": "surname", "type": "text", "required": true}, {"title": "First name", "name": "first_name", "type": "text", "required": true}, {"title": "Street", "name": "street", "type": "text"}, {"title": "ZIP", "name": "zip", "type": "text"}, {"title": "City", "name": "city", "type": "text"}]'
+  #   groupRegistrationEnabled: false
+  #   defaultLocale: "fr"
 
 qwcAuthService:
   image:

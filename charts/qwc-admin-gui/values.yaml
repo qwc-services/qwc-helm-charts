@@ -49,6 +49,13 @@ jwtSecret:
   # === jwt key name within secret
   # key:
 
+# ====== ENV variables for qwc-admin-gui
+env:
+  jwtCookieCSRFProtect: false
+  userInfoFields:
+  groupRegistrationEnabled: true
+  defaultLocale: "en"
+
 # Overrides claim names.
 # If values are setted below, not claim will be created and the deployment will use the overriden claim names.
 claimOverrides:

@@ -48,37 +48,31 @@ spec:
           env:
             - name: PGSERVICEFILE
               value: /qwc_cfg/pg_service.conf
-            - name: INPUT_CONFIG_PATH # TODO BBL
+            - name: INPUT_CONFIG_PATH
               value: "/qwc_cfg/config-in"
             - name: CONFIG_PATH
               value: "/qwc_cfg/config-out"
+            - name: SERVICE_MOUNTPOINT
+              value: '/admin'
+            - name: AUTH_PATH
+              value: "/auth"
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.jwtSecret.name }}
-                  key: {{ .Values.jwtSecret.key }}
-            - name: JWT_COOKIE_CSRF_PROTECT
-              value: "False"
+                  name: {{ .Values.global.env.jwtSecret.name }}
+                  key: {{ .Values.global.env.jwtSecret.key }}
             - name: SERVICE_UID
-              value: "1000"
+              value: {{ .Values.global.env.serviceUID | quote }}
             - name: SERVICE_GID
-              value: "1000"
+              value: {{ .Values.global.env.serviceGID | quote }}
+            - name: JWT_COOKIE_CSRF_PROTECT
+              value: {{ .Values.env.jwtCookieCSRFProtect | quote }}
             - name: USER_INFO_FIELDS
-              value: '[{"title": "Surname", "name": "surname", "type": "text", "required": true}, {"title": "First name", "name": "first_name", "type": "text", "required": true}, {"title": "Street", "name": "street", "type": "text"}, {"title": "ZIP", "name": "zip", "type": "text"}, {"title": "City", "name": "city", "type": "text"}]'
+              value: {{ .Values.env.userInfoFields | quote }}
             - name: GROUP_REGISTRATION_ENABLED
-              value: 'True'
+              value: {{ .Values.env.groupRegistrationEnabled | quote }}
             - name: DEFAULT_LOCALE
-              value: 'en'
-            - name: MAIL_SUPPRESS_SEND
-              value: 'True'
-            - name: MAIL_DEFAULT_SENDER
-              value: 'from@example.com'
-            - name: SERVICE_MOUNTPOINT
-              value: '/admin'
-            # - name: SKIP_LOGIN
-            #   value: 'True'
-            - name: AUTH_PATH
-              value: "/auth"
+              value: {{ .Values.env.defaultLocale | quote }}
 
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
