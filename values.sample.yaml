@@ -67,9 +67,6 @@ qwcQgisServer:
   pgServiceConfSecret:
     name: my-qwc-instance-global-secret
     key: pg_service_ro.conf
-  jwtSecret:
-    name: my-qwc-instance-global-secret
-    key: jwtSecretKey
 
   # -----------
   # claim can be overridden:
@@ -84,9 +81,6 @@ qwcDb:
   pgServiceConfSecret:
     name: my-qwc-instance-global-secret
     key: pg_service_ro.conf
-  jwtSecret:
-    name: my-qwc-instance-global-secret
-    key: jwtSecretKey
 
 qwcConfigService:
   image:
