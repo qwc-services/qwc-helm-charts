@@ -116,9 +116,6 @@ qwcDataService:
   pgServiceConfSecret:
     name: my-qwc-instance-global-secret
     key: pg_service_rw.conf
-  jwtSecret:
-    name: my-qwc-instance-global-secret
-    key: jwtSecretKey
 
 qwcMapViewer:
   image:
