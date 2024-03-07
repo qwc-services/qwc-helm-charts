@@ -44,6 +44,54 @@ pgServiceConfSecret:
   # === file key within secret
   # key:
 
+# ====== ENV variables for QGIS Server
+env:
+  urlPrefix: "/ows"
+  apacheLogLevel: "info"
+  fcgiIoTimeout: 120
+  fcgiMinProcesses: 3
+  fcgiMaxProcesses: 100
+  fcgiProcessLifeTime: 3600
+  fcgiIdleTimeout: 300
+  fcgiMaxRequestlen: 26214400
+  fcgiConnectTimeout: 60
+  maxCacheLayers: 500
+  qgisProjectSuffix: "qgs"
+  dbProjectService: "qgisprojects"
+  qgisDebug: 1
+  qgisServerAllowedExtraSqlTokens: ""
+  qgisServerApiWfs3MaxLimit: 10000
+  qgisServerCacheSize: 268435456
+  qgisServerDisableGetprint: false
+  qgisServerForceReadonlyLayers: false
+  qgisServerIgnoreBadLayers: false
+  qgisServerLandingPagePrefix: ""
+  qgisServerLandingPageProjectsDirectories: ""
+  qgisServerLandingPageProjectsPgConnections: ""
+  qgisServerLogLevel: 1
+  qgisServerLogProfile: false
+  qgisServerMaxThreads: -1
+  qgisServerOverrideSystemLocale: ""
+  qgisServerParallelRendering: false
+  qgisServerProjectCacheCheckInterval: 0
+  qgisServerProjectCacheStrategy: "filesystem"
+  qgisServerServiceUrl: ""
+  qgisServerShowGroupSeparator: false
+  qgisServerTrustLayerMetadata: 1
+  qgisServerWcsServiceUrl: ""
+  qgisServerWfsServiceUrl: ""
+  qgisServerWmsMaxHeight: -1
+  qgisServerWmsMaxWidth: -1
+  qgisServerWmsServiceUrl: ""
+  qgisServerWmtsServiceUrl: ""
+  qgisCustomConfigPath: "/var/lib/qgis"
+  qgisAuthDbDirPath: "/var/lib/qgis"
+  qgisOptionsPath: "/etc"
+  qgisPluginpath: "/usr/share/qgis/python/plugins"
+  qgisServerApiResourcesDirectory: "/usr/share/qgis/resources/server/api"
+  qgisServerCacheDirectory: "/.cache"
+  pgservicefile: "/etc/postgresql-common/pg_service.conf"
+
 # Overrides claim names.
 # If values are setted below, not claim will be created and the deployment will use the overriden claim names.
 claimOverrides:
