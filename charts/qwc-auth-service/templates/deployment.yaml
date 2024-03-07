@@ -52,25 +52,21 @@ spec:
               value: "/qwc_cfg/config"
             - name: SERVICE_MOUNTPOINT
               value: '/auth'
-            - name: JWT_COOKIE_SAMESITE
-              value: 'Strict'
-            - name: MAIL_SUPPRESS_SEND
-              value: 'True'
-            - name: MAIL_DEFAULT_SENDER
-              value: 'from@example.com'
-
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.jwtSecret.name }}
-                  key: {{ .Values.jwtSecret.key }}
-            - name: JWT_COOKIE_CSRF_PROTECT
-              value: "True"
+                  name: {{ .Values.global.env.jwtSecret.name }}
+                  key: {{ .Values.global.env.jwtSecret.key }}
             - name: SERVICE_UID
-              value: "1000"
+              value: {{ .Values.global.env.serviceUID | quote }}
             - name: SERVICE_GID
-              value: "1000"
-
+              value: {{ .Values.global.env.serviceGID | quote }}
+            - name: JWT_COOKIE_CSRF_PROTECT
+              value: {{ .Values.global.env.jwtCookieCSRFProtect | quote }}
+            - name: JWT_COOKIE_SECURE
+              value: {{ .Values.env.jwtCookieSecure | quote }}
+            - name: JWT_COOKIE_SAMESITE
+              value: {{ .Values.env.jwtCookieSamesite | quote }}
 
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
