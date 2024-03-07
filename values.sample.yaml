@@ -124,9 +124,10 @@ qwcMapViewer:
   pgServiceConfSecret:
     name: my-qwc-instance-global-secret
     key: pg_service_ro.conf
-  jwtSecret:
-    name: my-qwc-instance-global-secret
-    key: jwtSecretKey
+
+  ## ENV vars
+  # env:
+  #   authRequired: false
 
 qwcAdminGUI:
   image:
