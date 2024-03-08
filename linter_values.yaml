@@ -4,4 +4,4 @@ global:
     mainPassword: blah
     mainUser: blah
 
-  jwtSecretKey: blah
+  jsonWebToken: blah

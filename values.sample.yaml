@@ -19,7 +19,7 @@ global:
 
     jwtSecret:
       name: my-qwc-instance-global-secret
-      key: jwtSecretKey
+      key: jsonWebToken
 
     jwtCookieCSRFProtect: true
 

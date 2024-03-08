@@ -10,4 +10,4 @@ pgServiceConfSecret:
 env:
   jwtSecret:
     name: secret-name
-    key: jwtSecretKey
+    key: jsonWebToken
