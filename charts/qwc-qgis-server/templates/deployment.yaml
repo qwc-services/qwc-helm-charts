@@ -176,7 +176,7 @@ spec:
                 path: pg_service.conf
         - name: vol-project-resources-ro
           persistentVolumeClaim:
-            claimName: {{ include "qwcQgisServer.fullname" . }}-claim
+            claimName: {{ include "qwcQgisServer.projectResourceVolumeClaim" . }}
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
