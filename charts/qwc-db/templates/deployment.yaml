@@ -76,7 +76,7 @@ spec:
       volumes:
         - name: vol-db-data-rw
           persistentVolumeClaim:
-            claimName: {{ include "qwcDb.fullname" . }}-claim
+            claimName: {{ include "qwcDb.pgDataVolumeClaim" . }}
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

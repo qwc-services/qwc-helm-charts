@@ -14,5 +14,5 @@ spec:
       storage: 30Gi
   selector:
     matchLabels:
-      {{- include "qwcDb.pgDataVolumeLabels" .Subcharts.qwcDb | nindent 4 }}
+      {{- include "qwcDb.pgDataVolumeLabels" . | nindent 6 }}
 {{ end }}
