@@ -62,8 +62,8 @@ spec:
               value: {{ .Values.env.fcgiProcessLifeTime | default 3600 | quote }}
             - name: FCGI_IDLE_TIMEOUT
               value: {{ .Values.env.fcgiIdleTimeout | default 300 | quote }}
-            - name: FCGI_MAX_REQUESTLEN
-              value: {{ .Values.env.fcgiMaxRequestlen | default 26214400 | quote }}
+            # - name: FCGI_MAX_REQUESTLEN
+            #   value: {{ .Values.env.fcgiMaxRequestlen | default 26214400 | quote }}
             - name: FCGI_CONNECT_TIMEOUT
               value: {{ .Values.env.fcgiConnectTimeout | default 60 | quote }}
             - name: MAX_CACHE_LAYERS

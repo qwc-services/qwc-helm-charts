@@ -53,7 +53,7 @@ env:
   fcgiMaxProcesses: 100
   fcgiProcessLifeTime: 3600
   fcgiIdleTimeout: 300
-  fcgiMaxRequestlen: 26214400
+  fcgiMaxRequestlen: 26214400 # currently this parameter is not available as it is not read properly by qgis server
   fcgiConnectTimeout: 60
   maxCacheLayers: 500
   qgisProjectSuffix: "qgs"
