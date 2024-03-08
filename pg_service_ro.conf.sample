@@ -1,0 +1,29 @@
+## Vars between {{ }} will replaced by `global_secrets.yaml` object
+
+# MANDATORY: for qwc config service
+[qwc_configdb]
+host={{ qwc_db_host }}
+port={{ qwc_db_port }}
+dbname=qwc_services
+user=qwc_admin
+password={{ qwc_admin_pwd }}
+sslmode=disable
+
+# USER DEFINED: for qgis demo project
+[qwc_geodb]
+host={{ qwc_db_host }}
+port={{ qwc_db_port }}
+dbname=qwc_services
+user=qwc_service
+password={{ qwc_service_pwd }}
+sslmode=disable
+
+
+# USER DEFINED: for qwc data service
+[qwc_data]
+host={{ qwc_db_host }}
+port={{ qwc_db_port }}
+dbname=formation
+user=qwc_service
+password={{ qwc_service_pwd }}
+sslmode=disable

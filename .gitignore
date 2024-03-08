@@ -1,3 +1,6 @@
 *~
 values.yaml
 volumes/config-in
+pg_service_ro.conf
+pg_service_rw.conf
+secret-values.yaml

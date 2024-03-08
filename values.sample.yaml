@@ -13,6 +13,7 @@ global:
     hostname: my-qwc-instance-qwcdb
     port: 5432
 
+  # global env var are set here:
   env:
     serviceUID: 1000
     serviceGID: 1000
@@ -22,6 +23,19 @@ global:
       key: jsonWebToken
 
     jwtCookieCSRFProtect: true
+
+  # global secrets can be set here
+  # or in a separated file (secret-values.yaml and used with `-f` option)
+  # or set with `--set` option (`--set global.postgresqlSecrets.qwcAdminPassword=blah`)
+  postgresqlSecrets:
+    mainPassword: postgres
+    mainUser: postgres
+
+    qwcAdminPassword: qwc_admin
+    qwcServiceReadPassword: qwc_service
+    qwcServiceWritePassword: qwc_service_write
+
+  jsonWebToken: the_secret_key
 
 # ====================================
 # ================ VOLUMES

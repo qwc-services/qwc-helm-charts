@@ -23,3 +23,7 @@
 .vscode/
 
 volumes/
+
+pg_service_ro.conf.sample
+pg_service_rw.conf.sample
+secret-values.sample.yaml
