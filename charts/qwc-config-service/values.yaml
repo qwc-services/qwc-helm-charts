@@ -46,12 +46,14 @@ pgServiceConfSecret:
   # === file key within secret
   # key:
 
-# ====== Access to JWT secret
-jwtSecret:
-  # === secret name
-  # name:
-  # === jwt key name within secret
-  # key:
+# ====== ENV variables for qwc-config-service
+env:
+  # ====== Access to JWT secret
+  jwtSecret:
+    # === secret name
+    # name:
+    # === jwt key name within secret
+    # key:
 
 # Overrides claim names.
 # If values are setted below, not claim will be created and the deployment will use the overriden claim names.

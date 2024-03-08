@@ -42,15 +42,14 @@ pgServiceConfSecret:
   # === file key within secret
   # key:
 
-# ====== Access to JWT secret
-jwtSecret:
-  # === secret name
-  # name:
-  # === jwt key name within secret
-  # key:
-
 # ====== ENV variables for qwc-admin-gui
 env:
+  # ====== Access to JWT secret
+  jwtSecret:
+    # === secret name
+    # name:
+    # === jwt key name within secret
+    # key:
   jwtCookieCSRFProtect: false
   userInfoFields:
   groupRegistrationEnabled: true

@@ -7,6 +7,7 @@ global:
 pgServiceConfSecret:
   name: secret-name
   key: pg_service.conf
-jwtSecret:
-  name: secret-name
-  key: jwtSecretKey
+env:
+  jwtSecret:
+    name: secret-name
+    key: jwtSecretKey
