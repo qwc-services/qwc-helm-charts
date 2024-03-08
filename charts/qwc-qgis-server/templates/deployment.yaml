@@ -47,11 +47,11 @@ spec:
 
           env:
             - name: PORT
-              value: "1080"
+              value: "1080" # 1080 to avoid root permission under 1024
             - name: URL_PREFIX
-              value: {{ .Values.env.urlPrefix | default "/ows" | quote }}
+              value: {{ .Values.env.urlPrefix | default "/ows" }}
             - name: APACHE_LOG_LEVEL
-              value: {{ .Values.env.apacheLogLevel | default "info" | quote }}
+              value: {{ .Values.env.apacheLogLevel | default "info" }}
             - name: FCGI_IO_TIMEOUT
               value: {{ .Values.env.fcgiIoTimeout | default 120 | quote }}
             - name: FCGI_MIN_PROCESSES
@@ -69,13 +69,13 @@ spec:
             - name: MAX_CACHE_LAYERS
               value: {{ .Values.env.maxCacheLayers | default 500 | quote }}
             - name: QGIS_PROJECT_SUFFIX
-              value: {{ .Values.env.qgisProjectSuffix | default "qgs" | quote }}
+              value: {{ .Values.env.qgisProjectSuffix | default "qgs" }}
             - name: DB_PROJECT_SERVICE
-              value: {{ .Values.env.dbProjectService | default "qgisprojects" | quote }}
+              value: {{ .Values.env.dbProjectService | default "qgisprojects" }}
             - name: QGIS_DEBUG
               value: {{ .Values.env.qgisDebug | default 1 | quote }}
             - name: QGIS_SERVER_ALLOWED_EXTRA_SQL_TOKENS
-              value: {{ .Values.env.qgisServerAllowedExtraSqlTokens | default "" | quote }}
+              value: {{ .Values.env.qgisServerAllowedExtraSqlTokens | default "" }}
             - name: QGIS_SERVER_API_WFS3_MAX_LIMIT
               value: {{ .Values.env.qgisServerApiWfs3MaxLimit | default 10000 | quote }}
             - name: QGIS_SERVER_CACHE_SIZE
@@ -87,11 +87,11 @@ spec:
             - name: QGIS_SERVER_IGNORE_BAD_LAYERS
               value: {{ .Values.env.qgisServerIgnoreBadLayers | default false | quote }}
             - name: QGIS_SERVER_LANDING_PAGE_PREFIX
-              value: {{ .Values.env.qgisServerLandingPagePrefix | default "" | quote }}
+              value: {{ .Values.env.qgisServerLandingPagePrefix | default "" }}
             - name: QGIS_SERVER_LANDING_PAGE_PROJECTS_DIRECTORIES
-              value: {{ .Values.env.qgisServerLandingPageProjectsDirectories | default "" | quote }}
+              value: {{ .Values.env.qgisServerLandingPageProjectsDirectories | default "" }}
             - name: QGIS_SERVER_LANDING_PAGE_PROJECTS_PG_CONNECTIONS
-              value: {{ .Values.env.qgisServerLandingPageProjectsPgConnections | default "" | quote }}
+              value: {{ .Values.env.qgisServerLandingPageProjectsPgConnections | default "" }}
             - name: QGIS_SERVER_LOG_LEVEL
               value: {{ .Values.env.qgisServerLogLevel | default 1 | quote }}
             - name: QGIS_SERVER_LOG_PROFILE
@@ -99,45 +99,45 @@ spec:
             - name: QGIS_SERVER_MAX_THREADS
               value: {{ .Values.env.qgisServerMaxThreads | default -1 | quote }}
             - name: QGIS_SERVER_OVERRIDE_SYSTEM_LOCALE
-              value: {{ .Values.env.qgisServerOverrideSystemLocale | default "" | quote }}
+              value: {{ .Values.env.qgisServerOverrideSystemLocale | default "" }}
             - name: QGIS_SERVER_PARALLEL_RENDERING
               value: {{ .Values.env.qgisServerParallelRendering | default false | quote }}
             - name: QGIS_SERVER_PROJECT_CACHE_CHECK_INTERVAL
               value: {{ .Values.env.qgisServerProjectCacheCheckInterval | default 0 | quote }}
             - name: QGIS_SERVER_PROJECT_CACHE_STRATEGY
-              value: {{ .Values.env.qgisServerProjectCacheStrategy | default "filesystem" | quote }}
+              value: {{ .Values.env.qgisServerProjectCacheStrategy | default "filesystem" }}
             - name: QGIS_SERVER_SERVICE_URL
-              value: {{ .Values.env.qgisServerServiceUrl | default "" | quote }}
+              value: {{ .Values.env.qgisServerServiceUrl | default "" }}
             - name: QGIS_SERVER_SHOW_GROUP_SEPARATOR
               value: {{ .Values.env.qgisServerShowGroupSeparator | default false | quote }}
             - name: QGIS_SERVER_TRUST_LAYER_METADATA
               value: {{ .Values.env.qgisServerTrustLayerMetadata | default 1 | quote }}
             - name: QGIS_SERVER_WCS_SERVICE_URL
-              value: {{ .Values.env.qgisServerWcsServiceUrl | default "" | quote }}
+              value: {{ .Values.env.qgisServerWcsServiceUrl | default "" }}
             - name: QGIS_SERVER_WFS_SERVICE_URL
-              value: {{ .Values.env.qgisServerWfsServiceUrl | default "" | quote }}
+              value: {{ .Values.env.qgisServerWfsServiceUrl | default "" }}
             - name: QGIS_SERVER_WMS_MAX_HEIGHT
               value: {{ .Values.env.qgisServerWmsMaxHeight | default -1 | quote }}
             - name: QGIS_SERVER_WMS_MAX_WIDTH
               value: {{ .Values.env.qgisServerWmsMaxWidth | default -1 | quote }}
             - name: QGIS_SERVER_WMS_SERVICE_URL
-              value: {{ .Values.env.qgisServerWmsServiceUrl | default "" | quote }}
+              value: {{ .Values.env.qgisServerWmsServiceUrl | default "" }}
             - name: QGIS_SERVER_WMTS_SERVICE_URL
-              value: {{ .Values.env.qgisServerWmtsServiceUrl | default "" | quote }}
+              value: {{ .Values.env.qgisServerWmtsServiceUrl | default "" }}
             - name: QGIS_CUSTOM_CONFIG_PATH
-              value: {{ .Values.env.qgisCustomConfigPath | default "/var/lib/qgis" | quote }}
+              value: {{ .Values.env.qgisCustomConfigPath | default "/var/lib/qgis" }}
             - name: QGIS_AUTH_DB_DIR_PATH
-              value: {{ .Values.env.qgisAuthDbDirPath | default "/var/lib/qgis" | quote }}
+              value: {{ .Values.env.qgisAuthDbDirPath | default "/var/lib/qgis" }}
             - name: QGIS_OPTIONS_PATH
-              value: {{ .Values.env.qgisOptionsPath | default "/etc" | quote }}
+              value: {{ .Values.env.qgisOptionsPath | default "/etc" }}
             - name: QGIS_PLUGINPATH
-              value: {{ .Values.env.qgisPluginpath | default "/usr/share/qgis/python/plugins" | quote }}
+              value: {{ .Values.env.qgisPluginpath | default "/usr/share/qgis/python/plugins" }}
             - name: QGIS_SERVER_API_RESOURCES_DIRECTORY
-              value: {{ .Values.env.qgisServerApiResourcesDirectory | default "/usr/share/qgis/resources/server/api" | quote }}
+              value: {{ .Values.env.qgisServerApiResourcesDirectory | default "/usr/share/qgis/resources/server/api" }}
             - name: QGIS_SERVER_CACHE_DIRECTORY
-              value: {{ .Values.env.qgisServerCacheDirectory | default "/.cache" | quote }}
+              value: {{ .Values.env.qgisServerCacheDirectory | default "/.cache" }}
             - name: PGSERVICEFILE
-              value: {{ .Values.env.pgservicefile | default "/etc/postgresql-common/pg_service.conf" | quote }}
+              value: {{ .Values.env.pgservicefile | default "/etc/postgresql-common/pg_service.conf" }}
 
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
