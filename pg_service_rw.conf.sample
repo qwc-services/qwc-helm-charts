@@ -8,12 +8,3 @@ dbname=qwc_services
 user=qwc_service_write
 password={{ qwc_service_write_pwd }}
 sslmode=disable
-
-# USER DEFINED: for qwc data and ogc services
-[qwc_data]
-host={{ qwc_db_host }}
-port={{ qwc_db_port }}
-dbname=formation
-user=qwc_service
-password={{ qwc_service_pwd }}
-sslmode=disable

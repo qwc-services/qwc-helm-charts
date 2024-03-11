@@ -17,13 +17,3 @@ dbname=qwc_services
 user=qwc_service
 password={{ qwc_service_pwd }}
 sslmode=disable
-
-
-# USER DEFINED: for qwc data service
-[qwc_data]
-host={{ qwc_db_host }}
-port={{ qwc_db_port }}
-dbname=formation
-user=qwc_service
-password={{ qwc_service_pwd }}
-sslmode=disable
