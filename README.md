@@ -90,10 +90,10 @@ See also <https://artifacthub.io/packages/helm/nginx-gateway-fabric/nginx-gatewa
         projectResourceVolumeClaim: claim-01
     ```
 
-* postgresql services are configured according to 2 files: `pg_service_rw.conf` (read write) and `pg_service_ro.conf` (read only). Samples are provided.
-  One mandatory service is `qwc_configdb` in the `pg_service_ro.conf`. In this two files, the variables in `{{ }}` will be replaced by `global_secrets.yaml` with values found in the `global` parameter section (see `secret-values.sample.yaml`).
+* postgresql services are configured according to 2 mandatory files: `pg_service_rw.conf` (read write) and `pg_service_ro.conf` (read only). Samples are provided.
+  One mandatory service is `qwc_configdb` in the `pg_service_ro.conf`. In these two files, the variables in `{{ }}` will be replaced by `global_secrets.yaml` with values found in the `global` parameter section (see `secret-values.sample.yaml`).
 
-  To match the final user needs, one may creates its own files and concat them with mlxckv lkx mlkxc lklmlkxc  to produce the 2 needed files: `pg_service_rw.conf` and `pg_service_ro.conf`
+  To match the final user needs, one may create its own files and concat them with existing samples to produce the 2 needed files: `pg_service_rw.conf` and `pg_service_ro.conf`.
 
 * copy `config-in.sample` volume: `cp -a volumes/config-in.sample volumes/config-in`
 
