@@ -4,10 +4,13 @@ global:
     hostname: qwc-test-qwcdb
     port: 5432
 
+  env:
+    serviceUID: 1000
+    serviceGID: 1000
+    jwtSecret:
+      name: secret-name
+      key: jsonWebToken
+
 pgServiceConfSecret:
   name: secret-name
   key: pg_service.conf
-env:
-  jwtSecret:
-    name: secret-name
-    key: jsonWebToken
