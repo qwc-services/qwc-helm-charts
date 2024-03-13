@@ -63,7 +63,7 @@ spec:
             - name: INPUT_CONFIG_PATH
               value: "/qwc_cfg/config-in"
             - name: OUTPUT_CONFIG_PATH
-              value: "/qwc_cfg/config-out"
+              value: "/qwc_cfg/config-generated"
             - name: GENERATE_DYNAMIC_KVRELS
               value: "1"
             - name: JWT_SECRET_KEY
@@ -93,10 +93,10 @@ spec:
               mountPath: /data/
               readOnly: true
             - name: vol-config-in-rw
-              mountPath: /qwc_cfg/config-in/
+              mountPath: /qwc_cfg/config-in.template/
               readOnly: false
-            - name: vol-config-out-rw
-              mountPath: /qwc_cfg/config-out/
+            - name: vol-config-generated-rw
+              mountPath: /qwc_cfg/config-generated/
               readOnly: false
             - name: vol-qwc-app-ro
               mountPath: /qwc2/
@@ -105,7 +105,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
 
-          command: ["/qwc_cfg/config-in/entrypoint.sh"]
+          command: ["/qwc_cfg/config-in.template/entrypoint.sh"]
 
 
       initContainers:
@@ -130,7 +130,7 @@ spec:
         - name: vol-config-in-rw
           persistentVolumeClaim:
             claimName: {{ include "qwcConfigService.configInputVolumeClaim" . }}
-        - name: vol-config-out-rw
+        - name: vol-config-generated-rw
           persistentVolumeClaim:
             claimName: {{ include "qwcConfigService.configVolumeClaim" . }}
         - name: vol-qwc-app-ro

@@ -51,7 +51,7 @@ spec:
             - name: INPUT_CONFIG_PATH
               value: "/qwc_cfg/config-in"
             - name: CONFIG_PATH
-              value: "/qwc_cfg/config-out"
+              value: "/qwc_cfg/config-generated"
             - name: SERVICE_MOUNTPOINT
               value: '/admin'
             - name: AUTH_PATH
@@ -88,8 +88,8 @@ spec:
             - name: vol-config-in-rw
               mountPath: /qwc_cfg/config-in/
               readOnly: false
-            - name: vol-config-out-rw
-              mountPath: /qwc_cfg/config-out/
+            - name: vol-config-generated-rw
+              mountPath: /qwc_cfg/config-generated/
               readOnly: false
             - name: vol-project-resources-rw
               mountPath: /qgs-resources/
@@ -126,7 +126,7 @@ spec:
         - name: vol-config-in-rw
           persistentVolumeClaim:
             claimName: {{ include "qwcAdminGUI.configInputVolumeClaim" . }}
-        - name: vol-config-out-rw
+        - name: vol-config-generated-rw
           persistentVolumeClaim:
             claimName: {{ include "qwcAdminGUI.configVolumeClaim" . }}
         - name: vol-project-resources-rw
