@@ -25,10 +25,17 @@ function parse_mustache() {
     done
 }
 
+# copy template config in to destination directory
+cp -a ${INPUT_CONFIG_PATH}.template ${INPUT_CONFIG_PATH}
+# remove useless entrypoint.sh file
+rm ${INPUT_CONFIG_PATH}/entrypoint.sh
+
+# for each sample file, replace {{ ENV_VAR }} by env var value
 for f in $(find "${INPUT_CONFIG_PATH}" -type f -iname '*.sample.*')
 do
     fn=$(echo $f | sed 's/\.sample//g' )
     parse_mustache $f > $fn
+    rm $f
 done
 
 # With unique tenant, uncomment next line
@@ -36,9 +43,9 @@ python3 /srv/qwc_service/config_generator_cli.py "${INPUT_CONFIG_PATH}/default/t
  || failed "Unable to launch config_generator_cli"
 
 
-# Set the correct permissions to config-out
+# Set the correct permissions to config-generated
 chown -R "$SERVICE_UID":"$SERVICE_GID" "${OUTPUT_CONFIG_PATH}" \
- || failed "Unable to launch chown"
+ || failed "Unable to apply chown"
 
 # default qwc-config-generator entrypoint
 HOME=/tmp uwsgi --http-socket :9090 --buffer-size $REQ_HEADER_BUFFER_SIZE --processes $UWSGI_PROCESSES \
