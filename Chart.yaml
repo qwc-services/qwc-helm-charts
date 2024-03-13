@@ -75,3 +75,4 @@ dependencies:
     version: "*"
     repository: "file://charts/qwc-api-gateway"
     alias: qwcApiGateway
+    condition: qwcApiGateway.enable

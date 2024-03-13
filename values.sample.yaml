@@ -175,4 +175,5 @@ qwcPermalinkService:
     key: pg_service_ro.conf
 
 qwcApiGateway:
+  enable: true
   hostname: qwc.local
