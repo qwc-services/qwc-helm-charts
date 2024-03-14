@@ -93,8 +93,11 @@ spec:
               mountPath: /data/
               readOnly: true
             - name: vol-config-in-rw
-              mountPath: /qwc_cfg/config-in.template/
+              mountPath: /qwc_cfg/config-in/
               readOnly: false
+            - name: vol-config-in-template-ro
+              mountPath: /qwc_cfg/config-in-template/
+              readOnly: true
             - name: vol-config-generated-rw
               mountPath: /qwc_cfg/config-generated/
               readOnly: false
@@ -105,7 +108,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
 
-          command: ["/qwc_cfg/config-in.template/entrypoint.sh"]
+          command: ["/qwc_cfg/config-in-template/entrypoint.sh"]
 
 
       initContainers:
@@ -128,6 +131,8 @@ spec:
           persistentVolumeClaim:
             claimName: {{ include "qwcConfigService.projectResourceVolumeClaim" . }}
         - name: vol-config-in-rw
+          emptyDir: {}
+        - name: vol-config-in-template-ro
           persistentVolumeClaim:
             claimName: {{ include "qwcConfigService.configInputVolumeClaim" . }}
         - name: vol-config-generated-rw

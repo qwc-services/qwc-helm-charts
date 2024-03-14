@@ -80,7 +80,7 @@ volume-name: config-input
 {{- end }}
 
 {{/*
-Claim name for project resource volume
+Claim name for config input volume
 */}}
 {{- define "qwcConfigService.configInputVolumeClaim" -}}
 {{- if .Values.claimOverrides.configInputVolumeClaim }}

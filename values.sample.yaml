@@ -57,7 +57,7 @@ volumePaths:
     path: /data/qgs-resources/
 
   - name: vol-config-in-ro
-    path: /data/config-in.template/
+    path: /data/config-in-template/
 
   - name: vol-config-generated
     path: /data/config-generated/

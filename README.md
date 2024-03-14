@@ -95,8 +95,6 @@ See also <https://artifacthub.io/packages/helm/nginx-gateway-fabric/nginx-gatewa
 
   To match the final user needs, one may create its own files and concat them with existing samples to produce the 2 needed files: `pg_service_rw.conf` and `pg_service_ro.conf`.
 
-* copy `config-in.sample` volume: `cp -a volumes/config-in.sample volumes/config-in`
-
 ### Deploy
 
 ```bash
