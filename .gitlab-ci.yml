@@ -1,0 +1,63 @@
+variables:
+  LOCAL_GIT_URL: "https://gitlab-ci-token:${LOCAL_GIT_TOKEN}@forge.grandlyon.com/systemes-dinformation/geonet/qwc-helm.git"
+  REMOTE_GIT_URL: "https://${REM_GIT_USER}:${REM_GIT_TOKEN}@git.oslandia.net/Oslandia/technique/qgis-web-client/qwc-helm.git"
+  TMP_DIR: "qwc-helm"
+  GITLAB_ENV: $CI_COMMIT_REF_NAME
+  HELM_CHART: "./"
+
+stages:
+  - base
+  - build
+
+##### JOBS #####
+base:mirror_from_github:
+  stage: base
+  image: debian:sid-slim
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  before_script:
+    - apt update -qq && apt install -y -qq git
+    - git config --global user.name "${GITLAB_USER_NAME}"
+    - git config --global user.email "${GITLAB_USER_EMAIL}"
+    # create dedicated directory to clone as we may have gitlab cache (via docker volumes)
+    - rm -rf /tmp/$TMP_DIR
+    - mkdir -p /tmp/
+    - cd /tmp/
+    - git clone "$LOCAL_GIT_URL"
+    - cd $TMP_DIR
+  script:
+    # MASTER
+    - git branch
+    - git remote -v
+    - git remote add upstream "$REMOTE_GIT_URL"
+    - git fetch upstream
+    - git fetch origin
+    - git checkout main
+    - git rebase upstream/main
+    - git push -f "$LOCAL_GIT_URL" HEAD:main
+    - git push -f --tags "$LOCAL_GIT_URL" HEAD:main
+
+# remove dedicated directory
+after_script:
+  - rm -rf /tmp/$TMP_DIR
+
+build:build_helm:
+  stage: build
+  image: debian:sid-slim
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  before_script:
+    - apt update && apt install -y gpg curl apt-transport-https
+    - curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null
+    - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list
+    - apt update && apt install -y helm
+  script:
+    - helm package -u $HELM_CHART
+    - |
+      export VERSION=$(egrep 'version: [0-9]' Chart.yaml | cut -d ' ' -f 2)
+    - curl --request POST --form "chart=@qwc-$VERSION.tgz" --user gitlab-ci-token:$CI_JOB_TOKEN ${CI_API_V4_URL}/projects/1275/packages/helm/api/stable/charts
+
+  environment:
+    name: $GITLAB_ENV
+  tags:
+    - build-push-to-registry

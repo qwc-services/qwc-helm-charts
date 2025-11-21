@@ -1,0 +1,5 @@
+*~
+.venv
+*.bak
+.DS_Store
+values.yaml

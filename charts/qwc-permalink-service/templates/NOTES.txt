@@ -1,0 +1,5 @@
+{{ include "qwcPermalinkService.fullname" . }} deployed successfully!
+
+Access your service:
+  kubectl port-forward svc/{{ include "qwcPermalinkService.fullname" . }} -n {{ .Release.Namespace }} 8080:{{ .Values.service.port }}
+  Then open http://localhost:8080

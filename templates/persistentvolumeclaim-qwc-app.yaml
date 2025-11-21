@@ -1,0 +1,21 @@
+{{ if (not .Values.global.persistence.qwcApp.claimOverride) }}
+{{- $storClassName := .Values.global.persistence.qwcApp.storageClassName -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "qwc.qwcAppVolumeClaim" . }}
+  labels:
+    {{- include "qwc.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: {{ $storClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.global.persistence.qwcApp.size | default "10Gi" }}
+  {{- if eq $storClassName "local-storage" }}
+  selector:
+    matchLabels:
+      {{- include "qwc.qwcAppVolumeLabels" . | nindent 6 }}
+  {{- end }}
+{{ end }}

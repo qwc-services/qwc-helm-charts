@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "qwcDb.fullname" . }}-db-migrate
+  labels:
+    {{- include "qwcDb.labels" . | nindent 4 }}
+spec:
+  template:
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: OnFailure
+      containers:
+        - name: {{ .Chart.Name | lower }}-db-migrate
+          image: "{{ .Values.migrateImage.repository }}:{{ .Values.migrateImage.tag }}"
+          imagePullPolicy: {{ .Values.migrateImage.pullPolicy }}
+
+          env:
+            - name: PGSERVICEFILE
+              value: /qwc_cfg/pg_service.conf
+
+          volumeMounts:
+            - name: vol-pg-service-conf-ro
+              mountPath: /qwc_cfg/
+              readOnly: true
+
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.28
+          command:
+            - 'sh'
+            - '-c'
+            - "until nc -z {{ include "qwcDb.fullname" . }} 5432 >/dev/null 2>&1; do echo waiting for qwcDb; sleep 2; done"
+
+      volumes:
+        - name: vol-pg-service-conf-ro
+          secret:
+            secretName: {{ .Values.pgServiceConfSecret.name | default (printf "%s-global-secret" .Release.Name) }}
+            optional: false
+            items:
+              - key: {{ .Values.pgServiceConfSecret.key }}
+                path: pg_service.conf
+
+  backoffLimit: 4

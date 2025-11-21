@@ -1,0 +1,200 @@
+{{ $dbHostname := (default (printf "%s-qwcdb" .Release.Name) (default .Values.global.db.hostname .Values.db.hostname)) }}
+{{ $dbPort := (default .Values.global.db.port .Values.db.port) }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qwcQgisServer.fullname" . }}
+  labels:
+    {{- include "qwcQgisServer.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "qwcQgisServer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "qwcQgisServer.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: default
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
+      containers:
+        - name: {{ .Chart.Name | lower }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http-1080
+              containerPort: 1080
+              protocol: TCP
+
+          env:
+            - name: PORT
+              value: "1080" # 1080 to avoid root permission under 1024
+            - name: URL_PREFIX
+              value: {{ .Values.env.urlPrefix | default "/ows" }}
+            - name: APACHE_LOG_LEVEL
+              value: {{ .Values.env.apacheLogLevel | default "info" }}
+            - name: FCGI_IO_TIMEOUT
+              value: {{ .Values.env.fcgiIoTimeout | default 120 | quote }}
+            - name: FCGI_MIN_PROCESSES
+              value: {{ .Values.env.fcgiMinProcesses | default 3 | quote }}
+            - name: FCGI_MAX_PROCESSES
+              value: {{ .Values.env.fcgiMaxProcesses | default 100 | quote }}
+            - name: FCGI_PROCESS_LIFE_TIME
+              value: {{ .Values.env.fcgiProcessLifeTime | default 3600 | quote }}
+            - name: FCGI_IDLE_TIMEOUT
+              value: {{ .Values.env.fcgiIdleTimeout | default 300 | quote }}
+            # - name: FCGI_MAX_REQUESTLEN
+            #   value: {{ .Values.env.fcgiMaxRequestlen | default 26214400 | quote }}
+            - name: FCGI_CONNECT_TIMEOUT
+              value: {{ .Values.env.fcgiConnectTimeout | default 60 | quote }}
+            - name: MAX_CACHE_LAYERS
+              value: {{ .Values.env.maxCacheLayers | default 500 | quote }}
+            - name: QGIS_PROJECT_SUFFIX
+              value: {{ .Values.env.qgisProjectSuffix | default "qgs" }}
+            - name: DB_PROJECT_SERVICE
+              value: {{ .Values.env.dbProjectService | default "qgisprojects" }}
+            - name: QGIS_DEBUG
+              value: {{ .Values.env.qgisDebug | default 1 | quote }}
+            - name: QGIS_SERVER_ALLOWED_EXTRA_SQL_TOKENS
+              value: {{ .Values.env.qgisServerAllowedExtraSqlTokens | default "" }}
+            - name: QGIS_SERVER_API_WFS3_MAX_LIMIT
+              value: {{ .Values.env.qgisServerApiWfs3MaxLimit | default 10000 | quote }}
+            - name: QGIS_SERVER_CACHE_SIZE
+              value: {{ .Values.env.qgisServerCacheSize | default 268435456 | quote }}
+            - name: QGIS_SERVER_DISABLE_GETPRINT
+              value: {{ .Values.env.qgisServerDisableGetprint | default false | quote }}
+            - name: QGIS_SERVER_FORCE_READONLY_LAYERS
+              value: {{ .Values.env.qgisServerForceReadonlyLayers | default false | quote }}
+            - name: QGIS_SERVER_IGNORE_BAD_LAYERS
+              value: {{ .Values.env.qgisServerIgnoreBadLayers | default false | quote }}
+            - name: QGIS_SERVER_LANDING_PAGE_PREFIX
+              value: {{ .Values.env.qgisServerLandingPagePrefix | default "" }}
+            - name: QGIS_SERVER_LANDING_PAGE_PROJECTS_DIRECTORIES
+              value: {{ .Values.env.qgisServerLandingPageProjectsDirectories | default "" }}
+            - name: QGIS_SERVER_LANDING_PAGE_PROJECTS_PG_CONNECTIONS
+              value: {{ .Values.env.qgisServerLandingPageProjectsPgConnections | default "" }}
+            - name: QGIS_SERVER_LOG_LEVEL
+              value: {{ .Values.env.qgisServerLogLevel | default 1 | quote }}
+            - name: QGIS_SERVER_LOG_PROFILE
+              value: {{ .Values.env.qgisServerLogProfile | default false | quote }}
+            - name: QGIS_SERVER_MAX_THREADS
+              value: {{ .Values.env.qgisServerMaxThreads | default -1 | quote }}
+            - name: QGIS_SERVER_OVERRIDE_SYSTEM_LOCALE
+              value: {{ .Values.env.qgisServerOverrideSystemLocale | default "" }}
+            - name: QGIS_SERVER_PARALLEL_RENDERING
+              value: {{ .Values.env.qgisServerParallelRendering | default false | quote }}
+            - name: QGIS_SERVER_PROJECT_CACHE_CHECK_INTERVAL
+              value: {{ .Values.env.qgisServerProjectCacheCheckInterval | default 0 | quote }}
+            - name: QGIS_SERVER_PROJECT_CACHE_STRATEGY
+              value: {{ .Values.env.qgisServerProjectCacheStrategy | default "filesystem" }}
+            - name: QGIS_SERVER_SERVICE_URL
+              value: {{ .Values.env.qgisServerServiceUrl | default "" }}
+            - name: QGIS_SERVER_SHOW_GROUP_SEPARATOR
+              value: {{ .Values.env.qgisServerShowGroupSeparator | default false | quote }}
+            - name: QGIS_SERVER_TRUST_LAYER_METADATA
+              value: {{ .Values.env.qgisServerTrustLayerMetadata | default 1 | quote }}
+            - name: QGIS_SERVER_WCS_SERVICE_URL
+              value: {{ .Values.env.qgisServerWcsServiceUrl | default "" }}
+            - name: QGIS_SERVER_WFS_SERVICE_URL
+              value: {{ .Values.env.qgisServerWfsServiceUrl | default "" }}
+            - name: QGIS_SERVER_WMS_MAX_HEIGHT
+              value: {{ .Values.env.qgisServerWmsMaxHeight | default -1 | quote }}
+            - name: QGIS_SERVER_WMS_MAX_WIDTH
+              value: {{ .Values.env.qgisServerWmsMaxWidth | default -1 | quote }}
+            - name: QGIS_SERVER_WMS_SERVICE_URL
+              value: {{ .Values.env.qgisServerWmsServiceUrl | default "" }}
+            - name: QGIS_SERVER_WMTS_SERVICE_URL
+              value: {{ .Values.env.qgisServerWmtsServiceUrl | default "" }}
+            - name: QGIS_CUSTOM_CONFIG_PATH
+              value: {{ .Values.env.qgisCustomConfigPath | default "/var/lib/qgis" }}
+            - name: QGIS_AUTH_DB_DIR_PATH
+              value: {{ .Values.env.qgisAuthDbDirPath | default "/var/lib/qgis" }}
+            - name: QGIS_OPTIONS_PATH
+              value: {{ .Values.env.qgisOptionsPath | default "/etc" }}
+            - name: QGIS_PLUGINPATH
+              value: {{ .Values.env.qgisPluginpath | default "/usr/share/qgis/python/plugins" }}
+            - name: QGIS_SERVER_API_RESOURCES_DIRECTORY
+              value: {{ .Values.env.qgisServerApiResourcesDirectory | default "/usr/share/qgis/resources/server/api" }}
+            - name: QGIS_SERVER_CACHE_DIRECTORY
+              value: {{ .Values.env.qgisServerCacheDirectory | default "/.cache" }}
+            - name: QGIS_SERVER_PROJECT_ROOT
+              value: {{ .Values.env.qgisServerProjectRoot | default "/data" }}
+            - name: PGSERVICEFILE
+              value: {{ .Values.env.pgservicefile | default "/etc/postgresql-common/pg_service.conf" }}
+
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          volumeMounts:
+            - name: vol-pg-service-conf-ro
+              mountPath: /etc/postgresql-common/
+              readOnly: true
+            - name: vol-qgis-resources-ro
+              mountPath: /data/
+              readOnly: true
+          {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+
+      initContainers:
+      {{- with .Values.initContainers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+        - name: wait-for-db
+          image: busybox:1.28
+          command:
+            - 'sh'
+            - '-c'
+            - "until nc -z {{ $dbHostname }} {{ $dbPort }} >/dev/null 2>&1; do echo waiting for qwcDb; sleep 2; done"
+
+      volumes:
+        - name: vol-pg-service-conf-ro
+          secret:
+            secretName: {{ .Values.pgServiceConfSecret.name | default (printf "%s-global-secret" .Release.Name) }}
+            optional: false
+            items:
+              - key: {{ .Values.pgServiceConfSecret.key }}
+                path: pg_service.conf
+        - name: vol-qgis-resources-ro
+          persistentVolumeClaim:
+            claimName: {{ include "qwcQgisServer.qgisResourcesVolumeClaim" . }}
+      {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

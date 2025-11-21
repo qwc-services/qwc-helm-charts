@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2086,SC1091
+
+ROOT_DIR=$(dirname "$0")
+source $ROOT_DIR/common.sh
+
+function generate_config() {
+	[ -z "$1" ] && failed "Need first param: INPUT_CONFIG_PATH"
+	INPUT_CONFIG_PATH="$1"
+	[ -z "$2" ] && failed "Need second param: OUTPUT_CONFIG_PATH"
+	OUTPUT_CONFIG_PATH="$2"
+	logInfo "generate_config" "Generate config from ${INPUT_CONFIG_PATH} to ${OUTPUT_CONFIG_PATH}"
+
+	# With unique tenant, uncomment next line
+	# Activate virtualenv to access Python dependencies (jsonschema, etc.)
+	source /srv/qwc_service/.venv/bin/activate
+
+	python /srv/qwc_service/config_generator_cli.py "${INPUT_CONFIG_PATH}/default/tenantConfig.json" all ||
+		failed "config_generator_cli crashed!"
+
+	# Set the correct permissions to config-generated
+	chown -R "$SERVICE_UID":"$SERVICE_GID" "${OUTPUT_CONFIG_PATH}" ||
+		failed "Unable to apply chown"
+
+	logInfo "generate_config" "Done!"
+}
+
+logInfo "Entrypoint" "Starting..."
+
+for envvar in INPUT_CONFIG_PATH OUTPUT_CONFIG_PATH REQ_HEADER_BUFFER_SIZE UWSGI_PROCESSES \
+	UWSGI_THREADS UWSGI_EXTRA SERVICE_UID SERVICE_GID SERVICE_MOUNTPOINT BOOTSTRAP_WATCHDOG_FILE; do
+	[ -z "${!envvar+x}" ] && failed "'$envvar' env var must be defined."
+done
+
+logInfo "Entrypoint" "Checking ${INPUT_CONFIG_PATH}"
+ls -alR "${INPUT_CONFIG_PATH}/"
+
+if [ ! -f "${INPUT_CONFIG_PATH}/${BOOTSTRAP_WATCHDOG_FILE}" ]; then
+	logInfo "Entrypoint" "No config-in data. Will bootstrap..."
+	configmap_to_files /bootstrap/config-in "$INPUT_CONFIG_PATH" "$BOOTSTRAP_WATCHDOG_FILE"
+
+	if [ -n "$(which envsubst)" ]; then
+		logInfo "Configmap_to_files" "Parsing env vars..."
+		# for each sample file, replace {{ ENV_VAR }} by env var value
+		parse_inplace "$INPUT_CONFIG_PATH" '*'
+	fi
+
+	if [ -d /srv/qwc_service/.venv ]; then
+		generate_config "${INPUT_CONFIG_PATH}" "${OUTPUT_CONFIG_PATH}"
+	fi
+else
+	logInfo "Entrypoint" "Config-in data already present. Skipping bootstrap!"
+fi
+
+logInfo "Entrypoint" "Starting UWSGI..."
+# default qwc-config-generator entrypoint
+HOME=/tmp uwsgi \
+	--http-socket :9090 \
+	--buffer-size $REQ_HEADER_BUFFER_SIZE \
+	--processes $UWSGI_PROCESSES \
+	--threads $UWSGI_THREADS \
+	--plugins python3 $UWSGI_EXTRA \
+	--protocol uwsgi \
+	--wsgi-disable-file-wrapper \
+	--uid $SERVICE_UID \
+	--gid $SERVICE_GID \
+	--master \
+	--chdir /srv/qwc_service \
+	--virtualenv /srv/qwc_service/.venv \
+	--mount $SERVICE_MOUNTPOINT=server:app \
+	--manage-script-name ||
+	failed "Unable to launch uwsgi"

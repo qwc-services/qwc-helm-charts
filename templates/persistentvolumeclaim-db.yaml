@@ -1,0 +1,21 @@
+{{ if (not .Values.global.persistence.db.claimOverride) }}
+{{- $storClassName := .Values.global.persistence.db.storageClassName -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "qwc.pgDataVolumeClaim" . }}
+  labels:
+    {{- include "qwc.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ $storClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.global.persistence.db.size | default "30Gi" }}
+  {{- if eq $storClassName "local-storage" }}
+  selector:
+    matchLabels:
+      {{- include "qwc.pgDataVolumeLabels" . | nindent 6 }}
+  {{- end }}
+{{ end }}

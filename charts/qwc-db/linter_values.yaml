@@ -1,0 +1,17 @@
+### Default values for linter:
+global:
+  db:
+    secrets:
+      mainPassword: blah
+      mainUser: blah
+
+  persistence:
+    createVolumes: false
+
+    db:
+      storageClassName: blah
+      size: 10Gi
+
+pgServiceConfSecret:
+  name: secret-name
+  key: pg_service.conf

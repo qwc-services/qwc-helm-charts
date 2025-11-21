@@ -1,0 +1,23 @@
+{{- if and .Values.global.httpRoute.enabled .Values.global.httpRoute.gateway.create }}
+  apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ include "qwc.fullname" . }}-gateway
+  labels:
+    {{- include "qwc.labels" . | nindent 4 }}
+spec:
+  gatewayClassName: "nginx"
+  listeners:
+  - name: http
+    port: 80
+    protocol: HTTP
+    {{- with (first .Values.global.httpRoute.hostnames) }}
+    hostname: {{ . }}
+    {{- end }}
+  - name: https
+    port: 443
+    protocol: HTTPS
+    {{- with (first .Values.global.httpRoute.hostnames) }}
+    hostname: {{ . }}
+    {{- end }}
+{{- end }}

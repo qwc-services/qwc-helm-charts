@@ -1,0 +1,98 @@
+/* Search bar */
+.topbar-search-container {
+    border-radius: 16px;
+    border: 1px solid #720062;
+}
+
+.input-container {
+    border-radius: 16px;
+}
+
+div.SearchBox {
+    border-radius: 16px;
+}
+
+.input-container-input {
+    border-radius: 16px;
+}
+
+.searchbox-results {
+    border-radius: 0px 0px 16px 16px;
+}
+
+
+/* footer bar */
+.bottombar-mousepos {
+    border-radius: 16px 0px 0px 16px;
+}
+
+#BottomBar .controlgroup select {
+    border-radius: 0px 16px 16px 0px;
+}
+
+.map-bottom-tool-container div {
+    border-radius: 16px 16px 0px 0px;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+/* Popup dialogs */
+.resizeable-window {
+    border-radius: 16px;
+}
+
+.resizeable-window-body  {
+    border-radius: 0px 0px 16px 16px;
+}
+
+.resizeable-window-titlebar {
+    border-radius: 16px 16px 0px 0px;
+    padding: 0 0.5em !important;
+}
+
+
+/* messages */
+
+.messagebar {
+    border-radius: 10px;
+}
+
+.portal-search-field {
+    border-radius: 16px;
+}
+
+/* Menu */
+
+div.appmenu-menu-item:not(:last-child) {
+    border-bottom: none !important;
+}
+
+
+
+/* Thèmes */
+
+.theme-item {
+    border-radius: 16px;
+}
+.theme-item-body {
+    background: none !important;
+}
+
+.theme-item-thumbnail {
+    border-radius : 0px 0px 16px 16px;
+}
+.theme-item-icons .icon_clickable {
+    border-radius : 0px 0px 16px 0px;
+}
+
+
+/* Sidebar */
+.sidebar-open {
+    border-radius : 16px
+}
+
+
+/* Menu */
+.appmenu-menu-container {
+    border-radius: 0px 0px 0px 16px;
+}

@@ -1,0 +1,30 @@
+{{ if .Values.global.persistence.createVolumes }}
+{{- $storClassName := .Values.global.persistence.infoTemplates.storageClassName -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "qwc.fullname" . }}-info-templates
+  labels:
+    {{- include "qwc.labels" . | nindent 4 }}
+    {{- include "qwc.infoTemplatesVolumeLabels" . | nindent 4 }}
+spec:
+  capacity:
+    storage: {{ .Values.global.persistence.infoTemplates.size | default "10Gi" }}
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ $storClassName }}
+  {{- if eq $storClassName "local-storage" }}
+  local:
+    path: {{ .Values.global.persistence.infoTemplates.volumePath }}
+  {{- end }}
+
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: NotIn
+          values:
+          - SpecificOne
+{{ end }}

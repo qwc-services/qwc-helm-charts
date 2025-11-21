@@ -1,0 +1,21 @@
+{{ if (not .Values.global.persistence.infoTemplates.claimOverride) }}
+{{- $storClassName := .Values.global.persistence.infoTemplates.storageClassName -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "qwc.infoTemplatesVolumeClaim" . }}
+  labels:
+    {{- include "qwc.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: {{ $storClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.global.persistence.infoTemplates.size | default "10Gi" }}
+  {{- if eq $storClassName "local-storage" }}
+  selector:
+    matchLabels:
+      {{- include "qwc.infoTemplatesVolumeLabels" . | nindent 6 }}
+  {{- end }}
+{{ end }}

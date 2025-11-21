@@ -1,0 +1,222 @@
+{{ $dbHostname := (default (printf "%s-qwcdb" .Release.Name) (default .Values.global.db.hostname .Values.db.hostname)) }}
+{{ $dbPort := (default .Values.global.db.port .Values.db.port) }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "qwcConfigService.fullname" . }}
+  labels:
+    {{- include "qwcConfigService.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "qwcConfigService.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "qwcConfigService.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: default
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
+      containers:
+        - name: {{ .Chart.Name | lower }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http-9090
+              containerPort: 9090
+              protocol: TCP
+
+          env:
+            - name: QGIS_SERVER_HOST
+              value: {{ .Release.Name }}-qwcqgisserver
+            - name: QWC_AUTH_HOST
+              value: {{ default (printf "%s-qwcauthservice" .Release.Name) .Values.apiGatewayHostname }}
+            - name: QWC_CONFIG_HOST
+              value: {{ .Release.Name }}-qwcconfigservice
+            - name: QWC_DATA_HOST
+              value: {{ default (printf "%s-qwcdataservice" .Release.Name) .Values.apiGatewayHostname }}
+            - name: QWC_OGC_HOST
+              value: {{ default (printf "%s-qwcogcservice" .Release.Name) .Values.apiGatewayHostname }}
+            - name: QWC_PERMALINK_HOST
+              value: {{ default (printf "%s-qwcpermalinkservice" .Release.Name) .Values.apiGatewayHostname }}
+            - name: PGSERVICEFILE
+              value: /qwc_cfg/pg_service.conf
+            - name: INPUT_CONFIG_PATH
+              value: "/qwc_cfg/config-in"
+            - name: OUTPUT_CONFIG_PATH
+              value: "/qwc_cfg/config"
+            - name: BOOTSTRAP_WATCHDOG_FILE
+              value: {{ default "config/default/tenantConfig.json" .Values.bootstrapWatchDogFile }}
+            - name: GENERATE_DYNAMIC_KVRELS
+              value: "1"
+            - name: SERVICE_MOUNTPOINT
+              value: "/"
+            - name: REQ_HEADER_BUFFER_SIZE
+              value: "12288"
+            - name: UWSGI_PROCESSES
+              value: "1"
+            - name: UWSGI_THREADS
+              value: "4"
+            - name: UWSGI_EXTRA
+              value: ""
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.global.env.jwtSecret.name | default (printf "%s-global-secret" .Release.Name) }}
+                  key: {{ .Values.global.env.jwtSecret.key }}
+            - name: SERVICE_UID
+              value: {{ .Values.global.env.serviceUID | quote }}
+            - name: SERVICE_GID
+              value: {{ .Values.global.env.serviceGID | quote }}
+            - name: JWT_COOKIE_CSRF_PROTECT
+              value: {{ .Values.global.env.jwtCookieCSRFProtect | quote }}
+
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          volumeMounts:
+            - name: vol-pg-service-conf-ro
+              mountPath: /qwc_cfg/pg_service.conf
+              subPath: pg_service.conf
+              readOnly: true
+            - name: vol-qgis-resources-ro
+              mountPath: /data/
+              readOnly: true
+            - name: vol-config-in-rw
+              mountPath: /qwc_cfg/config-in/
+              readOnly: false
+            - name: vol-config-out-rw
+              mountPath: /qwc_cfg/config/
+              readOnly: false
+            - name: vol-qwc-app-ro
+              mountPath: /qwc2/
+              readOnly: false
+            - name: vol-bootstrap-config-in
+              mountPath: /bootstrap/config-in
+              readOnly: true
+          {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          command:
+            - 'sh'
+            - '-c'
+            - |
+              apk add bash envsubst
+              ls -alF $INPUT_CONFIG_PATH/
+              bash -c $INPUT_CONFIG_PATH/entrypoint.sh
+
+      initContainers:
+      {{- with .Values.initContainers }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+        - name: wait-for-db
+          image: busybox:1.28
+          command:
+            - 'sh'
+            - '-c'
+            - "until nc -z {{ $dbHostname }} {{ $dbPort }} >/dev/null 2>&1; do echo waiting for qwcDb; sleep 2; done"
+
+        - name: bootstrap-config-in
+          image: bash:5.3
+          command:
+            - 'bash'
+            - '-c'
+            - |
+              base64 -d /bootstrap/common/common.sh > $INPUT_CONFIG_PATH/common.sh
+              source $INPUT_CONFIG_PATH/common.sh
+              configmap_to_files /bootstrap/entrypoint/ $INPUT_CONFIG_PATH "do_it_each_time"
+              chmod 755 $INPUT_CONFIG_PATH/*.sh
+
+          env:
+            - name: INPUT_CONFIG_PATH
+              value: "/qwc_cfg/config-in"
+
+          volumeMounts:
+            - name: vol-bootstrap-entrypoint
+              mountPath: /bootstrap/entrypoint
+              readOnly: true
+            - name: vol-bootstrap-common-scripts
+              mountPath: /bootstrap/common
+              readOnly: true
+            - name: vol-config-in-rw
+              mountPath: /qwc_cfg/config-in/
+              readOnly: false
+
+      volumes:
+        - name: vol-pg-service-conf-ro
+          secret:
+            secretName: {{ .Values.pgServiceConfSecret.name | default (printf "%s-global-secret" .Release.Name) }}
+            optional: false
+            items:
+              - key: {{ .Values.pgServiceConfSecret.key }}
+                path: pg_service.conf
+
+        - name: vol-qgis-resources-ro
+          persistentVolumeClaim:
+            claimName: {{ include "qwcConfigService.qgisResourcesVolumeClaim" . }}
+
+        - name: vol-config-in-rw
+          persistentVolumeClaim:
+            claimName: {{ include "qwcConfigService.configInputVolumeClaim" . }}
+
+        - name: vol-bootstrap-entrypoint
+          configMap:
+            name: {{ include "qwcConfigService.bootstrapEntrypoint" . }}
+            defaultMode: 0755
+
+        - name: vol-bootstrap-common-scripts
+          configMap:
+            name: {{ include "qwcConfigService.bootstrapCommonScripts" . }}
+            defaultMode: 0755
+
+        - name: vol-bootstrap-config-in
+          configMap:
+            name: {{ include "qwcConfigService.bootstrapConfigIn" . }}
+
+        - name: vol-config-out-rw
+          persistentVolumeClaim:
+            claimName: {{ include "qwcConfigService.configOutputVolumeClaim" . }}
+
+        - name: vol-qwc-app-ro
+          persistentVolumeClaim:
+            claimName: {{ include "qwcConfigService.qwcAppVolumeClaim" . }}
+      {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

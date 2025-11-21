@@ -1,0 +1,21 @@
+{{ if (not .Values.global.persistence.qgisResources.claimOverride) }}
+{{- $storClassName := .Values.global.persistence.qgisResources.storageClassName -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "qwc.qgisResourcesVolumeClaim" . }}
+  labels:
+    {{- include "qwc.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadOnlyMany
+  storageClassName: {{ $storClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.global.persistence.qgisResources.size | default "10Gi" }}
+  {{- if eq $storClassName "local-storage" }}
+  selector:
+    matchLabels:
+      {{- include "qwc.qgisResourcesVolumeLabels" . | nindent 6 }}
+  {{- end }}
+{{ end }}

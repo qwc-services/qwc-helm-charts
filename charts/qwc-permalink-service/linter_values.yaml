@@ -1,0 +1,27 @@
+### Default values for linter:
+global:
+  db:
+    hostname: qwc-test-qwcdb
+    port: 5432
+
+  env:
+    serviceUID: 1000
+    serviceGID: 1000
+    jwtSecret:
+      name: secret-name
+      key: jsonWebToken
+
+  httpRoute:
+    gateway:
+      name: blah
+
+  persistence:
+    createVolumes: false
+
+    configOutput:
+      storageClassName: blah
+      size: 10Gi
+
+pgServiceConfSecret:
+  name: secret-name
+  key: pg_service.conf

@@ -1,0 +1,166 @@
+# ============================================================
+# QWC Services Helm Chart - Main Configuration
+# ============================================================
+# Deploy with: helm upgrade --install <release-name> . -f values.yaml
+# ============================================================
+
+global:
+  # ========================================
+  # HTTPRoutes
+  # ========================================
+  httpRoute:
+    enabled: false
+
+    # GATEWAY
+    gateway:
+      create: false
+
+  # ========================================
+  # DATABASE
+  # ========================================
+  db:
+    port: 5432
+    # hostname: auto-generated as <release-name>-qwcdb
+
+    # SECRETS
+    # Can also be set via --set or separate values file
+    secrets:
+      mainUser: postgres
+      mainPassword: postgres
+      qwcAdminPassword: qwc_admin
+      qwcServiceReadPassword: qwc_service
+      qwcServiceWritePassword: qwc_service_write
+
+  jsonWebToken: the_secret_key
+
+  env:
+    serviceUID: 1000
+    serviceGID: 1000
+    jwtSecret:
+      key: jsonWebToken
+    jwtCookieCSRFProtect: true
+
+  # ========================================
+  # VOLUME MANAGEMENT
+  # ========================================
+  # true  = Chart creates PVCs dynamically (development)
+  # false = Expects pre-existing PVCs (production)
+  persistence:
+    createVolumes: false
+
+    db:
+      # === Storage class name for PVCs
+      # === IMPORTANT: Use Azure Disk (managed-csi) instead of Azure Files for PostgreSQL
+      # === Azure Files does NOT support chmod/chown operations required by PostgreSQL initdb
+      storageClassName: managed-csi # Use Azure Disk for PostgreSQL
+      # === Size for PVC
+      size: 10Gi
+      # === Local paths for PVs when storageClassName is local-storage, ie. dev mode
+      # volumePath: /data/db/
+      # === Overrides claim name.
+      # claimOverride: claim-01
+
+    configInput:
+      # === Storage class name for PVCs
+      storageClassName: azurefile-csi
+      # === Size for PVC
+      size: 10Gi
+      # === Local paths for PVs when storageClassName is local-storage, ie. dev mode
+      # volumePath: /data/config-input/
+      # === Overrides claim name.
+      # claimOverride: claim-01
+
+    configOutput:
+      # === Storage class name for PVCs
+      storageClassName: azurefile-csi
+      # === Size for PVC
+      size: 10Gi
+      # === Local paths for PVs when storageClassName is local-storage, ie. dev mode
+      # volumePath: /data/config-generated/
+      # === Overrides claim name.
+      # claimOverride: claim-01
+
+    qwcApp:
+      # === Storage class name for PVCs
+      storageClassName: azurefile-csi
+      # === Size for PVC
+      size: 10Gi
+      # === Local paths for PVs when storageClassName is local-storage, ie. dev mode
+      # volumePath: /data/qwc2/
+      # === Overrides claim name.
+      # claimOverride: claim-01
+
+    attachments:
+      # === Storage class name for PVCs
+      storageClassName: azurefile
+      # === Size for PVC
+      size: 10Gi
+      # === Local paths for PVs when storageClassName is local-storage, ie. dev mode
+      # volumePath: /data/attachments/
+      # === Overrides claim name.
+      # claimOverride: claim-01
+
+    infoTemplates:
+      # === Storage class name for PVCs
+      storageClassName: azurefile-csi
+      # === Size for PVC
+      size: 10Gi
+      # === Local paths for PVs when storageClassName is local-storage, ie. dev mode
+      # volumePath: /data/info-templates/
+      # === Overrides claim name.
+      # claimOverride: claim-01
+
+    qgisResources:
+      # === Storage class name for PVCs (azurefile-csi for ReadWriteMany)
+      storageClassName: azurefile-csi
+      # === Size for PVC
+      size: 10Gi
+      # === Local path for PV (dev mode only)
+      # volumePath: /data/qgs-resources/
+      # === Overrides claim name.
+      # claimOverride: claim-01
+
+# ============================================================
+# SUBCHART OVERRIDES
+# ============================================================
+# Each subchart has sensible defaults. Override here as needed.
+# Common overrides:
+#   - claimOverrides
+#   - image.tag
+# ============================================================
+
+# PostgreSQL Database
+qwcDb:
+  enabled: true
+
+# QGIS Server
+qwcQgisServer:
+  enabled: true
+
+# Config Generator Service
+qwcConfigService:
+  enabled: true
+
+# OGC (WMS/WFS) Service
+qwcOgcService:
+  enabled: true
+
+# Data Service
+qwcDataService:
+  enabled: true
+
+# Map Viewer (Web UI)
+qwcMapViewer:
+  enabled: true
+
+# Admin GUI
+qwcAdminGUI:
+  enabled: true
+
+# Auth Service
+qwcAuthService:
+  enabled: true
+
+# Permalink Service
+qwcPermalinkService:
+  enabled: true

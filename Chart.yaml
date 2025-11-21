@@ -1,0 +1,83 @@
+apiVersion: v2
+name: qwc
+description: A Helm chart for QGIS Web Client
+
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+#
+# Library charts provide useful utilities or functions for the chart developer. They're included as
+# a dependency of application charts to inject those utilities and functions into the rendering
+# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 2.0.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+#
+# Most recent version of all subcharts:
+appVersion:
+  "v2026.02.03"
+
+  # Aliases are needed to call chart functions from root chart and match internal chart function names in '_helpers.tpl'.
+dependencies:
+  - name: qwc-db
+    version: "*"
+    repository: "file://charts/qwc-db"
+    alias: qwcDb
+    condition: qwcDb.enabled
+
+  - name: qwc-qgis-server
+    version: "*"
+    repository: "file://charts/qwc-qgis-server"
+    alias: qwcQgisServer
+    condition: qwcQgisServer.enabled
+
+  - name: qwc-config-service
+    version: "*"
+    repository: "file://charts/qwc-config-service"
+    alias: qwcConfigService
+    condition: qwcConfigService.enabled
+
+  - name: qwc-ogc-service
+    version: "*"
+    repository: "file://charts/qwc-ogc-service"
+    alias: qwcOgcService
+    condition: qwcOgcService.enabled
+
+  - name: qwc-data-service
+    version: "*"
+    repository: "file://charts/qwc-data-service"
+    alias: qwcDataService
+    condition: qwcDataService.enabled
+
+  - name: qwc-map-viewer
+    version: "*"
+    repository: "file://charts/qwc-map-viewer"
+    alias: qwcMapViewer
+    condition: qwcMapViewer.enabled
+
+  - name: qwc-admin-gui
+    version: "*"
+    repository: "file://charts/qwc-admin-gui"
+    alias: qwcAdminGUI
+    condition: qwcAdminGUI.enabled
+
+  - name: qwc-auth-service
+    version: "*"
+    repository: "file://charts/qwc-auth-service"
+    alias: qwcAuthService
+    condition: qwcAuthService.enabled
+
+  - name: qwc-permalink-service
+    version: "*"
+    repository: "file://charts/qwc-permalink-service"
+    alias: qwcPermalinkService
+    condition: qwcPermalinkService.enabled

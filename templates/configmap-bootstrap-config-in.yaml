@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "qwcConfigService.fullname" . }}-bootstrap-config-in
+  labels:
+    {{- include "qwcConfigService.labels" . | nindent 4 }}
+data:
+  {{ $root := . }}
+  {{ range $path, $bytes := .Files.Glob "bootstrap/config/**" }}
+  {{ $path | trimPrefix "bootstrap/config/" | replace "/" "--" }}: '{{ $root.Files.Get $path | b64enc }}'
+  {{ end }}
