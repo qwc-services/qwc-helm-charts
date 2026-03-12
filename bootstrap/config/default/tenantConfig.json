@@ -16,37 +16,6 @@
   "themesConfig": "themes/config.json",
   "services": [
     {
-      "name": "ogc",
-      "generator_config": {
-        "wms_services": {
-          "online_resources": {
-            "service": "/ows/",
-            "feature_info": "/api/v1/featureinfo/",
-            "legend": "/api/v1/legend/"
-          }
-        }
-      },
-      "config": {
-        "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/"
-      }
-    },
-    {
-      "name": "mapViewer",
-      "generator_config": {
-        "qwc2_config": {
-          "qwc2_config_file": "{{INPUT_CONFIG_PATH}}/default/config.json",
-          "qwc2_index_file": "{{INPUT_CONFIG_PATH}}/default/index.html"
-        }
-      },
-      "config": {
-        "qwc2_path": "/qwc2/",
-        "auth_service_url": "/auth/",
-        "data_service_url": "/api/v1/data/",
-        "ogc_service_url": "/ows/",
-        "permalink_service_url": "/api/v1/permalink/"
-      }
-    },
-    {
       "name": "adminGui",
       "config": {
         "db_url": "postgresql:///?service=qwc_configdb",
@@ -69,9 +38,47 @@
       }
     },
     {
+      "name": "data",
+      "config": {
+        "geometry_default_allow_null": false
+      }
+    },
+    {
       "name": "dbAuth",
       "config": {
         "db_url": "postgresql:///?service=qwc_configdb"
+      }
+    },
+    {
+      "name": "mapViewer",
+      "generator_config": {
+        "qwc2_config": {
+          "qwc2_config_file": "{{INPUT_CONFIG_PATH}}/default/config.json",
+          "qwc2_index_file": "{{INPUT_CONFIG_PATH}}/default/index.html"
+        }
+      },
+      "config": {
+        "qwc2_path": "/qwc2/",
+        "auth_service_url": "/auth/",
+        "data_service_url": "/api/v1/data/",
+        "ogc_service_url": "/ows/",
+        "permalink_service_url": "/api/v1/permalink/"
+      }
+    },
+    {
+      "name": "ogc",
+      "generator_config": {
+        "wms_services": {
+          "online_resources": {
+            "feature_info": "/ows/",
+            "legend": "/ows/",
+            "service": "/ows/",
+            "edit_config": "/editConfig.json?map="
+          }
+        }
+      },
+      "config": {
+        "default_qgis_server_url": "http://{{QGIS_SERVER_HOST}}/ows/"
       }
     },
     {
@@ -79,13 +86,8 @@
       "config": {
         "db_url": "postgresql:///?service=qwc_configdb",
         "permalinks_table": "qwc_config.permalinks",
-        "user_permalink_table": "qwc_config.user_permalinks"
-      }
-    },
-    {
-      "name": "data",
-      "config": {
-        "geometry_default_allow_null": false
+        "user_permalink_table": "qwc_config.user_permalinks",
+        "user_bookmark_table": "qwc_config.user_bookmarks"
       }
     }
   ]

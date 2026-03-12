@@ -98,32 +98,6 @@
                     256
                 ],
                 "thumbnail": "img/mapthumbs/default.jpg"
-            },
-            {
-                "type": "mvt",
-                "url": "https://data.geopf.fr/tms/1.0.0/OPTIMIZED-PLANIGNV2/{z}/{x}/{y}.pbf",
-                "title": "Plan IGN v2",
-                "name": "PLANIGNV2",
-                "attribution": "IGN",
-                "projection": "EPSG:3857",
-                "style": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/standard.json",
-                "group": "IGN"
-            },
-            {
-                "type": "xyz",
-                "url": "https://data.geopf.fr/tms/1.0.0/HR.ORTHOIMAGERY.ORTHOPHOTOS/{z}/{x}/{y}.jpeg",
-                "title": "Ortho 20 cm",
-                "attribution": "IGN",
-                "name": "HR.ORTHOIMAGERY.ORTHOPHOTOS",
-                "group": "IGN"
-            },
-            {
-                "type": "xyz",
-                "url": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
-                "title": "Google Satellite",
-                "name": "google.satellite",
-                "attribution": "Google",
-                "crs": "EPSG:3857"
             }
         ]
     }

@@ -1,42 +1,38 @@
 {
-  "searchServiceUrl": "http://localhost:8088/api/v2/search/",
-  "searchDataServiceUrl": "http://localhost:8088/api/v2/search/geom/",
-  "editServiceUrl": "http://localhost:8088/api/v1/data/",
-  "mapInfoService": "http://localhost:8088/api/v1/mapinfo/",
-  "permalinkServiceUrl": "http://localhost:8088/api/v1/permalink/",
-  "elevationServiceUrl": "http://localhost:8088/elevation/",
-  "featureReportService": "http://localhost:8088/api/v1/document/",
-  "authServiceUrl": "http://localhost:8088/api/v1/auth/",
-  "routingServiceUrl": "https://valhalla1.openstreetmap.de",
-  "urlPositionFormat": "centerAndZoom",
-  "urlPositionCrs": "",
-  "loadTranslationOverrides": false,
-  "omitUrlParameterUpdates": false,
-  "preserveExtentOnThemeSwitch": true,
-  "preserveBackgroundOnThemeSwitch": true,
-  "preserveNonThemeLayersOnThemeSwitch": false,
-  "storeAllLayersInPermalink": false,
-  "allowReorderingLayers": true,
-  "preventSplittingGroupsWhenReordering": false,
-  "allowLayerTreeSeparators": false,
-  "flattenLayerTreeGroups": false,
-  "allowRemovingThemeLayers": true,
-  "globallyDisableDockableDialogs": false,
-  "globallyDisableMaximizeableDialogs": false,
-  "searchThemes": true,
-  "searchThemeLayers": true,
-  "allowAddingOtherThemes": true,
-  "allowFractionalZoom": false,
-  "localeAwareNumbers": false,
-  "geodesicMeasurements": true,
-  "trustWmsCapabilityURLs": false,
-  "identifyTool": "Identify",
-  "wmsDpi": 96,
-  "wmsHidpi": false,
-  "wmsMaxGetUrlLength": 2048,
-  "qgisServerVersion": 3,
+  "allowAddingOtherThemes":true,
+  "allowFractionalZoom":false,
+  "allowLayerTreeSeparators":false,
+  "allowRemovingThemeLayers":true,
+  "allowReorderingLayers":true,
+  "availableLocales": {
+    "en-US": "English",
+    "de-CH": "Deutsch",
+    "fr-FR": "Français",
+    "it-IT": "Italiano"
+  },
   "defaultColorScheme": "default",
-  "username": "admin",
+  "flattenLayerTreeGroups": false,
+  "geodesicMeasurements": true,
+  "globallyDisableDockableDialogs":false,
+  "globallyDisableMaximizeableDialogs": false,
+  "identifyTool":"Identify",
+  "loadTranslationOverrides": false,
+  "localeAwareNumbers":false,
+  "omitUrlParameterUpdates":false,
+  "preserveBackgroundOnThemeSwitch":true,
+  "preserveExtentOnThemeSwitch":true,
+  "preserveNonThemeLayersOnThemeSwitch":false,
+  "preventSplittingGroupsWhenReordering":false,
+  "routingServiceUrl": "https://valhalla1.openstreetmap.de/",
+  "searchThemes":true,
+  "searchThemeLayers": true,
+  "storeAllLayersInPermalink": false,
+  "trustWmsCapabilityURLs": false,
+  "urlPositionFormat":"centerAndZoom",
+  "urlPositionCrs":"",
+  "wmsDpi":96,
+  "wmsHidpi":false,
+  "wmsMaxGetUrlLength": 2048,
   "defaultFeatureStyle": {
     "strokeColor": [0, 0, 255, 1],
     "strokeWidth": 1,
@@ -309,7 +305,7 @@
       {
         "name": "Portal",
         "cfg": {
-          "logo": "mycompany_logo.png",
+          "logo": "logo.svg",
           "topBarText": "",
           "showMenuOnStartup": true,
           "keepMenuOpen": true,
@@ -397,7 +393,6 @@
           "appMenuCompact": false,
           "appMenuVisibleOnStartup": false,
           "logoUrl": "/",
-          "logoSrc": "assets/img/mycompany_logo.png",
           "appMenuShortcut": "alt+shift+m",
           "toolbarItemsShortcutPrefix": "alt+shift"
         }
@@ -414,24 +409,6 @@
       {
         "name": "Settings",
         "cfg": {
-          "languages": [
-            {
-              "title": "English",
-              "value": "en-US"
-            },
-            {
-              "title": "Deutsch",
-              "value": "de-CH"
-            },
-            {
-              "title": "Français",
-              "value": "fr-FR"
-            },
-            {
-              "title": "Italiano",
-              "value": "it-IT"
-            }
-          ],
           "colorSchemes": [
             {
               "titleMsgId": "colorschemes.default",
@@ -444,10 +421,6 @@
             {
               "titleMsgId": "colorschemes.dark",
               "value": "dark"
-            },
-            {
-              "titleMsgId": "mycompany",
-              "value": "mycompany"
             }
           ]
         }
