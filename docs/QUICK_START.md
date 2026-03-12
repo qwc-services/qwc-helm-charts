@@ -13,23 +13,23 @@ This guide will get you up and running with QWC2 in minutes.
 ### Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone <repository-url> qwc-helm-main
 cd qwc-helm-main
 ```
 
 ### Configure Values
 
-Copy and customize the values file:
+Copy `values-aks.yaml.sample` (or `values-local.yaml.sample`) and customize the values file:
 
 ```bash
-cp values.yaml values-override.yaml
+cp values-aks.yaml.sample values.yaml
 ```
 
-Edit `values-override.yaml` to configure:
+Edit `values.yaml` to configure:
 
-- **Namespace** and **release name**
-- **Database passwords**
-- **Hostnames** for external access
+- `global` persistence
+- `global` database passwords
+- external accesses (`hostnames` and `gateway`)
 
 ### Deploy with Helm
 
@@ -37,11 +37,21 @@ Edit `values-override.yaml` to configure:
 # Create namespace and install
 helm upgrade --install my-qwc-instance . \
   -n qwc-dev \
-  -f ./values-override.yaml \
+  -f ./values.yaml \
   --create-namespace
 ```
 
-### Initialize Demo Data
+Wait for pods to be ready (few minutes): `kubectl wait --for=condition=Ready pods --all -n qwc-dev --timeout=300s`
+
+### Access the Application
+
+| Service | URL |
+| --------- | ----- |
+| **Map Viewer** | <https://myhostname.com/> |
+| **Admin GUI** | <https://myhostname.com/admin/> |
+| **WMS Service** | <https://myhostname.com/ows/demo?SERVICE=WMS&REQUEST=GetCapabilities> |
+
+## Initialize Demo Data
 
 Run the initialization script to set up demo users and sample data:
 
@@ -57,15 +67,7 @@ The script will:
 - Deploy a demo QGIS project
 - Configure the Map Viewer theme
 
-### Access the Application
-
-| Service | URL |
-|---------|-----|
-| **Map Viewer** | <https://myhostname.com/> |
-| **Admin GUI** | <https://myhostname.com/admin/> |
-| **WMS Service** | <https://myhostname.com/ows/demo?SERVICE=WMS&REQUEST=GetCapabilities> |
-
-## Demo Credentials
+### Demo Credentials
 
 | User | Password | Role |
 | ------ | ---------- | ------ |
@@ -73,8 +75,6 @@ The script will:
 | `demo` | `demo` | Regular user |
 
 ⚠️ **Important:** Change these passwords in production!
-
-## What's Included in the Demo
 
 ### Demo Layers
 
@@ -100,29 +100,7 @@ curl "https://myhostname.com/ows/demo?SERVICE=WMS&REQUEST=GetCapabilities"
 
 ## Troubleshooting
 
-### Map Viewer shows blank map
-
-- Wait 30 seconds for services to stabilize
-- Refresh the page (Ctrl+F5)
-- Check if layers are visible in the layer panel
-
-### Cannot access the application
-
-```bash
-# Check pod status
-kubectl get pods -n qwc-dev
-
-# Check logs
-kubectl logs -n qwc-dev -l app.kubernetes.io/name=qwcmapviewer
-```
-
-### Demo data not visible
-
-Re-run the initialization script:
-
-```bash
-./scripts/init-demo-data.sh
-```
+See [the architecture document](ARCHITECTURE.md#troubleshooting-guide) or [the complete guide](QWC2_COMPLETE_GUIDE.md#troubleshooting)
 
 ## Next Steps
 

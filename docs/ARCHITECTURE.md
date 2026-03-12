@@ -725,7 +725,7 @@ docker run --rm \
 
 ### Step 3: Update Helm Values
 
-Modify your `values-override.yaml`:
+Modify your `values.yaml` when it includes the secrets :
 
 ```yaml
 # Disable built-in database
@@ -744,34 +744,43 @@ global:
       qwcServiceWritePassword: your_qwc_service_write_password
 ```
 
+Or when the secrets are externalized:
+
+- `values.yaml`:
+
+  ```yaml
+  # Disable built-in database
+  qwcDb:
+    enabled: false  # or simply don't include qwcDb section
+
+  # Configure external database connection
+  global:
+    db:
+      hostname: your-external-db.example.com
+      port: 5432
+  ```
+
+- `secret-values.yaml`:
+
+  ```yaml
+  # Configure external database connection
+  global:
+    db:
+      secrets:
+        qwcAdminPassword: your_qwc_admin_password
+        qwcServiceReadPassword: your_qwc_service_password
+        qwcServiceWritePassword: your_qwc_service_write_password
+  ```
+
 ### Step 4: Update pg_service.conf Files
 
-Create custom `pg_service_ro.conf` and `pg_service_rw.conf` files:
-
-```ini
-# pg_service_ro.conf
-[qwc_configdb]
-host=your-external-db.example.com
-port=5432
-dbname=qwc_services
-user=qwc_admin
-password=your_qwc_admin_password
-sslmode=require
-
-[qwc_geodb]
-host=your-external-db.example.com
-port=5432
-dbname=qwc_services
-user=qwc_service
-password=your_qwc_service_password
-sslmode=require
-```
+Adjust `pg_service_ro.conf` and `pg_service_rw.conf` files to specific database paramaters as `sslmode`.
 
 ### Step 5: Deploy
 
 ```bash
 helm upgrade --install my-qwc-instance . \
-  -f values-override.yaml \
+  -f values.yaml \
   -f secret-values.yaml
 ```
 
@@ -793,6 +802,26 @@ global:
       key: jsonWebToken
     jwtCookieCSRFProtect: true
 ```
+
+Or with `values.yaml` and `secret-values.yaml`:
+
+- `values.yaml`:
+
+  ```yaml
+  global:
+    env:
+      jwtSecret:
+        name: my-qwc-instance-global-secret
+        key: jsonWebToken
+      jwtCookieCSRFProtect: true
+  ```
+
+- `secret-values.yaml`:
+
+  ```yaml
+  global:
+    jsonWebToken: "your-very-long-secure-random-string-min-32-chars"
+  ```
 
 ### Production Security Checklist
 
@@ -1051,7 +1080,3 @@ kubectl exec -it <pod-name> -- psql "service=qwc_configdb" -c "SELECT 1"
 - [QGIS Server Documentation](https://docs.qgis.org/latest/en/docs/server_manual/)
 - [PostGIS Documentation](https://postgis.net/documentation/)
 - [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/)
-
----
-
-*Document generated for QWC Helm Chart - Last updated: December 2024*

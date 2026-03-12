@@ -12,9 +12,8 @@
 4. [Volumes and Persistent Storage](#volumes-and-persistent-storage)
 5. [Helm Chart Configuration](#helm-chart-configuration)
 6. [Installation Guide](#installation-guide)
-7. [Quick Start and Demo](#quick-start-and-demo)
-8. [Troubleshooting](#troubleshooting)
-9. [Appendix](#appendix)
+7. [Troubleshooting](#troubleshooting)
+8. [Appendix](#appendix)
 
 ---
 
@@ -79,7 +78,7 @@ The following component versions are verified to work together in this Helm char
 | **Database** | `qwc-db` | `16` | PostgreSQL version |
 | **DB Migrate** | `qwc-db-migrate` | `v2026.01.05` | Schema migration tool |
 
-> **Note:** These versions reflect the configuration in `values-override.yaml`. Using significantly older or newer versions may require configuration adjustments.
+> **Note:** These versions reflect the configuration in `values.yaml`. Using significantly older or newer versions may require configuration adjustments.
 
 ---
 
@@ -754,8 +753,7 @@ volumeBindingMode: Immediate
 
 ```raw
 qwc-helm/
-├── values.yaml              # Default values (do not modify)
-├── values-override.yaml     # Your custom overrides
+├── values.yaml     # Your custom overrides
 ├── charts/                  # Sub-charts for each service
 │   ├── qwc-db/
 │   ├── qwc-qgis-server/
@@ -803,6 +801,65 @@ global:
   jwtSecret: "your-very-secure-jwt-secret-at-least-32-chars"
 ```
 
+#### Persistence Settings
+
+Volumes and claims are configured in the `global` section. There are 7 volumes/claims to configure:
+
+```yaml
+global:
+  persistence:
+    # true  = Chart creates PVCs dynamically (development)
+    # false = Expects pre-existing PVCs (production)
+    createVolumes: false
+
+    db:
+    configInput:
+    configOutput:
+    qwcApp:
+    attachments:
+    infoTemplates:
+    qgisResources:
+```
+
+Each bloc as the same content, f.e. for `db`:
+
+```yaml
+global:
+    db:
+      # === Storage class name for PVCs
+      # === IMPORTANT: Use Azure Disk (managed-csi) instead of Azure Files for PostgreSQL
+      # === Azure Files does NOT support chmod/chown operations required by PostgreSQL initdb
+      storageClassName: managed-csi # Use Azure Disk for PostgreSQL
+      # === Size for PVC
+      size: 10Gi
+      # === Local paths for PVs when storageClassName is local-storage, ie. dev mode
+      # volumePath: /data/db/
+      # === Overrides claim name.
+      # claimOverride: claim-01
+```
+
+or for local storage:
+
+```yaml
+global:
+    db:
+      # === Storage class name for PVCs
+      storageClassName: local-storage
+      # === Size for PVC
+      size: 10Gi
+      # === Local paths for PVs when storageClassName is local-storage, ie. dev mode
+      volumePath: /data/db/
+      # === Overrides claim name.
+      # claimOverride: claim-01
+```
+
+if you have `global.persistence.createVolumes` to `true`:
+
+- then in most of cases you do not need to specify `claimOverride` and claim will be generated automatically
+- if the `storageClassName` is a driver mapping local directory, then you should set the `volumePath`
+
+If you set a `claimOverride` for one of the volume above, no PVC will be generated automatically.
+
 #### Database Configuration
 
 ```yaml
@@ -820,11 +877,6 @@ qwcDb:
     limits:
       memory: "2Gi"
       cpu: "1000m"
-
-  persistence:
-    enabled: true
-    size: 20Gi
-    storageClass: ""  # Use default or specify
 ```
 
 #### QGIS Server Configuration
@@ -973,21 +1025,22 @@ cd qwc-helm-main
 #### Step 2: Create Configuration Override
 
 ```bash
-cp values.yaml values-override.yaml
+cp values.yaml values.yaml
 ```
 
 #### Step 3: Edit Configuration
 
-Edit `values-override.yaml` with your settings:
+Edit `values.yaml` with your settings:
 
 ```yaml
 global:
   hostnames:
     - maps.your-domain.com
 
-  postgresqlSecrets:
-    qwcAdminPassword: "YOUR_SECURE_PASSWORD"
-    postgresPassword: "YOUR_POSTGRES_PASSWORD"
+  db:
+    secrets:
+      qwcAdminPassword: "YOUR_SECURE_PASSWORD"
+      postgresPassword: "YOUR_POSTGRES_PASSWORD"
 
   jwtSecret: "YOUR_32_CHAR_JWT_SECRET"
 ```
@@ -997,7 +1050,7 @@ global:
 ```bash
 helm upgrade --install my-qwc-instance . \
   -n qwc-dev \
-  -f ./values-override.yaml \
+  -f ./values.yaml \
   --create-namespace
 ```
 
@@ -1033,90 +1086,6 @@ The script will:
 4. Create sample geospatial data
 5. Deploy demo QGIS project
 6. Configure Map Viewer theme
-
-### Upgrade
-
-```bash
-## Apply configuration changes
-helm upgrade my-qwc-instance . \
-  -n qwc-dev \
-  -f ./values-override.yaml
-```
-
-### Uninstall
-
-```bash
-## Remove Helm release
-helm uninstall my-qwc-instance -n qwc-dev
-
-## Remove PVCs (WARNING: Deletes all data!)
-kubectl delete pvc --all -n qwc-dev
-
-## Remove namespace (optional)
-kubectl delete namespace qwc-dev
-```
-
----
-
-## Quick Start and Demo
-
-### 5-Minute Quick Start
-
-```bash
-## Install the chart
-helm upgrade --install my-qwc-instance . \
-  -n qwc-dev \
-  -f ./values-override.yaml \
-  --create-namespace
-
-## Wait for pods to be ready (2-3 minutes)
-kubectl wait --for=condition=Ready pods --all -n qwc-dev --timeout=300s
-
-## Initialize demo data
-./scripts/init-demo-data.sh
-
-## Open browser
-open https://myhostname.com/
-```
-
-### Access URLs
-
-| Service | URL |
-| --------- | ----- |
-| **Map Viewer** | <https://myhostname.com/> |
-| **Admin GUI** | <https://myhostname.com/admin/> |
-| **WMS Capabilities** | <https://myhostname.com/ows/demo?SERVICE=WMS&REQUEST=GetCapabilities> |
-
-### Demo Credentials
-
-| User | Password | Role | Description |
-| ------ | ---------- | ------ | ------------- |
-| `admin` | `demo` | Administrator | Full access to all features |
-| `demo` | `demo` | User | Regular user for testing |
-
-⚠️ **Change these passwords immediately in production!**
-
-### Demo Content
-
-#### Available Layers
-
-| Layer | Type | Features | Description |
-| ------- | ------ | ---------- | ------------- |
-| **European Cities** | Points | 10 | Major European cities with population data |
-| **Roads** | Lines | 3 | Road connections between cities |
-| **Regions** | Polygons | 3 | Regions around Rome, Paris, Berlin |
-
-#### Cities Included
-
-Rome, Paris, Berlin, Madrid, London, Amsterdam, Vienna, Brussels, Lisbon, Athens
-
-#### Map Configuration
-
-| Property | Value |
-| ---------- | ------- |
-| **CRS** | EPSG:3857 (Web Mercator) |
-| **Extent** | Western and Central Europe |
-| **Background** | OpenStreetMap |
 
 ### Verification Tests
 
@@ -1155,6 +1124,28 @@ curl "https://myhostname.com/auth/userinfo" \
 ## Get cities (requires authentication)
 curl "https://myhostname.com/api/v1/data/demo.cities?limit=5" \
   -b cookies.txt
+```
+
+### Upgrade
+
+```bash
+## Apply configuration changes
+helm upgrade my-qwc-instance . \
+  -n qwc-dev \
+  -f ./values.yaml
+```
+
+### Uninstall
+
+```bash
+## Remove Helm release
+helm uninstall my-qwc-instance -n qwc-dev
+
+## Remove PVCs (WARNING: Deletes all data!)
+kubectl delete pvc --all -n qwc-dev
+
+## Remove namespace (optional)
+kubectl delete namespace qwc-dev
 ```
 
 ---
@@ -1313,7 +1304,7 @@ kubectl delete pvc --all -n qwc-dev
 
 helm upgrade --install my-qwc-instance . \
   -n qwc-dev \
-  -f ./values-override.yaml \
+  -f ./values.yaml \
   --create-namespace
 
 ./scripts/init-demo-data.sh
@@ -1419,8 +1410,3 @@ echo "Backup completed: $BACKUP_DIR/db_$DATE.sql.gz"
 - [Kubernetes Documentation](https://kubernetes.io/docs/)
 - [Helm Documentation](https://helm.sh/docs/)
 - [Gateway API](https://gateway-api.sigs.k8s.io/)
-
----
-
-*Document Version: 1.0*
-*Last Updated: December 2025*

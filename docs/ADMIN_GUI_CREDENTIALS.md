@@ -290,7 +290,7 @@ The Admin GUI connects to the database using credentials from `pg_service.conf`:
 
 **Service name:** `qwc_configdb`
 
-**Configuration in values-override.yaml:**
+**Configuration in values.yaml:**
 
 ```yaml
 qwcAdminGUI:
@@ -457,7 +457,7 @@ echo "Password for user '$USERNAME' has been reset to: $NEW_PASSWORD"
    - Monitor admin actions
 
 6. **Database security:**
-   - Use strong database passwords (set in `values-override.yaml`)
+   - Use strong database passwords (set in `values.yaml`)
    - Enable SSL for database connections in production
    - Restrict database access to necessary services only
 
@@ -473,7 +473,7 @@ echo "Password for user '$USERNAME' has been reset to: $NEW_PASSWORD"
 ### Database Admin Credentials
 
 - **Username:** `qwc_admin` (from `global.db.secrets.qwcAdminPassword`)
-- **Password:** Set in `values-override.yaml` → `global.db.secrets.qwcAdminPassword`
+- **Password:** Set in `values.yaml` → `global.db.secrets.qwcAdminPassword`
 
 ### Access URLs
 
@@ -522,7 +522,3 @@ kubectl exec -n qwc-dev $DB_POD -- psql -U qwc_admin -d qwc_services -c \
 # Create user via init script
 ./scripts/init-demo-data.sh --host my-qwc-instance-qwcdb --admin-pass qwc_admin
 ```
-
----
-
-*Last updated: December 2024*

@@ -10,7 +10,7 @@ All **9 services** are deployed, running, and reachable within the cluster. Heal
 ## Status Matrix
 
 | Service | Status | Port | Health Endpoint | Functional Endpoint | Observation |
-|---------|--------|------|-----------------|---------------------|-------------|
+| --------- | -------- | ------ | ----------------- | --------------------- | ------------- |
 | **qwc-db** | 🟢 PASSED | 5432 | TCP Connect | N/A | Connection successful. |
 | **qwc-qgis-server** | � PASSED | 1080 | `/` (200 OK) | `GetCapabilities` (200 OK) | Server is correctly serving OGC Capabilities. |
 | **qwc-config-service** | 🟢 PASSED | 9090 | `/maps` (200 OK) | `/maps` (200 OK) | Service is answering core requests. |

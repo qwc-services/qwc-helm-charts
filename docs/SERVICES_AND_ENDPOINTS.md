@@ -19,7 +19,7 @@ This document provides comprehensive documentation of all Kubernetes services an
 The QWC2 Helm chart creates the following Kubernetes services:
 
 | Service Name | Type | Port | Purpose |
-|--------------|------|------|---------|
+| -------------- | ------ | ------ | --------- |
 | `{release}-qwcdb` | ClusterIP | 5432 | PostgreSQL database |
 | `{release}-qwcqgisserver` | ClusterIP | 80 | QGIS Server (Apache/FCGI) |
 | `{release}-qwcconfigservice` | ClusterIP | 80 | Config generator service |
@@ -729,7 +729,7 @@ Returns raster coverage data.
 When using `qwc-api-gateway`, requests are routed as follows:
 
 | Path | Service | Purpose |
-|------|---------|---------|
+| ------ | --------- | --------- |
 | `/` | qwc-map-viewer | Main application |
 | `/auth/*` | qwc-auth-service | Authentication |
 | `/ows/*` | qwc-ogc-service | OGC services |
@@ -859,7 +859,3 @@ curl "https://maps.example.com/ows/?SERVICE=WMS&REQUEST=GetCapabilities&MAP=qwc_
 curl "https://maps.example.com/api/v1/data/public.buildings?limit=10" \
   -b cookies.txt
 ```
-
----
-
-*Last updated: December 2024*
