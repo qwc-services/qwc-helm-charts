@@ -1,3 +1,4 @@
+{{ if .Values.createDb }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,3 +14,4 @@ spec:
       name: postgresql
   selector:
     {{- include "qwcDb.selectorLabels" . | nindent 4 }}
+{{ end }}

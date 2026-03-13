@@ -1,0 +1,105 @@
+# Default values for qwcDb.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: sourcepole/qwc-base-db
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "16"
+
+migrateImage:
+  repository: sourcepole/qwc-base-db-migrate
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: v2026.01.05
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# if false will not create the database but will apply the migration job
+createDb: true
+
+dbSecret:
+  user:
+    # name: secret config name. If empty, will use the one included in this chart.
+    key: postgresUser
+  password:
+    # name: secret config name. If empty, will use the one included in this chart.
+    key: postgresPassword
+
+# ====== Access to pg_service.conf secret (used by db migration job)
+pgServiceConfSecret:
+  # === secret name
+  # name:
+  # === file key within secret
+  key: pg_service_ro.conf
+
+service:
+  type: ClusterIP
+  port: 5432
+
+livenessProbe:
+  exec:
+    command: ["sh", "-c", 'pg_isready -U "$POSTGRES_USER" -d postgres']
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  failureThreshold: 40
+
+readinessProbe:
+  exec:
+    command: ["sh", "-c", 'pg_isready -U "$POSTGRES_USER" -d postgres']
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  failureThreshold: 30
+
+# Overrides claim names.
+# If values are setted below, not claim will be created and the deployment will use the overriden claim names.
+claimOverrides: {}
+  # pgData: claim-01
+
+# Additional volumes on the output Deployment definition:
+volumes: []
+# None
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  fsGroup: 999
+  # runAsUser: 999  # Uncomment if needed
+
+securityContext:
+  fsGroup: 999
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 999
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
