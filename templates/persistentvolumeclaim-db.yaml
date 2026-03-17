@@ -1,5 +1,7 @@
-{{ if and (not .Values.global.persistence.db.claimOverride) .Values.qwcDb.enabled }}
-{{- $storClassName := .Values.global.persistence.db.storageClassName -}}
+{{- if and .Values.qwcDb.enabled .Values.qwcDb.createDb }}
+{{- $dbBlock := .Values.global.persistence.db | default dict }}
+{{- $storClassName := $dbBlock.storageClassName -}}
+{{- if (not $dbBlock.claimOverride) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -12,10 +14,11 @@ spec:
   storageClassName: {{ $storClassName }}
   resources:
     requests:
-      storage: {{ .Values.global.persistence.db.size | default "30Gi" }}
+      storage: {{ $dbBlock.size | default "30Gi" }}
   {{- if eq $storClassName "local-storage" }}
   selector:
     matchLabels:
       {{- include "qwc.pgDataVolumeLabels" . | nindent 6 }}
   {{- end }}
-{{ end }}
+{{- end }}
+{{- end }}

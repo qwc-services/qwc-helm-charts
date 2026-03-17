@@ -160,10 +160,15 @@ Claim name for attachments volume
 Claim name for db volume
 */}}
 {{- define "qwc.pgDataVolumeClaim" -}}
-{{- if .Values.global.persistence.db.claimOverride }}
-{{- .Values.global.persistence.db.claimOverride }}
+{{- $dbBlock := .Values.global.persistence.db | default dict }}
+{{- if .Values.qwcDb.enabled }}
+{{- if $dbBlock.claimOverride }}
+{{- $dbBlock.claimOverride }}
 {{- else }}
 {{- printf "%s-%s-claim" .Release.Name "pg" }}
+{{- end }}
+{{- else }}
+{{- "fake" }}
 {{- end }}
 {{- end }}
 
