@@ -1,4 +1,4 @@
-{{ if (not .Values.global.persistence.db.claimOverride) }}
+{{ if and (not .Values.global.persistence.db.claimOverride) .Values.qwcDb.enabled }}
 {{- $storClassName := .Values.global.persistence.db.storageClassName -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
