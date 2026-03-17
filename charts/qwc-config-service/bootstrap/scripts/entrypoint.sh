@@ -36,13 +36,16 @@ logInfo "Entrypoint" "Checking ${INPUT_CONFIG_PATH}"
 ls -alR "${INPUT_CONFIG_PATH}/"
 
 if [ ! -f "${INPUT_CONFIG_PATH}/${BOOTSTRAP_WATCHDOG_FILE}" ]; then
-	logInfo "Entrypoint" "No config-in data. Will bootstrap..."
+	logInfo "Entrypoint-bootstrap" "No config-in data. Will bootstrap..."
 	configmap_to_files /bootstrap/config-in "$INPUT_CONFIG_PATH" "$BOOTSTRAP_WATCHDOG_FILE"
 
 	if [ -n "$(which envsubst)" ]; then
-		logInfo "Configmap_to_files" "Parsing env vars..."
-		# for each sample file, replace {{ ENV_VAR }} by env var value
-		parse_inplace "$INPUT_CONFIG_PATH" '*'
+		logInfo "Entrypoint-bootstrap" "Parsing env vars..."
+
+		# for each sample file of default and qgis_projects, replace {{ ENV_VAR }} by env var value
+		# it can not be executed on root $INPUT_CONFIG_PATH directory (strange errors will occur)
+		parse_inplace "$INPUT_CONFIG_PATH/default" '*'
+		parse_inplace "$INPUT_CONFIG_PATH/qgis_projects" '*'
 	fi
 
 	if [ -d /srv/qwc_service/.venv ]; then
