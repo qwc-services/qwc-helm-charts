@@ -59,8 +59,8 @@ function configmap_to_files() {
 			newpath=$(echo $f | sed 's|--|/|g' | sed 's|^\./||g')
 			# skip internal configMap mechanism directory:
 			[ "$newpath" == "..data" ] && continue
-			echo "Copying $f => $DEST/$newpath"
-			mkdir -p "$(dirname $DEST/$newpath)" || failed "Unable to create dir '$DEST/$newpath'"
+			echo "Copying $f => $DEST/$(dirname $newpath)/$(basename $newpath)"
+			mkdir -p "$(dirname $DEST/$newpath)" || failed "Unable to create dir '$DEST/$(dirname $newpath)/$(basename $newpath)'"
 			base64 -d "$f" >"$DEST/$(dirname $newpath)/$(basename $newpath)"
 
 		done
