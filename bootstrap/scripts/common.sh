@@ -33,8 +33,8 @@ function parse_mustache() {
 function parse_inplace() {
 	# shellcheck disable=SC2044
 	for f in $(find "$1" -type f -iname "$2"); do
-		parse_mustache $f >$f.tmp &&
-			mv $f.tmp $f
+		parse_mustache $f >$f.tmp || failed "Unable to parse_mustache '$f'"
+		mv $f.tmp $f || failed "Unable to rename tmp file '$f'"
 	done
 }
 
