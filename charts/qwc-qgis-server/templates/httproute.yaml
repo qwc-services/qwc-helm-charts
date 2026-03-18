@@ -1,4 +1,4 @@
-{{- if .Values.httpRoute.enabled }}
+{{- if (default .Values.global.httpRoute.enabled .Values.httpRoute.enabled) }}
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -20,7 +20,7 @@ spec:
     - group: gateway.networking.k8s.io
       kind: Gateway
       name: {{ .Values.global.httpRoute.gateway.name | default .Values.httpRoute.gateway.name | default  (printf "%s-gateway" .Release.Name) }}
-      namespace: {{ .Values.global.httpRoute.gateway.namespace | default .Values.httpRoute.gateway.namespace }}
+      namespace: {{ .Values.global.httpRoute.gateway.namespace | default .Values.httpRoute.gateway.namespace | default .Release.Namespace }}
       sectionName: {{ .Values.global.httpRoute.gateway.sectionName | default .Values.httpRoute.gateway.sectionName }}
   rules:
     - backendRefs:
