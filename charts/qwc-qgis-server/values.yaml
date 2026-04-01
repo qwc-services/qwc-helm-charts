@@ -138,7 +138,7 @@ httpRoute:
     sectionName: https
   paths:
     - type: PathPrefix
-      value: /
+      value: /ogc/
 
 serviceAccount:
   # Specifies whether a service account should be created
