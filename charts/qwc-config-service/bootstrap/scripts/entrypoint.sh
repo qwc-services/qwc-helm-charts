@@ -36,7 +36,7 @@ logInfo "Entrypoint" "Checking ${INPUT_CONFIG_PATH}"
 ls -alR "${INPUT_CONFIG_PATH}/"
 
 if [ ! -f "${INPUT_CONFIG_PATH}/${BOOTSTRAP_WATCHDOG_FILE}" ]; then
-	logInfo "Entrypoint-bootstrap" "No config-in data. Will bootstrap..."
+	logInfo "Entrypoint-bootstrap" "No config-in data (watchdog file '${INPUT_CONFIG_PATH}/${BOOTSTRAP_WATCHDOG_FILE}'). Will bootstrap..."
 	configmap_to_files /bootstrap/config-in "$INPUT_CONFIG_PATH" "$BOOTSTRAP_WATCHDOG_FILE"
 
 	if [ -n "$(which envsubst)" ]; then
