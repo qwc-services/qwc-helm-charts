@@ -35,21 +35,21 @@ Create chart name and version as used by the chart label.
 Bootstrap configMap name for entrypoint
 */}}
 {{- define "qwcConfigService.bootstrapEntrypoint" -}}
-{{- default (printf "%s-bootstrap-entrypoint" (include "qwcConfigService.fullname" .)) .Values.bootstrapEntrypoint }}
+{{- default (printf "%s-bootstrap-entrypoint" (include "qwcConfigService.fullname" .)) .Values.bootstrap.entrypoint }}
 {{- end }}
 
 {{/*
 Bootstrap configMap name for common scripts
 */}}
 {{- define "qwcConfigService.bootstrapCommonScripts" -}}
-{{- default (printf "%s-bootstrap-common-scripts" .Release.Name) .Values.bootstrapCommonScripts }}
+{{- default (printf "%s-bootstrap-common-scripts" .Release.Name) .Values.bootstrap.commonScripts }}
 {{- end }}
 
 {{/*
 Bootstrap configMap name for config input
 */}}
 {{- define "qwcConfigService.bootstrapConfigIn" -}}
-{{- default (printf "%s-bootstrap-config-in" .Release.Name) .Values.bootstrapConfigIn }}
+{{- default (printf "%s-bootstrap-config-in" .Release.Name) .Values.bootstrap.configIn }}
 {{- end }}
 
 

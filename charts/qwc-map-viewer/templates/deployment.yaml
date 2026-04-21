@@ -114,7 +114,7 @@ spec:
 
           env:
             - name: BOOTSTRAP_WATCHDOG_FILE
-              value: {{ default "catalog.json" .Values.bootstrapWatchDogFile }}
+              value: {{ .Values.bootstrap.watchDogFile }}
 
           volumeMounts:
             - name: vol-qwc-bootstrap-assets

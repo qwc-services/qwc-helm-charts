@@ -66,6 +66,16 @@ volumes: []
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: []
 
+bootstrap:
+  # === ConfigMap name for common scripts
+  # commonScripts:
+
+  # === ConfigMap name for assets data
+  # assets:
+
+  # === Watchdog file name. Used to tell if we need to create asset from bootstrap data or keep existing one.
+  watchDogFile: catalog.json
+
 autoscaling:
   enabled: false
   minReplicas: 1

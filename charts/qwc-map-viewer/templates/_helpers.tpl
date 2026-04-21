@@ -35,14 +35,14 @@ Create chart name and version as used by the chart label.
 Bootstrap configMap name for assets
 */}}
 {{- define "qwcMapViewer.bootstrapAssets" -}}
-{{- default (printf "%s-bootstrap-assets" .Release.Name) .Values.bootstrapAssets }}
+{{- default (printf "%s-bootstrap-assets" .Release.Name) .Values.bootstrap.assets }}
 {{- end }}
 
 {{/*
 Bootstrap configMap name for common scripts
 */}}
 {{- define "qwcMapViewer.bootstrapCommonScripts" -}}
-{{- default (printf "%s-bootstrap-common-scripts" .Release.Name) .Values.bootstrapCommonScripts }}
+{{- default (printf "%s-bootstrap-common-scripts" .Release.Name) .Values.bootstrap.commonScripts }}
 {{- end }}
 
 
