@@ -62,6 +62,8 @@ spec:
               value: {{ .Values.global.env.jwtCookieCSRFProtect | quote }}
             - name: AUTH_REQUIRED
               value: {{ .Values.env.authRequired | quote }}
+            - name: UWSGI_EXTRA
+              value: "--thunder-lock --listen {{ .Values.env.queueSize }}"
 
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
