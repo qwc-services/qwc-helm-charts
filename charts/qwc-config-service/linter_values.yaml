@@ -6,6 +6,7 @@ global:
 
   env:
     jwtSecret: {}
+    uwsgi: {}
 
   persistence:
     createVolumes: false

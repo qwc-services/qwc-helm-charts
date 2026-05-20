@@ -41,6 +41,16 @@ global:
       # name:
       # === jwt key name within secret or empty to use the default one: 'jsonWebToken'
       # key:
+    # ===== uwsgi parameters
+    uwsgi:
+      # === listen queue size
+      # queueSize:
+      # === http header buffer size
+      headerSize: 12288
+      # === number of parallel processes per thread
+      # nbProcess:
+      # === number of parallel threads
+      # nbThread:
 
   # ========================================
   # VOLUME MANAGEMENT
@@ -142,10 +152,20 @@ qwcQgisServer:
 # Config Generator Service
 qwcConfigService:
   enabled: true
+  # === uwsgi parameters
+  uwsgi:
+    # === number of parallel processes per thread
+    nbProcess: 1
+    # === number of parallel threads
+    nbThread: 4
 
 # OGC (WMS/WFS) Service
 qwcOgcService:
   enabled: true
+  # === uwsgi parameters
+  uwsgi:
+    # === listen queue size
+    queueSize: 1024
 
 # Data Service
 qwcDataService:

@@ -52,6 +52,14 @@ spec:
               value: "/qwc_cfg/config"
             - name: SERVICE_MOUNTPOINT
               value: '/api/v1/permalink'
+            - name: REQ_HEADER_BUFFER_SIZE
+              value: {{ .Values.env.uwsgi.headerSize | default .Values.global.env.uwsgi.headerSize | default 4096 | quote }}
+            - name: UWSGI_PROCESSES
+              value: {{ .Values.env.uwsgi.nbProcess | default .Values.global.env.uwsgi.nbProcess | default 1 | quote }}
+            - name: UWSGI_THREADS
+              value: {{ .Values.env.uwsgi.nbThread | default .Values.global.env.uwsgi.nbThread | default 1 | quote }}
+            - name: UWSGI_EXTRA
+              value: "--thunder-lock --listen {{ .Values.env.uwsgi.queueSize | default .Values.global.env.uwsgi.queueSize | default 64 }}"
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:

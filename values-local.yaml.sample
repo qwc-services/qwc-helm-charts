@@ -46,6 +46,8 @@ global:
       # name:
       # === jwt key name within secret or empty to use the default one: 'jsonWebToken'
       # key:
+    # ===== uwsgi parameters
+    uwsgi: {}
 
   # ========================================
   # VOLUME MANAGEMENT

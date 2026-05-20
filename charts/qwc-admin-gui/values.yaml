@@ -47,6 +47,16 @@ pgServiceConfSecret:
 env:
   # === CSRF protection
   # jwtCookieCSRFProtect: true
+  # === uwsgi parameters
+  uwsgi: {}
+    # === listen queue size
+    # queueSize: 64
+    # === http header buffer size
+    # headerSize: 12288
+    # === number of parallel processes per thread
+    # nbProcess: 1
+    # === number of parallel threads
+    # nbThread: 1
 
   # ======== GLOBAL ONLY env variables:
   # serviceUID:

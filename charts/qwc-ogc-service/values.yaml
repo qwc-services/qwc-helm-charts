@@ -43,6 +43,16 @@ pgServiceConfSecret:
 env:
   # === CSRF protection
   # jwtCookieCSRFProtect: true
+  # === uwsgi parameters
+  uwsgi: {}
+    # === listen queue size
+    # queueSize: 64
+    # === http header buffer size
+    # headerSize: 12288
+    # === number of parallel processes per thread
+    # nbProcess: 1
+    # === number of parallel threads
+    # nbThread: 1
 
   # ======== GLOBAL ONLY env variables:
   # serviceUID:
@@ -56,8 +66,6 @@ env:
 
   # ======== LOCAL only env variables:
   authRequired: false
-  # === uwsgi queue size
-  queueSize: 1024
 
 # Overrides claim names.
 # If values are setted below, not claim will be created and the deployment will use the overriden claim names.
