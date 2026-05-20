@@ -5,8 +5,6 @@ global:
     port: 5432
 
   env:
-    serviceUID: 1000
-    serviceGID: 1000
     jwtSecret:
       name: secret-name
       key: jsonWebToken

@@ -39,8 +39,11 @@ pgServiceConfSecret:
   # === file key within secret
   key: pg_service_rw.conf
 
-# ====== ENV variables for qwc-ogc-service
+# ====== Chart env variables defined in global or overriden here
 env:
+  # ======== GLOBAL ONLY env variables:
+  # serviceUID:
+  # serviceGID:
   # ====== Access to JWT secret
   jwtSecret:
     # === secret name

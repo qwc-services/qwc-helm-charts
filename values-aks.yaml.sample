@@ -34,8 +34,6 @@ global:
   jsonWebToken: the_secret_key
 
   env:
-    serviceUID: 1000
-    serviceGID: 1000
     jwtSecret:
       key: jsonWebToken
     jwtCookieCSRFProtect: true

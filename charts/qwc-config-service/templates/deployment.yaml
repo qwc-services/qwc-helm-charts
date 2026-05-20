@@ -84,9 +84,9 @@ spec:
                   name: {{ .Values.global.env.jwtSecret.name | default (printf "%s-global-secret" .Release.Name) }}
                   key: {{ .Values.global.env.jwtSecret.key }}
             - name: SERVICE_UID
-              value: {{ .Values.global.env.serviceUID | quote }}
+              value: {{ .Values.global.env.serviceUID | default 1000 | quote }}
             - name: SERVICE_GID
-              value: {{ .Values.global.env.serviceGID | quote }}
+              value: {{ .Values.global.env.serviceGID | default 1000 | quote }}
             - name: JWT_COOKIE_CSRF_PROTECT
               value: {{ .Values.global.env.jwtCookieCSRFProtect | quote }}
 
