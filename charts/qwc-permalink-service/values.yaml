@@ -43,6 +43,9 @@ pgServiceConfSecret:
 
 # ====== Chart env variables defined in global or overriden here
 env:
+  # === CSRF protection
+  # jwtCookieCSRFProtect: true
+
   # ======== GLOBAL ONLY env variables:
   # serviceUID:
   # serviceGID:

@@ -41,7 +41,6 @@ global:
       # name:
       # === jwt key name within secret or empty to use the default one: 'jsonWebToken'
       # key:
-    jwtCookieCSRFProtect: true
 
   # ========================================
   # VOLUME MANAGEMENT
@@ -159,6 +158,8 @@ qwcMapViewer:
 # Admin GUI
 qwcAdminGUI:
   enabled: true
+  env:
+    jwtCookieCSRFProtect: false
 
 # Auth Service
 qwcAuthService:
