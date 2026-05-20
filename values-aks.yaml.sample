@@ -31,11 +31,16 @@ global:
       qwcServiceReadPassword: qwc_service
       qwcServiceWritePassword: qwc_service_write
 
+  # jwt secret to be saved in default Secret storage 'RELEASE-global-secret'
   jsonWebToken: the_secret_key
 
   env:
-    jwtSecret:
-      key: jsonWebToken
+    # ====== Access to JWT secret
+    jwtSecret: {}
+      # === secret name or empty to use the default one: 'RELEASE-global-secret'
+      # name:
+      # === jwt key name within secret or empty to use the default one: 'jsonWebToken'
+      # key:
     jwtCookieCSRFProtect: true
 
   # ========================================

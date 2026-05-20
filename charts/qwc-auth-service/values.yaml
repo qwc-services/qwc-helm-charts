@@ -49,11 +49,13 @@ env:
   # serviceUID:
   # serviceGID:
   # ====== Access to JWT secret
-  jwtSecret:
-    # === secret name
-    # name:
-    # === jwt key name within secret
-    # key:
+  # jwtSecret:
+  #   === secret name or empty to use the default one: 'RELEASE-global-secret'
+  #   name:
+  #   === jwt key name within secret or empty to use the default one: 'jsonWebToken'
+  #   key:
+
+  # ======== LOCAL only env variables:
   jwtCookieSecure: false
   jwtCookieSamesite: "Lax"
 

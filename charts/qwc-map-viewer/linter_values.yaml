@@ -5,9 +5,7 @@ global:
     port: 5432
 
   env:
-    jwtSecret:
-      name: secret-name
-      key: jsonWebToken
+    jwtSecret: {}
 
   httpRoute:
     gateway:
