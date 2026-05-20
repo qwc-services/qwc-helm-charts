@@ -46,6 +46,25 @@ spec:
               protocol: TCP
 
           env:
+            # Extra ENV vars:
+            {{- range .Values.envExtra }}
+            - name: {{ .name }}
+              value: {{ .value }}
+            {{- end }}
+
+            # Extra secret ENV vars:
+            {{- with .Values.envExtraSecret }}
+              {{ $secretName := .secretName }}
+              {{- range .keys }}
+            - name: {{ . }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secretName }}
+                  key: {{ . }}
+              {{- end }}
+            {{- end }}
+
+            # Default ENV vars:
             - name: PORT
               value: "1080" # 1080 to avoid root permission under 1024
             - name: URL_PREFIX
