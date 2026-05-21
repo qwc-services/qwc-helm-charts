@@ -5,8 +5,7 @@ global:
     port: 5432
 
   httpRoute:
-    gateway:
-      name: blah
+    gateway: {}
 
   persistence:
     createVolumes: false

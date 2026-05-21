@@ -9,8 +9,7 @@ global:
     uwsgi: {}
 
   httpRoute:
-    gateway:
-      name: blah
+    gateway: {}
 
   persistence:
     createVolumes: false

@@ -104,12 +104,12 @@ ingress:
 httpRoute:
   enabled:
   hostnames: []
-  gateway:
+  gateway: {}
     # === k8s gateway name
     # name: aGatewayName
     # === k8s gateway namespace
     # namespace: aNamespaceName
-    sectionName: https
+    # sectionName: https
   paths:
     - type: PathPrefix
       value: /api/v1/permalink/
