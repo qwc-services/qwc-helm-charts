@@ -28,9 +28,9 @@ set -e
 # ============================================
 
 # Default values
-NAMESPACE="qwc-dev"
-RELEASE="qwc-services"
-VERBOSE=false
+NAMESPACE="${QWC_NAMESPACE:-qwc-dev}"
+RELEASE="${QWC_RELEASE:-my-qwc-instance}"
+VERBOSE="${VERBOSE:-false}"
 LOCAL_PORT_START=18000
 TIMEOUT=5
 
