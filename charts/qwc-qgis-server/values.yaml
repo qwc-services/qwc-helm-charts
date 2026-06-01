@@ -85,7 +85,8 @@ env:
   qgisServerWmtsServiceUrl: ""
   qgisCustomConfigPath: "/var/lib/qgis"
   qgisAuthDbDirPath: "/var/lib/qgis"
-  qgisOptionsPath: "/etc"
+  # This default value makes the qgis option path set to /opt/qgis and creates volume/mountVolume accordingly
+  qgisOptionsPath: "the_qgis_options_path"
   qgisPluginpath: "/usr/share/qgis/python/plugins"
   qgisServerApiResourcesDirectory: "/usr/share/qgis/resources/server/api"
   qgisServerCacheDirectory: "/.cache"

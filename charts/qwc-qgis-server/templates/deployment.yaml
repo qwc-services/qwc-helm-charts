@@ -34,6 +34,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
 
+      # ======================= MAIN CONTAINER =======================
       containers:
         - name: {{ .Chart.Name | lower }}
           securityContext:
@@ -129,8 +130,23 @@ spec:
               value: {{ .Values.env.qgisCustomConfigPath | default "/var/lib/qgis" }}
             - name: QGIS_AUTH_DB_DIR_PATH
               value: {{ .Values.env.qgisAuthDbDirPath | default "/var/lib/qgis" }}
+
+            {{- if .Values.env.qgisOptionsPath }}
+              {{- if eq .Values.env.qgisOptionsPath "the_qgis_options_path" }}
+              # Use default mount point if path is "the_qgis_options_path":
             - name: QGIS_OPTIONS_PATH
-              value: {{ .Values.env.qgisOptionsPath | default "/etc" }}
+              value: "/opt/qgis"
+              {{- else }}
+              # else use the provided value:
+            - name: QGIS_OPTIONS_PATH
+              value: {{ .Values.env.qgisOptionsPath }}
+              {{- end }}
+            # Also add QGIS_OPTIONS_PATH to FCGID_EXTRA_ENV to be taken into account
+            # but it can be overriden by user FCGID_EXTRA_ENV value:
+            - name: FCGID_EXTRA_ENV
+              value: "QGIS_OPTIONS_PATH"
+            {{- end }}
+
             - name: QGIS_PLUGINPATH
               value: {{ .Values.env.qgisPluginpath | default "/usr/share/qgis/python/plugins" }}
             - name: QGIS_SERVER_API_RESOURCES_DIRECTORY
@@ -167,6 +183,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 
+          # ======================= VOLUME MOUNT =======================
           volumeMounts:
             - name: vol-pg-service-conf-ro
               mountPath: /etc/postgresql-common/
@@ -174,11 +191,17 @@ spec:
             - name: vol-qgis-resources-ro
               mountPath: /data/
               readOnly: true
+
+          {{- if eq .Values.env.qgisOptionsPath "the_qgis_options_path" }}
+            - mountPath: /opt/qgis
+              name: qgis-home-volume
+          {{- end }}
+
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}
 
-
+      # ======================= INIT CONTAINERS =======================
       initContainers:
       {{- with .Values.initContainers }}
         {{- toYaml . | nindent 8 }}
@@ -190,6 +213,21 @@ spec:
             - '-c'
             - "until nc -z {{ $dbHostname }} {{ $dbPort }} >/dev/null 2>&1; do echo waiting for qwcDb; sleep 2; done"
 
+      {{- if eq .Values.env.qgisOptionsPath "the_qgis_options_path" }}
+        - name: qgis-home-volume-hack
+          image: busybox
+          command:
+            - "sh"
+            - "-c"
+            - |
+              mkdir -p /opt/qgis/QGIS
+              chown -R www-data:www-data /opt/qgis || echo true
+          volumeMounts:
+            - name: qgis-home-volume
+              mountPath: /opt/qgis
+      {{- end }}
+
+      # ======================= VOLUMES =======================
       volumes:
         - name: vol-pg-service-conf-ro
           secret:
@@ -201,10 +239,18 @@ spec:
         - name: vol-qgis-resources-ro
           persistentVolumeClaim:
             claimName: {{ include "qwcQgisServer.qgisResourcesVolumeClaim" . }}
+
+      {{- if eq .Values.env.qgisOptionsPath "the_qgis_options_path" }}
+        - name: qgis-home-volume
+          emptyDir:
+            sizeLimit: 500Mi
+      {{- end }}
+
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
 
+      # ======================= POD EXTRA =======================
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
