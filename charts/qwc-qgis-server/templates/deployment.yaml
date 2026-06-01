@@ -46,24 +46,6 @@ spec:
               protocol: TCP
 
           env:
-            # Extra ENV vars:
-            {{- range .Values.envExtra }}
-            - name: {{ .name }}
-              value: {{ .value }}
-            {{- end }}
-
-            # Extra secret ENV vars:
-            {{- with .Values.envExtraSecret }}
-              {{ $secretName := .secretName }}
-              {{- range .keys }}
-            - name: {{ . }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ $secretName }}
-                  key: {{ . }}
-              {{- end }}
-            {{- end }}
-
             # Default ENV vars:
             - name: PORT
               value: "1080" # 1080 to avoid root permission under 1024
@@ -159,6 +141,24 @@ spec:
               value: {{ .Values.env.qgisServerProjectRoot | default "/data" }}
             - name: PGSERVICEFILE
               value: {{ .Values.env.pgservicefile | default "/etc/postgresql-common/pg_service.conf" }}
+
+            # Extra ENV vars:
+            {{- range .Values.envExtra }}
+            - name: {{ .name }}
+              value: {{ .value }}
+            {{- end }}
+
+            # Extra secret ENV vars:
+            {{- with .Values.envExtraSecret }}
+              {{ $secretName := .secretName }}
+              {{- range .keys }}
+            - name: {{ . }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $secretName }}
+                  key: {{ . }}
+              {{- end }}
+            {{- end }}
 
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
