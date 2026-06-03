@@ -18,7 +18,7 @@ function generate_config() {
   # Activate virtualenv to access Python dependencies (jsonschema, etc.)
   source /srv/qwc_service/.venv/bin/activate
 
-  python /srv/qwc_service/config_generator_cli.py "${INPUT_CONFIG_PATH}/default/tenantConfig.json" all \
+  uv run /srv/qwc_service/config_generator_cli.py "${INPUT_CONFIG_PATH}/default/tenantConfig.json" all \
     || failed "config_generator_cli crashed!"
 
   # Set the correct permissions to config-generated
