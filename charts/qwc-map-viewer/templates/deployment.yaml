@@ -119,6 +119,7 @@ spec:
               base64 -d /bootstrap/scripts/common.sh > /tmp/common.sh
               source /tmp/common.sh
               configmap_to_files /bootstrap/assets /qwc2/assets/ $BOOTSTRAP_WATCHDOG_FILE
+              sed -i 's|Build $VERSION$.*</p>|Build $VERSION${{ tpl .Values.aboutVersionTemplate . }}</p>|g' /qwc2/assets/help.html
 
           env:
             - name: BOOTSTRAP_WATCHDOG_FILE

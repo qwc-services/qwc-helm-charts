@@ -94,6 +94,9 @@ bootstrap:
   # === Watchdog file name. Used to tell if we need to create asset from bootstrap data or keep existing one.
   watchDogFile: catalog.json
 
+# String used to display About info in help menu:
+aboutVersionTemplate: "</p><p>Chart: <ul><li>Version: {{ .Chart.Version }}</li><li>Updated: {{ now }}</li><li>Revision:  {{ .Release.Revision }}</li></ul>"
+
 autoscaling:
   enabled: false
   minReplicas: 1
