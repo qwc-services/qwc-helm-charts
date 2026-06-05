@@ -9,7 +9,10 @@ function generate_config() {
   INPUT_CONFIG_PATH="$1"
   [ -z "$2" ] && failed "Need second param: OUTPUT_CONFIG_PATH"
   OUTPUT_CONFIG_PATH="$2"
-  logInfo "generate_config" "Generate config from ${INPUT_CONFIG_PATH} to ${OUTPUT_CONFIG_PATH}"
+
+  logInfo "generate_config" "Will generate config from '${INPUT_CONFIG_PATH}' to '${OUTPUT_CONFIG_PATH}'"
+
+  [ -d /srv/qwc_service/.venv ] || failed "No venv directory present!"
 
   # With unique tenant, uncomment next line
   # Activate virtualenv to access Python dependencies (jsonschema, etc.)
@@ -32,7 +35,7 @@ for envvar in INPUT_CONFIG_PATH OUTPUT_CONFIG_PATH REQ_HEADER_BUFFER_SIZE UWSGI_
   [ -z "${!envvar+x}" ] && failed "'$envvar' env var must be defined."
 done
 
-logInfo "Entrypoint" "Checking ${INPUT_CONFIG_PATH}"
+logInfo "Entrypoint" "Checking content of '${INPUT_CONFIG_PATH}'"
 ls -alR "${INPUT_CONFIG_PATH}/"
 
 if [ ! -f "${INPUT_CONFIG_PATH}/${BOOTSTRAP_WATCHDOG_FILE}" ]; then
@@ -47,12 +50,13 @@ if [ ! -f "${INPUT_CONFIG_PATH}/${BOOTSTRAP_WATCHDOG_FILE}" ]; then
     parse_inplace "$INPUT_CONFIG_PATH/default" '*'
     parse_inplace "$INPUT_CONFIG_PATH/qgis_projects" '*'
   fi
-
-  if [ -d /srv/qwc_service/.venv ]; then
-    generate_config "${INPUT_CONFIG_PATH}" "${OUTPUT_CONFIG_PATH}"
-  fi
 else
-  logInfo "Entrypoint" "Config-in data already present. Skipping bootstrap!"
+  logInfo "Entrypoint" "Config-in data already present (watchdog file '${INPUT_CONFIG_PATH}/${BOOTSTRAP_WATCHDOG_FILE}'). Skipping bootstrap!"
+fi
+
+# When bootstrap is done and no config was never generated, generate first one.
+if [ ! -f "${OUTPUT_CONFIG_PATH}/adminGuiConfig.json" ]; then
+  generate_config "${INPUT_CONFIG_PATH}" "${OUTPUT_CONFIG_PATH}"
 fi
 
 logInfo "Entrypoint" "Starting UWSGI..."
