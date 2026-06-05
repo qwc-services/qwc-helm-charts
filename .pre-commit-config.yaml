@@ -10,7 +10,7 @@ repos:
       - id: check-builtin-literals
       - id: check-case-conflict
       - id: check-toml
-#      - id: check-yaml
+      #      - id: check-yaml
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: fix-byte-order-marker
@@ -24,3 +24,9 @@ repos:
     hooks:
       - id: shellcheck
       - id: helmlint
+
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.13.1-1
+    hooks:
+      - id: shfmt # prebuilt upstream executable
+      # - id: shfmt-docker  # Docker image (requires Docker to run)
