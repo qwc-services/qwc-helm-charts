@@ -30,3 +30,9 @@ repos:
     hooks:
       - id: shfmt # prebuilt upstream executable
       # - id: shfmt-docker  # Docker image (requires Docker to run)
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.16.3 # Use the latest version or a specific version
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
