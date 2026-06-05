@@ -2,7 +2,7 @@
 
 All notable changes to this chart and subcharts will be documented in this file.
 
-## **Unreleased** - 2026-06-05
+## **3.0.0** - 2026-06-05
 
 ### Added
 
@@ -25,11 +25,13 @@ All notable changes to this chart and subcharts will be documented in this file.
 - Move from configmap file file content to configmap that load file content
 - Move global.env.serviceUID etc block from subchart to main values.yaml as one is enough
 - Clean up volumes and claims to work with any storageClassName
+- Format values files
 - Create value files for local and aks cluster
 - Postgresql paths in db chart
 - Move configuration files into the subchart
 - Use plural info-templates everywhere
 - Move/rename bootstrap files
+- Small changes
 - Replace bad conditional by eq
 - Remove unused config services and fix some parameters
 - Get config.json from upstream qwc stock app
