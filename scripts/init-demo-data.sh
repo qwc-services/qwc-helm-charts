@@ -42,80 +42,80 @@ NC='\033[0m' # No Color
 
 # Cleanup function to stop port-forward on exit
 cleanup() {
-	if [ -n "$PORT_FORWARD_PID" ]; then
-		echo -e "${YELLOW}Stopping port-forward (PID: $PORT_FORWARD_PID)...${NC}"
-		kill "$PORT_FORWARD_PID" 2>/dev/null || true
-		wait "$PORT_FORWARD_PID" 2>/dev/null || true
-	fi
+  if [ -n "$PORT_FORWARD_PID" ]; then
+    echo -e "${YELLOW}Stopping port-forward (PID: $PORT_FORWARD_PID)...${NC}"
+    kill "$PORT_FORWARD_PID" 2>/dev/null || true
+    wait "$PORT_FORWARD_PID" 2>/dev/null || true
+  fi
 }
 trap cleanup EXIT
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
-	case $1 in
-	--namespace | -n)
-		NAMESPACE="$2"
-		shift 2
-		;;
-	--release)
-		RELEASE_NAME="$2"
-		shift 2
-		;;
-	--database)
-		DB_NAME="$2"
-		shift 2
-		;;
-	--skip-users)
-		SKIP_USERS=true
-		shift
-		;;
-	--skip-geodata)
-		SKIP_GEODATA=true
-		shift
-		;;
-	--yes | -y)
-		INTERACTIVE=false
-		shift
-		;;
-	--help)
-		echo "Usage: ./init-demo-data.sh [OPTIONS]"
-		echo ""
-		echo "This script initializes QWC2 with demo data including:"
-		echo "  - Demo users (admin/demo, demo/demo)"
-		echo "  - Demo geospatial data (cities, roads, regions)"
-		echo "  - Demo QGIS project"
-		echo "  - Demo theme configuration"
-		echo ""
-		echo "Options:"
-		echo "  --namespace, -n NS    Kubernetes namespace (default: $DEFAULT_NAMESPACE)"
-		echo "  --release NAME        Helm release name (auto-detected from pods)"
-		echo "  --database DB         Database name (default: qwc_services)"
-		echo "  --skip-users          Skip creating demo users"
-		echo "  --skip-geodata        Skip creating demo geospatial data"
-		echo "  --yes, -y             Skip interactive prompts (use defaults)"
-		echo "  --help                Show this help message"
-		exit 0
-		;;
-	*)
-		echo -e "${RED}Unknown option: $1${NC}"
-		echo "Use --help for usage information."
-		exit 1
-		;;
-	esac
+  case $1 in
+    --namespace | -n)
+      NAMESPACE="$2"
+      shift 2
+      ;;
+    --release)
+      RELEASE_NAME="$2"
+      shift 2
+      ;;
+    --database)
+      DB_NAME="$2"
+      shift 2
+      ;;
+    --skip-users)
+      SKIP_USERS=true
+      shift
+      ;;
+    --skip-geodata)
+      SKIP_GEODATA=true
+      shift
+      ;;
+    --yes | -y)
+      INTERACTIVE=false
+      shift
+      ;;
+    --help)
+      echo "Usage: ./init-demo-data.sh [OPTIONS]"
+      echo ""
+      echo "This script initializes QWC2 with demo data including:"
+      echo "  - Demo users (admin/demo, demo/demo)"
+      echo "  - Demo geospatial data (cities, roads, regions)"
+      echo "  - Demo QGIS project"
+      echo "  - Demo theme configuration"
+      echo ""
+      echo "Options:"
+      echo "  --namespace, -n NS    Kubernetes namespace (default: $DEFAULT_NAMESPACE)"
+      echo "  --release NAME        Helm release name (auto-detected from pods)"
+      echo "  --database DB         Database name (default: qwc_services)"
+      echo "  --skip-users          Skip creating demo users"
+      echo "  --skip-geodata        Skip creating demo geospatial data"
+      echo "  --yes, -y             Skip interactive prompts (use defaults)"
+      echo "  --help                Show this help message"
+      exit 0
+      ;;
+    *)
+      echo -e "${RED}Unknown option: $1${NC}"
+      echo "Use --help for usage information."
+      exit 1
+      ;;
+  esac
 done
 
 # Interactive namespace prompt
 if [ -z "$NAMESPACE" ]; then
-	if [ "$INTERACTIVE" = true ]; then
-		echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
-		echo -e "${CYAN}║         QWC2 Demo Data Initialization Script               ║${NC}"
-		echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
-		echo ""
-		read -r -p "Enter Kubernetes namespace [${DEFAULT_NAMESPACE}]: " INPUT_NAMESPACE
-		NAMESPACE="${INPUT_NAMESPACE:-$DEFAULT_NAMESPACE}"
-	else
-		NAMESPACE="$DEFAULT_NAMESPACE"
-	fi
+  if [ "$INTERACTIVE" = true ]; then
+    echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║         QWC2 Demo Data Initialization Script               ║${NC}"
+    echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
+    echo ""
+    read -r -p "Enter Kubernetes namespace [${DEFAULT_NAMESPACE}]: " INPUT_NAMESPACE
+    NAMESPACE="${INPUT_NAMESPACE:-$DEFAULT_NAMESPACE}"
+  else
+    NAMESPACE="$DEFAULT_NAMESPACE"
+  fi
 fi
 
 echo ""
@@ -126,37 +126,37 @@ echo -e "Namespace: ${YELLOW}$NAMESPACE${NC}"
 DB_POD=$(kubectl get pods -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcdb" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
 
 if [ -z "$DB_POD" ]; then
-	# Try alternative label
-	DB_POD=$(kubectl get pods -n "$NAMESPACE" | grep -E "qwcdb|qwc-db" | awk '{print $1}' | head -1 || echo "")
+  # Try alternative label
+  DB_POD=$(kubectl get pods -n "$NAMESPACE" | grep -E "qwcdb|qwc-db" | awk '{print $1}' | head -1 || echo "")
 fi
 
 if [ -z "$DB_POD" ]; then
-	echo -e "${RED}Error: Cannot find database pod in namespace '$NAMESPACE'.${NC}"
-	echo -e "${YELLOW}Available pods:${NC}"
-	kubectl get pods -n "$NAMESPACE" 2>/dev/null || echo "Cannot list pods"
-	exit 1
+  echo -e "${RED}Error: Cannot find database pod in namespace '$NAMESPACE'.${NC}"
+  echo -e "${YELLOW}Available pods:${NC}"
+  kubectl get pods -n "$NAMESPACE" 2>/dev/null || echo "Cannot list pods"
+  exit 1
 fi
 
 echo -e "Database pod: ${YELLOW}$DB_POD${NC}"
 
 # Auto-detect release name from pod name if not specified
 if [ -z "$RELEASE_NAME" ]; then
-	# Extract release name from db pod name (e.g., qwc-services-qwcdb-xxx -> qwc-services)
-	RELEASE_NAME=${DB_POD//-qwcdb.*/}
-	echo -e "Detected release name: ${YELLOW}$RELEASE_NAME${NC}"
+  # Extract release name from db pod name (e.g., qwc-services-qwcdb-xxx -> qwc-services)
+  RELEASE_NAME=${DB_POD//-qwcdb.*/}
+  echo -e "Detected release name: ${YELLOW}$RELEASE_NAME${NC}"
 fi
 
 echo ""
 
 # Define execute_sql function for kubectl exec mode
 execute_sql() {
-	local sql="$1"
-	kubectl exec -n "$NAMESPACE" "$DB_POD" -- psql -U postgres -d "$DB_NAME" -c "$sql" 2>/dev/null
+  local sql="$1"
+  kubectl exec -n "$NAMESPACE" "$DB_POD" -- psql -U postgres -d "$DB_NAME" -c "$sql" 2>/dev/null
 }
 
 execute_sql_file() {
-	local file="$1"
-	kubectl exec -i -n "$NAMESPACE" "$DB_POD" -- psql -U postgres -d "$DB_NAME" <"$file" 2>/dev/null
+  local file="$1"
+  kubectl exec -i -n "$NAMESPACE" "$DB_POD" -- psql -U postgres -d "$DB_NAME" <"$file" 2>/dev/null
 }
 
 echo -e "${GREEN}=== QWC2 Demo Data Initialization ===${NC}"
@@ -167,8 +167,8 @@ echo ""
 # Test database connection
 echo -e "${GREEN}[1/4] Testing database connection...${NC}"
 if ! execute_sql "SELECT 1;" >/dev/null 2>&1; then
-	echo -e "${RED}Error: Cannot connect to database. Please check connection parameters.${NC}"
-	exit 1
+  echo -e "${RED}Error: Cannot connect to database. Please check connection parameters.${NC}"
+  exit 1
 fi
 echo -e "${GREEN}✓ Database connection successful${NC}"
 
@@ -176,69 +176,69 @@ echo -e "${GREEN}✓ Database connection successful${NC}"
 echo -e "${GREEN}[2/4] Checking PostGIS extension...${NC}"
 POSTGIS_VERSION=$(execute_sql "SELECT PostGIS_version();" 2>/dev/null | grep -v "row" | grep -v "postgis_version" | grep -v "^-" | xargs || echo "")
 if [ -z "$POSTGIS_VERSION" ]; then
-	echo -e "${YELLOW}PostGIS extension not found. Creating it...${NC}"
-	execute_sql "CREATE EXTENSION IF NOT EXISTS postgis;"
-	echo -e "${GREEN}✓ PostGIS extension created${NC}"
+  echo -e "${YELLOW}PostGIS extension not found. Creating it...${NC}"
+  execute_sql "CREATE EXTENSION IF NOT EXISTS postgis;"
+  echo -e "${GREEN}✓ PostGIS extension created${NC}"
 else
-	echo -e "${GREEN}✓ PostGIS extension found (version: $POSTGIS_VERSION)${NC}"
+  echo -e "${GREEN}✓ PostGIS extension found (version: $POSTGIS_VERSION)${NC}"
 fi
 
 # Create demo users
 if [ "$SKIP_USERS" = false ]; then
-	echo -e "${GREEN}[3/4] Creating/updating demo users...${NC}"
+  echo -e "${GREEN}[3/4] Creating/updating demo users...${NC}"
 
-	# Check if users table exists in qwc_config schema
-	if execute_sql "SELECT 1 FROM information_schema.tables WHERE table_schema='qwc_config' AND table_name='users';" | grep -q "1"; then
+  # Check if users table exists in qwc_config schema
+  if execute_sql "SELECT 1 FROM information_schema.tables WHERE table_schema='qwc_config' AND table_name='users';" | grep -q "1"; then
 
-		# Find auth-service pod to generate Werkzeug-compatible password hashes
-		AUTH_POD=$(kubectl get pods -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcauthservice" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
+    # Find auth-service pod to generate Werkzeug-compatible password hashes
+    AUTH_POD=$(kubectl get pods -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcauthservice" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
 
-		if [ -z "$AUTH_POD" ]; then
-			AUTH_POD=$(kubectl get pods -n "$NAMESPACE" | grep -E "authservice|qwcauthservice" | awk '{print $1}' | head -1 || echo "")
-		fi
+    if [ -z "$AUTH_POD" ]; then
+      AUTH_POD=$(kubectl get pods -n "$NAMESPACE" | grep -E "authservice|qwcauthservice" | awk '{print $1}' | head -1 || echo "")
+    fi
 
-		if [ -n "$AUTH_POD" ]; then
-			echo "Using auth-service pod to generate Werkzeug-compatible password hash..."
+    if [ -n "$AUTH_POD" ]; then
+      echo "Using auth-service pod to generate Werkzeug-compatible password hash..."
 
-			# Generate Werkzeug-compatible password hash using Python in auth-service venv
-			DEMO_HASH=$(kubectl exec -n "$NAMESPACE" "$AUTH_POD" -- /srv/qwc_service/.venv/bin/python -c "from werkzeug.security import generate_password_hash; print(generate_password_hash('demo'))" 2>/dev/null)
+      # Generate Werkzeug-compatible password hash using Python in auth-service venv
+      DEMO_HASH=$(kubectl exec -n "$NAMESPACE" "$AUTH_POD" -- /srv/qwc_service/.venv/bin/python -c "from werkzeug.security import generate_password_hash; print(generate_password_hash('demo'))" 2>/dev/null)
 
-			if [ -n "$DEMO_HASH" ]; then
-				echo "Generated Werkzeug password hash successfully"
+      if [ -n "$DEMO_HASH" ]; then
+        echo "Generated Werkzeug password hash successfully"
 
-				# Ensure password_hash column can hold scrypt hashes (they are ~200 chars)
-				execute_sql "ALTER TABLE qwc_config.users ALTER COLUMN password_hash TYPE VARCHAR(256);" 2>/dev/null || true
+        # Ensure password_hash column can hold scrypt hashes (they are ~200 chars)
+        execute_sql "ALTER TABLE qwc_config.users ALTER COLUMN password_hash TYPE VARCHAR(256);" 2>/dev/null || true
 
-				# Update admin user password to 'demo' and disable force_password_change
-				echo "Updating admin user password to 'demo'..."
-				execute_sql "
+        # Update admin user password to 'demo' and disable force_password_change
+        echo "Updating admin user password to 'demo'..."
+        execute_sql "
                 UPDATE qwc_config.users
                 SET password_hash = '$DEMO_HASH',
                     force_password_change = false
                 WHERE name = 'admin';
                 " || echo -e "${YELLOW}Note: Could not update admin user${NC}"
 
-				# Create demo regular user if it doesn't exist
-				echo "Creating demo regular user (demo/demo)..."
-				execute_sql "
+        # Create demo regular user if it doesn't exist
+        echo "Creating demo regular user (demo/demo)..."
+        execute_sql "
                 INSERT INTO qwc_config.users (name, description, email, password_hash, force_password_change)
                 VALUES ('demo', 'Demo User for Testing', 'demo@example.com', '$DEMO_HASH', false)
                 ON CONFLICT (name) DO UPDATE
                 SET password_hash = '$DEMO_HASH',
                     force_password_change = false;
                 " || echo -e "${YELLOW}Note: Demo user may already exist${NC}"
-			else
-				echo -e "${YELLOW}Warning: Could not generate Werkzeug password hash. Using fallback method.${NC}"
-				echo -e "${RED}Please manually reset passwords via admin GUI after deployment.${NC}"
-			fi
-		else
-			echo -e "${YELLOW}Warning: Auth-service pod not found. Cannot generate proper password hash.${NC}"
-			echo -e "${YELLOW}Please manually reset passwords via admin GUI after deployment.${NC}"
-		fi
+      else
+        echo -e "${YELLOW}Warning: Could not generate Werkzeug password hash. Using fallback method.${NC}"
+        echo -e "${RED}Please manually reset passwords via admin GUI after deployment.${NC}"
+      fi
+    else
+      echo -e "${YELLOW}Warning: Auth-service pod not found. Cannot generate proper password hash.${NC}"
+      echo -e "${YELLOW}Please manually reset passwords via admin GUI after deployment.${NC}"
+    fi
 
-		# Get admin user ID and assign admin role
-		echo "Ensuring admin role assignment..."
-		execute_sql "
+    # Get admin user ID and assign admin role
+    echo "Ensuring admin role assignment..."
+    execute_sql "
         INSERT INTO qwc_config.users_roles (user_id, role_id)
         SELECT u.id, r.id
         FROM qwc_config.users u, qwc_config.roles r
@@ -246,17 +246,17 @@ if [ "$SKIP_USERS" = false ]; then
         ON CONFLICT DO NOTHING;
         " 2>/dev/null || true
 
-		# Create demo group if it doesn't exist
-		echo "Creating demo group..."
-		execute_sql "
+    # Create demo group if it doesn't exist
+    echo "Creating demo group..."
+    execute_sql "
         INSERT INTO qwc_config.groups (name, description)
         VALUES ('demo_group', 'Demo Group for Testing')
         ON CONFLICT (name) DO NOTHING;
         " 2>/dev/null || true
 
-		# Add demo user to demo group
-		echo "Adding demo user to demo_group..."
-		execute_sql "
+    # Add demo user to demo group
+    echo "Adding demo user to demo_group..."
+    execute_sql "
         INSERT INTO qwc_config.groups_users (group_id, user_id)
         SELECT g.id, u.id
         FROM qwc_config.groups g, qwc_config.users u
@@ -264,36 +264,36 @@ if [ "$SKIP_USERS" = false ]; then
         ON CONFLICT DO NOTHING;
         " 2>/dev/null || true
 
-		echo -e "${GREEN}✓ Demo users configured${NC}"
-		echo -e "  ${YELLOW}Admin user:${NC} admin / demo"
-		echo -e "  ${YELLOW}Demo user:${NC} demo / demo"
-	else
-		echo -e "${YELLOW}Users table not found in qwc_config schema. Skipping user creation.${NC}"
-		echo -e "${YELLOW}Please ensure database migration has been run.${NC}"
-	fi
+    echo -e "${GREEN}✓ Demo users configured${NC}"
+    echo -e "  ${YELLOW}Admin user:${NC} admin / demo"
+    echo -e "  ${YELLOW}Demo user:${NC} demo / demo"
+  else
+    echo -e "${YELLOW}Users table not found in qwc_config schema. Skipping user creation.${NC}"
+    echo -e "${YELLOW}Please ensure database migration has been run.${NC}"
+  fi
 else
-	echo -e "${YELLOW}[3/4] Skipping demo user creation${NC}"
+  echo -e "${YELLOW}[3/4] Skipping demo user creation${NC}"
 fi
 
 # Create demo geospatial data
 if [ "$SKIP_GEODATA" = false ]; then
-	echo -e "${GREEN}[4/4] Creating demo geospatial data...${NC}"
+  echo -e "${GREEN}[4/4] Creating demo geospatial data...${NC}"
 
-	# Check if we need to use postgres superuser for schema operations
-	# Try with current user first, fall back to checking permissions
-	echo "Creating demo schema..."
-	if ! execute_sql "CREATE SCHEMA IF NOT EXISTS demo;" 2>/dev/null; then
-		echo -e "${YELLOW}Note: Cannot create schema with current user. Demo geodata may require superuser.${NC}"
-		echo -e "${YELLOW}Run with --skip-geodata or use postgres superuser.${NC}"
-	else
-		# Grant permissions (may fail if roles don't exist, that's OK)
-		execute_sql "GRANT USAGE ON SCHEMA demo TO qwc_service;" 2>/dev/null || true
-		execute_sql "GRANT USAGE ON SCHEMA demo TO qwc_service_write;" 2>/dev/null || true
-		execute_sql "GRANT ALL ON SCHEMA demo TO qwc_service_write;" 2>/dev/null || true
+  # Check if we need to use postgres superuser for schema operations
+  # Try with current user first, fall back to checking permissions
+  echo "Creating demo schema..."
+  if ! execute_sql "CREATE SCHEMA IF NOT EXISTS demo;" 2>/dev/null; then
+    echo -e "${YELLOW}Note: Cannot create schema with current user. Demo geodata may require superuser.${NC}"
+    echo -e "${YELLOW}Run with --skip-geodata or use postgres superuser.${NC}"
+  else
+    # Grant permissions (may fail if roles don't exist, that's OK)
+    execute_sql "GRANT USAGE ON SCHEMA demo TO qwc_service;" 2>/dev/null || true
+    execute_sql "GRANT USAGE ON SCHEMA demo TO qwc_service_write;" 2>/dev/null || true
+    execute_sql "GRANT ALL ON SCHEMA demo TO qwc_service_write;" 2>/dev/null || true
 
-		# Create demo points table (cities)
-		echo "Creating demo points layer (cities)..."
-		execute_sql "
+    # Create demo points table (cities)
+    echo "Creating demo points layer (cities)..."
+    execute_sql "
         CREATE TABLE IF NOT EXISTS demo.cities (
             id SERIAL PRIMARY KEY,
             name VARCHAR(100) NOT NULL,
@@ -305,14 +305,14 @@ if [ "$SKIP_GEODATA" = false ]; then
         CREATE INDEX IF NOT EXISTS idx_cities_geom ON demo.cities USING GIST (geom);
         " || echo -e "${YELLOW}Note: cities table may already exist${NC}"
 
-		# Grant permissions on cities table
-		execute_sql "GRANT SELECT ON demo.cities TO qwc_service;" 2>/dev/null || true
-		execute_sql "GRANT ALL ON demo.cities TO qwc_service_write;" 2>/dev/null || true
-		execute_sql "GRANT USAGE, SELECT ON SEQUENCE demo.cities_id_seq TO qwc_service_write;" 2>/dev/null || true
+    # Grant permissions on cities table
+    execute_sql "GRANT SELECT ON demo.cities TO qwc_service;" 2>/dev/null || true
+    execute_sql "GRANT ALL ON demo.cities TO qwc_service_write;" 2>/dev/null || true
+    execute_sql "GRANT USAGE, SELECT ON SEQUENCE demo.cities_id_seq TO qwc_service_write;" 2>/dev/null || true
 
-		# Insert sample cities (Web Mercator coordinates)
-		echo "Inserting sample cities..."
-		execute_sql "
+    # Insert sample cities (Web Mercator coordinates)
+    echo "Inserting sample cities..."
+    execute_sql "
         DELETE FROM demo.cities;
         INSERT INTO demo.cities (name, population, country, geom) VALUES
         ('Rome', 2873000, 'Italy', ST_Transform(ST_SetSRID(ST_MakePoint(12.4964, 41.9028), 4326), 3857)),
@@ -327,9 +327,9 @@ if [ "$SKIP_GEODATA" = false ]; then
         ('Athens', 664046, 'Greece', ST_Transform(ST_SetSRID(ST_MakePoint(23.7275, 37.9838), 4326), 3857));
         "
 
-		# Create demo lines table (roads)
-		echo "Creating demo lines layer (roads)..."
-		execute_sql "
+    # Create demo lines table (roads)
+    echo "Creating demo lines layer (roads)..."
+    execute_sql "
         CREATE TABLE IF NOT EXISTS demo.roads (
             id SERIAL PRIMARY KEY,
             name VARCHAR(100),
@@ -341,14 +341,14 @@ if [ "$SKIP_GEODATA" = false ]; then
         CREATE INDEX IF NOT EXISTS idx_roads_geom ON demo.roads USING GIST (geom);
         " || echo -e "${YELLOW}Note: roads table may already exist${NC}"
 
-		# Grant permissions on roads table
-		execute_sql "GRANT SELECT ON demo.roads TO qwc_service;" 2>/dev/null || true
-		execute_sql "GRANT ALL ON demo.roads TO qwc_service_write;" 2>/dev/null || true
-		execute_sql "GRANT USAGE, SELECT ON SEQUENCE demo.roads_id_seq TO qwc_service_write;" 2>/dev/null || true
+    # Grant permissions on roads table
+    execute_sql "GRANT SELECT ON demo.roads TO qwc_service;" 2>/dev/null || true
+    execute_sql "GRANT ALL ON demo.roads TO qwc_service_write;" 2>/dev/null || true
+    execute_sql "GRANT USAGE, SELECT ON SEQUENCE demo.roads_id_seq TO qwc_service_write;" 2>/dev/null || true
 
-		# Insert sample roads (connecting some cities)
-		echo "Inserting sample roads..."
-		execute_sql "
+    # Insert sample roads (connecting some cities)
+    echo "Inserting sample roads..."
+    execute_sql "
         DELETE FROM demo.roads;
         INSERT INTO demo.roads (name, road_type, length_km, geom) VALUES
         ('Route A1', 'Highway', 1100.5,
@@ -368,9 +368,9 @@ if [ "$SKIP_GEODATA" = false ]; then
          ), 4326), 3857));
         "
 
-		# Create demo polygons table (regions)
-		echo "Creating demo polygons layer (regions)..."
-		execute_sql "
+    # Create demo polygons table (regions)
+    echo "Creating demo polygons layer (regions)..."
+    execute_sql "
         CREATE TABLE IF NOT EXISTS demo.regions (
             id SERIAL PRIMARY KEY,
             name VARCHAR(100) NOT NULL,
@@ -383,14 +383,14 @@ if [ "$SKIP_GEODATA" = false ]; then
         CREATE INDEX IF NOT EXISTS idx_regions_geom ON demo.regions USING GIST (geom);
         " || echo -e "${YELLOW}Note: regions table may already exist${NC}"
 
-		# Grant permissions on regions table
-		execute_sql "GRANT SELECT ON demo.regions TO qwc_service;" 2>/dev/null || true
-		execute_sql "GRANT ALL ON demo.regions TO qwc_service_write;" 2>/dev/null || true
-		execute_sql "GRANT USAGE, SELECT ON SEQUENCE demo.regions_id_seq TO qwc_service_write;" 2>/dev/null || true
+    # Grant permissions on regions table
+    execute_sql "GRANT SELECT ON demo.regions TO qwc_service;" 2>/dev/null || true
+    execute_sql "GRANT ALL ON demo.regions TO qwc_service_write;" 2>/dev/null || true
+    execute_sql "GRANT USAGE, SELECT ON SEQUENCE demo.regions_id_seq TO qwc_service_write;" 2>/dev/null || true
 
-		# Insert sample regions (simple polygons around cities)
-		echo "Inserting sample regions..."
-		execute_sql "
+    # Insert sample regions (simple polygons around cities)
+    echo "Inserting sample regions..."
+    execute_sql "
         DELETE FROM demo.regions;
         INSERT INTO demo.regions (name, area_sqkm, population, country, geom) VALUES
         ('Rome Region', 5351.0, 4200000, 'Italy',
@@ -401,8 +401,8 @@ if [ "$SKIP_GEODATA" = false ]; then
          ST_Buffer(ST_Transform(ST_SetSRID(ST_MakePoint(13.4050, 52.5200), 4326), 3857), 30000));
         "
 
-		# Add comments to tables
-		execute_sql "
+    # Add comments to tables
+    execute_sql "
         COMMENT ON TABLE demo.cities IS 'Demo cities point layer for QWC2 testing';
         COMMENT ON TABLE demo.roads IS 'Demo roads line layer for QWC2 testing';
         COMMENT ON TABLE demo.regions IS 'Demo regions polygon layer for QWC2 testing';
@@ -412,34 +412,34 @@ if [ "$SKIP_GEODATA" = false ]; then
         COMMENT ON COLUMN demo.regions.geom IS 'Region boundary in Web Mercator (EPSG:3857)';
         " 2>/dev/null || true
 
-		echo -e "${GREEN}✓ Demo geospatial data created${NC}"
-		echo -e "  ${YELLOW}Created layers:${NC}"
-		echo -e "    - demo.cities (10 points)"
-		echo -e "    - demo.roads (3 lines)"
-		echo -e "    - demo.regions (3 polygons)"
-	fi
+    echo -e "${GREEN}✓ Demo geospatial data created${NC}"
+    echo -e "  ${YELLOW}Created layers:${NC}"
+    echo -e "    - demo.cities (10 points)"
+    echo -e "    - demo.roads (3 lines)"
+    echo -e "    - demo.regions (3 polygons)"
+  fi
 else
-	echo -e "${YELLOW}[4/4] Skipping demo geospatial data creation${NC}"
+  echo -e "${YELLOW}[4/4] Skipping demo geospatial data creation${NC}"
 fi
 
 # Step 5: Create and deploy QGIS demo project
 if [ "$SKIP_GEODATA" = false ]; then
-	echo ""
-	echo -e "${GREEN}[5/5] Creating demo QGIS project...${NC}"
+  echo ""
+  echo -e "${GREEN}[5/5] Creating demo QGIS project...${NC}"
 
-	# Find the QGIS server pod to copy the project file
-	QGIS_POD=$(kubectl get pods -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcqgisserver" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
+  # Find the QGIS server pod to copy the project file
+  QGIS_POD=$(kubectl get pods -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcqgisserver" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
 
-	if [ -z "$QGIS_POD" ]; then
-		QGIS_POD=$(kubectl get pods -n "$NAMESPACE" | grep -E "qgisserver|qwcqgisserver" | awk '{print $1}' | head -1 || echo "")
-	fi
+  if [ -z "$QGIS_POD" ]; then
+    QGIS_POD=$(kubectl get pods -n "$NAMESPACE" | grep -E "qgisserver|qwcqgisserver" | awk '{print $1}' | head -1 || echo "")
+  fi
 
-	if [ -n "$QGIS_POD" ]; then
-		echo "Found QGIS Server pod: $QGIS_POD"
+  if [ -n "$QGIS_POD" ]; then
+    echo "Found QGIS Server pod: $QGIS_POD"
 
-		# Create a minimal QGIS project file
-		DEMO_PROJECT=$(
-			cat <<'QGIS_PROJECT_EOF'
+    # Create a minimal QGIS project file
+    DEMO_PROJECT=$(
+      cat <<'QGIS_PROJECT_EOF'
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
 <qgis projectname="Demo European Cities" version="3.28.0">
   <title>Demo European Cities</title>
@@ -607,25 +607,25 @@ if [ "$SKIP_GEODATA" = false ]; then
   </mapcanvas>
 </qgis>
 QGIS_PROJECT_EOF
-		)
+    )
 
-		# Get the PVC name for QGIS qgis resources
-		PVC_NAME=$(kubectl get deployment -n "$NAMESPACE" "${RELEASE_NAME}-qwcqgisserver" -o jsonpath='{.spec.template.spec.volumes[?(@.name=="vol-qgis-resources-ro")].persistentVolumeClaim.claimName}' 2>/dev/null || echo "")
+    # Get the PVC name for QGIS qgis resources
+    PVC_NAME=$(kubectl get deployment -n "$NAMESPACE" "${RELEASE_NAME}-qwcqgisserver" -o jsonpath='{.spec.template.spec.volumes[?(@.name=="vol-qgis-resources-ro")].persistentVolumeClaim.claimName}' 2>/dev/null || echo "")
 
-		if [ -z "$PVC_NAME" ]; then
-			PVC_NAME="${RELEASE_NAME}-qwcqgisserver-qgis-resources-claim"
-		fi
+    if [ -z "$PVC_NAME" ]; then
+      PVC_NAME="${RELEASE_NAME}-qwcqgisserver-qgis-resources-claim"
+    fi
 
-		echo "Using PVC: $PVC_NAME"
-		echo "Deploying demo.qgs via temporary Job..."
+    echo "Using PVC: $PVC_NAME"
+    echo "Deploying demo.qgs via temporary Job..."
 
-		# Create a temporary Job to write the project file to the PVC
-		JOB_NAME="demo-project-writer-$(date +%s)"
+    # Create a temporary Job to write the project file to the PVC
+    JOB_NAME="demo-project-writer-$(date +%s)"
 
-		# Escape the project content for use in YAML
-		DEMO_PROJECT_BASE64=$(echo "$DEMO_PROJECT" | base64 | tr -d '\n')
+    # Escape the project content for use in YAML
+    DEMO_PROJECT_BASE64=$(echo "$DEMO_PROJECT" | base64 | tr -d '\n')
 
-		kubectl apply -n "$NAMESPACE" -f - <<EOF
+    kubectl apply -n "$NAMESPACE" -f - <<EOF
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -654,52 +654,52 @@ spec:
           claimName: $PVC_NAME
 EOF
 
-		# shellcheck disable=SC2181
-		if [ $? -eq 0 ]; then
-			echo "Waiting for Job to complete..."
-			kubectl wait --for=condition=complete --timeout=60s job/"$JOB_NAME" -n "$NAMESPACE" 2>/dev/null
+    # shellcheck disable=SC2181
+    if [ $? -eq 0 ]; then
+      echo "Waiting for Job to complete..."
+      kubectl wait --for=condition=complete --timeout=60s job/"$JOB_NAME" -n "$NAMESPACE" 2>/dev/null
 
-			if [ $? -eq 0 ]; then
-				echo -e "${GREEN}✓ Demo QGIS project deployed${NC}"
-				echo -e "  ${YELLOW}Project file:${NC} demo.qgs"
+      if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✓ Demo QGIS project deployed${NC}"
+        echo -e "  ${YELLOW}Project file:${NC} demo.qgs"
 
-				# Restart config-service to pick up the new project
-				echo "Restarting config-service to regenerate configurations..."
-				kubectl rollout restart deployment -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcconfigservice" 2>/dev/null || true
-				echo -e "${GREEN}✓ Config service restart triggered${NC}"
-			else
-				echo -e "${YELLOW}Job did not complete in time. Check logs:${NC}"
-				kubectl logs job/"$JOB_NAME" -n "$NAMESPACE" 2>/dev/null || true
-			fi
+        # Restart config-service to pick up the new project
+        echo "Restarting config-service to regenerate configurations..."
+        kubectl rollout restart deployment -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcconfigservice" 2>/dev/null || true
+        echo -e "${GREEN}✓ Config service restart triggered${NC}"
+      else
+        echo -e "${YELLOW}Job did not complete in time. Check logs:${NC}"
+        kubectl logs job/"$JOB_NAME" -n "$NAMESPACE" 2>/dev/null || true
+      fi
 
-			# Clean up Job
-			kubectl delete job/"$JOB_NAME" -n "$NAMESPACE" --ignore-not-found 2>/dev/null || true
-		else
-			echo -e "${YELLOW}Note: Could not create temporary Job. You may need to deploy the project manually.${NC}"
-		fi
-	else
-		echo -e "${YELLOW}Note: QGIS server pod not found. Skipping project deployment.${NC}"
-	fi
+      # Clean up Job
+      kubectl delete job/"$JOB_NAME" -n "$NAMESPACE" --ignore-not-found 2>/dev/null || true
+    else
+      echo -e "${YELLOW}Note: Could not create temporary Job. You may need to deploy the project manually.${NC}"
+    fi
+  else
+    echo -e "${YELLOW}Note: QGIS server pod not found. Skipping project deployment.${NC}"
+  fi
 fi
 
 # Step 6: Configure demo theme and services (direct configuration approach)
 if [ "$SKIP_GEODATA" = false ]; then
-	echo ""
-	echo -e "${GREEN}[6/6] Configuring demo theme and services...${NC}"
+  echo ""
+  echo -e "${GREEN}[6/6] Configuring demo theme and services...${NC}"
 
-	# Wait for config-service to be ready after QGIS project deployment
-	echo "Waiting for services to stabilize..."
-	sleep 10
+  # Wait for config-service to be ready after QGIS project deployment
+  echo "Waiting for services to stabilize..."
+  sleep 10
 
-	CONFIG_POD=$(kubectl get pods -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcconfigservice" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
+  CONFIG_POD=$(kubectl get pods -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcconfigservice" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
 
-	if [ -n "$CONFIG_POD" ]; then
-		echo "Found config-service pod: $CONFIG_POD"
+  if [ -n "$CONFIG_POD" ]; then
+    echo "Found config-service pod: $CONFIG_POD"
 
-		# Step 6a: Configure OGC service for the demo theme
-		echo "Configuring OGC service..."
-		QGIS_SERVER_URL="http://${RELEASE_NAME}-qwcqgisserver"
-		kubectl exec -n "$NAMESPACE" "$CONFIG_POD" -- sh -c "cat > /qwc_cfg/config-generated/default/ogcConfig.json << 'EOFOGC'
+    # Step 6a: Configure OGC service for the demo theme
+    echo "Configuring OGC service..."
+    QGIS_SERVER_URL="http://${RELEASE_NAME}-qwcqgisserver"
+    kubectl exec -n "$NAMESPACE" "$CONFIG_POD" -- sh -c "cat > /qwc_cfg/config-generated/default/ogcConfig.json << 'EOFOGC'
 {
   \"\$schema\": \"https://github.com/qwc-services/qwc-ogc-service/raw/master/schemas/qwc-ogc-service.json\",
   \"service\": \"ogc\",
@@ -737,11 +737,11 @@ if [ "$SKIP_GEODATA" = false ]; then
   }
 }
 EOFOGC" 2>/dev/null
-		echo -e "${GREEN}✓ OGC service configured${NC}"
+    echo -e "${GREEN}✓ OGC service configured${NC}"
 
-		# Step 6b: Update permissions to allow access to demo services
-		echo "Updating permissions..."
-		kubectl exec -n "$NAMESPACE" "$CONFIG_POD" -- sh -c 'python3 -c "
+    # Step 6b: Update permissions to allow access to demo services
+    echo "Updating permissions..."
+    kubectl exec -n "$NAMESPACE" "$CONFIG_POD" -- sh -c 'python3 -c "
 import json
 
 # Read current permissions
@@ -782,11 +782,11 @@ with open(\"/qwc_cfg/config-generated/default/permissions.json\", \"w\") as f:
     json.dump(data, f, indent=2)
 print(\"Permissions updated\")
 "' 2>/dev/null
-		echo -e "${GREEN}✓ Permissions updated${NC}"
+    echo -e "${GREEN}✓ Permissions updated${NC}"
 
-		# Step 6c: Update mapViewerConfig with demo theme
-		echo "Configuring Map Viewer theme..."
-		kubectl exec -n "$NAMESPACE" "$CONFIG_POD" -- sh -c 'python3 -c "
+    # Step 6c: Update mapViewerConfig with demo theme
+    echo "Configuring Map Viewer theme..."
+    kubectl exec -n "$NAMESPACE" "$CONFIG_POD" -- sh -c 'python3 -c "
 import json
 
 with open(\"/qwc_cfg/config-generated/default/mapViewerConfig.json\") as f:
@@ -854,27 +854,27 @@ with open(\"/qwc_cfg/config-generated/default/mapViewerConfig.json\", \"w\") as 
     json.dump(data, f, indent=2)
 print(\"Map Viewer config updated\")
 "' 2>/dev/null
-		echo -e "${GREEN}✓ Map Viewer configured${NC}"
+    echo -e "${GREEN}✓ Map Viewer configured${NC}"
 
-		# Step 6d: Remove conflicting QGIS Server HTTPRoute (it conflicts with Map Viewer route on /)
-		echo "Removing conflicting QGIS Server HTTPRoute..."
-		kubectl delete httproute -n "$NAMESPACE" "${RELEASE_NAME}-qwcqgisserver-route" --ignore-not-found 2>/dev/null || true
-		echo -e "${GREEN}✓ Conflicting route removed${NC}"
+    # Step 6d: Remove conflicting QGIS Server HTTPRoute (it conflicts with Map Viewer route on /)
+    echo "Removing conflicting QGIS Server HTTPRoute..."
+    kubectl delete httproute -n "$NAMESPACE" "${RELEASE_NAME}-qwcqgisserver-route" --ignore-not-found 2>/dev/null || true
+    echo -e "${GREEN}✓ Conflicting route removed${NC}"
 
-		# Step 6e: Restart OGC service and Map Viewer to pick up new configs
-		echo "Restarting services to apply configuration..."
-		kubectl rollout restart deployment -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcogcservice" 2>/dev/null || true
-		kubectl rollout restart deployment -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcmapviewer" 2>/dev/null || true
-		echo -e "${GREEN}✓ Services restart triggered${NC}"
+    # Step 6e: Restart OGC service and Map Viewer to pick up new configs
+    echo "Restarting services to apply configuration..."
+    kubectl rollout restart deployment -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcogcservice" 2>/dev/null || true
+    kubectl rollout restart deployment -n "$NAMESPACE" -l "app.kubernetes.io/name=qwcmapviewer" 2>/dev/null || true
+    echo -e "${GREEN}✓ Services restart triggered${NC}"
 
-		# Step 6f: Wait for services to be ready
-		echo "Waiting for services to be ready..."
-		sleep 30
-		echo -e "${GREEN}✓ Services should now be ready${NC}"
+    # Step 6f: Wait for services to be ready
+    echo "Waiting for services to be ready..."
+    sleep 30
+    echo -e "${GREEN}✓ Services should now be ready${NC}"
 
-	else
-		echo -e "${YELLOW}Note: Config-service pod not found. Theme configuration skipped.${NC}"
-	fi
+  else
+    echo -e "${YELLOW}Note: Config-service pod not found. Theme configuration skipped.${NC}"
+  fi
 fi
 
 echo ""
