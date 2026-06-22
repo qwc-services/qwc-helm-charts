@@ -6,7 +6,7 @@ image:
   repository: sourcepole/qwc-ogc-service
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: v2026.01.18
+  tag: latest-2026-lts
 
 imagePullSecrets: []
 nameOverride: ""
