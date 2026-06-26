@@ -1,17 +1,58 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2086
 
+function log() {
+  level=$1
+  shift
+  col=
+  case "$level" in
+    'ERROR')
+      col="\e[31m"
+      ;;
+    'WARN')
+      col="\e[33m"
+      ;;
+    'INFO')
+      col="\e[32m"
+      ;;
+    'DEBUG')
+      col="\e[34m"
+      ;;
+  esac
+
+  if [ -z "$2" ]; then
+    scope="none"
+  else
+    scope="$1"
+    shift
+  fi
+
+  echo -e -n "$(date +'%Y-%m-%d %H:%M:%S') $level <$scope> $col"
+  echo -e -n "$*"
+  echo -e "\e[0m"
+}
+
+function logDebug() {
+  log DEBUG "$@"
+}
+
 function logInfo() {
-  echo -e -n "$(date +'%Y-%m-%d %H:%M:%S') ======================== "
-  echo -e -n "$1: "
-  echo "$2"
+  log INFO "$@"
+}
+
+function logWarn() {
+  log WARN "$@"
+}
+
+function logError() {
+  log ERROR "$@"
 }
 
 function failed() {
   if [ -z "$1" ]; then
-    echo 'Premature end of process: FAILURE!'
+    logError 'Premature end of process: FAILURE!'
   else
-    echo "Premature end of process: $*"
+    logError "Premature end of process: $*"
   fi
 
   exit 1
