@@ -102,10 +102,3 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{/*
-Create the name of the secret for pg_service.conf
-*/}}
-{{- define "qwcMapViewer.secrets" -}}
-{{- printf "%s-secret" (include "qwcMapViewer.fullname" .) }}
-{{- end }}

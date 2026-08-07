@@ -86,10 +86,3 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{/*
-Create the name of the secret for pg_service.conf
-*/}}
-{{- define "qwcDataService.secrets" -}}
-{{- printf "%s-secret" (include "qwcDataService.fullname" .) }}
-{{- end }}
