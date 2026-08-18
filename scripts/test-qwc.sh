@@ -56,6 +56,47 @@ test_section() {
   echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 }
 
+usage() {
+  echo ""
+  echo "Usage: $0 [OPTIONS]"
+  echo ""
+  echo "Options:"
+  echo "  -n, --namespace NAMESPACE   Kubernetes namespace (default: $NAMESPACE)"
+  echo "  -r, --release RELEASE       Helm release name (default: $RELEASE)"
+  echo "  -h, --help                  Show this help message"
+  echo ""
+  echo "Examples:"
+  echo "  $0                                    # Use defaults"
+  echo "  $0 -n my-namespace -r my-release      # Custom namespace and release"
+  echo ""
+}
+
+# ============================================
+# Parse Arguments
+# ============================================
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -n | --namespace)
+      NAMESPACE="$2"
+      shift 2
+      ;;
+    -r | --release)
+      RELEASE="$2"
+      shift 2
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      usage
+      exit 1
+      ;;
+  esac
+done
+
 echo -e "${BLUE}=== QWC2 Comprehensive Test Suite ===${NC}"
 echo "Namespace: $NAMESPACE"
 echo "Release: $RELEASE"
@@ -151,7 +192,7 @@ PODS_READY=${PODS_READY:-0}
 PODS_TOTAL=${PODS_TOTAL:-0}
 PODS_NOT_READY=${PODS_NOT_READY:-0}
 
-if [ "$PODS_READY" -eq "$PODS_TOTAL" ] && [ "$PODS_TOTAL" -gt "0" ]; then
+if [[ $PODS_READY -eq $PODS_TOTAL ]] && [[ $PODS_TOTAL -gt 0 ]]; then
   test_passed "All $PODS_TOTAL pods are running"
 else
   test_failed "Only $PODS_READY/$PODS_TOTAL pods are running ($PODS_NOT_READY not ready)"
@@ -241,25 +282,25 @@ else
 fi
 
 # 1.6 Check database connectivity
-echo -e "${YELLOW}[1.6] Checking database connectivity...${NC}"
-DB_POD=$(kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/instance="$RELEASE",app.kubernetes.io/name=qwcdb -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
-if [ -n "$DB_POD" ]; then
-  if kubectl exec -n "$NAMESPACE" "$DB_POD" -- pg_isready -U postgres &>/dev/null; then
-    test_passed "Database is ready and accepting connections"
+# echo -e "${YELLOW}[1.6] Checking database connectivity...${NC}"
+# DB_POD=$(kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/instance="$RELEASE",app.kubernetes.io/name=qwcdb -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
+# if [ -n "$DB_POD" ]; then
+#   if kubectl exec -n "$NAMESPACE" "$DB_POD" -- pg_isready -U postgres &>/dev/null; then
+#     test_passed "Database is ready and accepting connections"
 
-    # Check database exists
-    DB_EXISTS=$(kubectl exec -n "$NAMESPACE" "$DB_POD" -- psql -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='qwc_services'" 2>/dev/null || echo "0")
-    if [ "$DB_EXISTS" = "1" ]; then
-      test_passed "Database 'qwc_services' exists"
-    else
-      test_failed "Database 'qwc_services' does not exist"
-    fi
-  else
-    test_failed "Database is not ready"
-  fi
-else
-  test_failed "Database pod not found"
-fi
+#     # Check database exists
+#     DB_EXISTS=$(kubectl exec -n "$NAMESPACE" "$DB_POD" -- psql -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='qwc_services'" 2>/dev/null || echo "0")
+#     if [ "$DB_EXISTS" = "1" ]; then
+#       test_passed "Database 'qwc_services' exists"
+#     else
+#       test_failed "Database 'qwc_services' does not exist"
+#     fi
+#   else
+#     test_failed "Database is not ready"
+#   fi
+# else
+#   test_failed "Database pod not found"
+# fi
 
 # 1.7 Check for recent pod restarts
 echo -e "${YELLOW}[1.7] Checking for pod restarts...${NC}"
@@ -301,18 +342,14 @@ echo -e "${YELLOW}[2.0] Discovering available QGIS projects...${NC}"
 CONFIG_POD=$(kubectl get pods -n "$NAMESPACE" -l app.kubernetes.io/instance="$RELEASE",app.kubernetes.io/name=qwcconfigservice -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
 QGIS_PROJECT=""
 if [ -n "$CONFIG_POD" ]; then
-  CONFIG_RESPONSE=$(kubectl exec -n "$NAMESPACE" "$CONFIG_POD" -- sh -c 'curl -s "http://localhost:9090/maps?tenant=default" 2>/dev/null' 2>/dev/null || echo "")
+  CONFIG_RESPONSE=$(kubectl exec -n "$NAMESPACE" "$CONFIG_POD" -- sh -c 'wget -q -O- "http://127.0.0.1:9090/maps?tenant=default" 2>/dev/null' 2>/dev/null || echo "")
   if [ -n "$CONFIG_RESPONSE" ]; then
-    QGIS_PROJECT=$(echo "$CONFIG_RESPONSE" | jq -r '.themes[0].name // empty' 2>/dev/null || echo "")
+    QGIS_PROJECT=$(echo "$CONFIG_RESPONSE" | jq -r '.[0] // empty' 2>/dev/null || echo "")
     if [ -n "$QGIS_PROJECT" ] && [ "$QGIS_PROJECT" != "null" ]; then
       test_passed "Found QGIS project: $QGIS_PROJECT"
     else
-      # Try to get project name from URL if available
-      QGIS_PROJECT=$(echo "$CONFIG_RESPONSE" | jq -r '.themes[0].url // empty' 2>/dev/null | sed -n 's/.*MAP=\([^&]*\).*/\1/p' || echo "")
-      if [ -z "$QGIS_PROJECT" ]; then
-        test_warning "No QGIS projects found in config - using default 'qwc_demo'"
-        QGIS_PROJECT="qwc_demo"
-      fi
+      test_warning "No QGIS projects found in config - using default 'qwc_demo'"
+      QGIS_PROJECT="qwc_demo"
     fi
   else
     test_warning "Could not retrieve config from config service - using default 'qwc_demo'"
@@ -327,7 +364,7 @@ fi
 echo -e "${YELLOW}[2.1] Testing config service...${NC}"
 if [ -n "$CONFIG_POD" ]; then
   # Internal health check
-  if kubectl exec -n "$NAMESPACE" "$CONFIG_POD" -- sh -c 'curl -s "http://localhost:9090/maps?tenant=default" 2>/dev/null' &>/dev/null; then
+  if kubectl exec -n "$NAMESPACE" "$CONFIG_POD" -- sh -c 'wget -q -O- "http://127.0.0.1:9090/maps?tenant=default" 2>/dev/null' &>/dev/null; then
     test_passed "Config service is responding internally"
   else
     test_failed "Config service is not responding internally"

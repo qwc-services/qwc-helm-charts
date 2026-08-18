@@ -27,6 +27,8 @@ set -e
 # Configuration
 # ============================================
 
+ROOT_DIR=$(dirname "$0")
+
 # Default values
 NAMESPACE="${QWC_NAMESPACE:-qwc-dev}"
 RELEASE="${QWC_RELEASE:-my-qwc-instance}"
@@ -49,9 +51,8 @@ BOLD='\033[1m'
 
 # Format: service_short|description|container_port|health_endpoint|test_endpoints (separated by ,)
 SERVICES_LIST="
-qwcdb|PostgreSQL Database|5432|tcp|none
-qwcqgisserver|QGIS Server (WMS/WFS)|1080|/|/ows/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&MAP=/data/demo.qgs
 qwcconfigservice|Config Generator Service|9090|/maps?tenant=default|/maps?tenant=default
+qwcqgisserver|QGIS Server (WMS/WFS)|1080|/|/ows/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&MAP=/data/demo.qgs
 qwcmapviewer|Map Viewer Frontend|9090|/healthz|/healthz,/ready,/
 qwcogcservice|OGC Service Proxy|9090|/healthz|/healthz,/ready,/ows/
 qwcdataservice|Data REST API|9090|/healthz|/healthz,/ready
@@ -59,6 +60,8 @@ qwcauthservice|Authentication Service|9090|/healthz|/healthz,/ready,/auth/login
 qwcadmingui|Admin GUI|9090|/|/
 qwcpermalinkservice|Permalink Service|9090|/healthz|/healthz,/ready
 "
+
+DB_SERVICE="qwcdb|PostgreSQL Database|5432|tcp|none"
 
 # ============================================
 # Helper Functions
@@ -280,6 +283,20 @@ test_http_endpoint_with_body() {
   echo "$response"
 }
 
+check_pod_logs_for_errors() {
+  local pod_name=$1
+  local service_name=$2
+  local error_pattern=${3:-"ERROR|FATAL|Exception|Traceback"}
+
+  local errors=$(kubectl logs -n "$NAMESPACE" "$pod_name" --tail=50 2>/dev/null | grep -ciE "$error_pattern" | tr -d ' ')
+  if [ "$errors" -gt "0" ]; then
+    log_warning "$service_name has $errors recent errors in logs"
+    kubectl logs -n "$NAMESPACE" "$pod_name" --tail=10 2>/dev/null | grep -iE "$error_pattern" | head -3
+  else
+    log_success "$service_name logs are clean"
+  fi
+}
+
 # ============================================
 # Main Test Logic
 # ============================================
@@ -290,6 +307,12 @@ TOTAL_SERVICES=0
 log_header "Testing Services"
 
 current_port=$LOCAL_PORT_START
+
+if [ -f "$ROOT_DIR/values.yaml" ]; then
+  grep -q 'createDb: true' "$ROOT_DIR/values.yaml" && SERVICES_LIST="
+$DB_SERVICE
+$SERVICES_LIST"
+fi
 
 # Process each service
 echo "$SERVICES_LIST" | while IFS='|' read -r service_short description container_port health_endpoint test_endpoints; do
@@ -323,6 +346,8 @@ echo "$SERVICES_LIST" | while IFS='|' read -r service_short description containe
 
   log_success "Pod is running: $pod"
 
+  check_pod_logs_for_errors "$pod" "$service_short"
+
   # Use next available port
   local_port=$current_port
   current_port=$((current_port + 1))
@@ -337,6 +362,30 @@ echo "$SERVICES_LIST" | while IFS='|' read -r service_short description containe
     log_error "Port-forward failed to start"
     echo "$service_short:FAILED:Port-forward failed" >>/tmp/qwc_test_results_$$
     continue
+  fi
+
+  # extract first project name from tenant to be used for qgisserver test
+  if [ "$service_short" == "qwcconfigservice" ]; then
+    QGIS_PROJECT=""
+    CONFIG_RESPONSE=$(curl -s "http://localhost:$local_port/maps?tenant=default" 2>/dev/null)
+    if [ -n "$CONFIG_RESPONSE" ]; then
+      echo "$CONFIG_RESPONSE" >/tmp/config_response.json
+      QGIS_PROJECT=$(echo "$CONFIG_RESPONSE" | jq -r '.[0] // empty' 2>/dev/null || echo "")
+      if [ -n "$QGIS_PROJECT" ] && [ "$QGIS_PROJECT" != "null" ]; then
+        log_success "Found QGIS project: $QGIS_PROJECT"
+      else
+        log_warning "No QGIS projects found in config - using default 'qwc_demo'"
+        QGIS_PROJECT="qwc_demo"
+      fi
+    else
+      log_warning "Could not retrieve config from config service - using default 'qwc_demo'"
+      QGIS_PROJECT="qwc_demo"
+    fi
+  fi
+
+  # force the use of the previously extracted project name
+  if [ "$service_short" == "qwcqgisserver" ]; then
+    test_endpoints="/ows/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&MAP=/data/$QGIS_PROJECT.qgs"
   fi
 
   service_passed=true
