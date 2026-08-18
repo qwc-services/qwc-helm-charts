@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "qwcAuthService.fullname" . }}-test-connection
+  labels:
+    {{- include "qwcAuthService.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: service-port
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "qwcAuthService.fullname" . }}:{{ .Values.service.port }}/healthz']
+  restartPolicy: Never

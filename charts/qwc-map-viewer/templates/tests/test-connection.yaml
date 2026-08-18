@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "qwcMapViewer.fullname" . }}-test-connection
+  labels:
+    {{- include "qwcMapViewer.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: service-port
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "qwcMapViewer.fullname" . }}:{{ .Values.service.port }}/healthz']
+  restartPolicy: Never
