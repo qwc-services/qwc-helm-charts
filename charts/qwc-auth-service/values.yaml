@@ -2,15 +2,46 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-image:
-  repository: sourcepole/qwc-db-auth
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: latest-2026-lts
+# === authentication mode: db, oidc, partial-oidc, oidc-db
+mode: db
 
-db: {}
-  # hostname: qwcdb
-  # port: 5432
+authOidc:
+  image:
+    repository: sourcepole/qwc-oidc-auth
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: latest-2026-lts
+
+  # ====== Mandatory parameters
+  # === Issuer url ie. authentication server. No default.
+  # issuerUrl:
+  # === Client id to connect to authentication server. No default.
+  # clientId:
+  # === Client secret to connect to authentication server. No default.
+  # clientSecret:
+  # === Scopes needed for QWC user info (space separated string of scopes). No default.
+  # openidScopes:
+  # === Attribute for user name. No default.
+  # username:
+  # === Attribute name of group memberships
+  # groupinfo:
+  # === Admin group name. No default.
+  # adminGroupName:
+  # === DB connection URL (to sync users and user_info_fields) as postgresql:///?service=qwc_configdb. No default.
+  # dbUrl:
+  # === List of user info fields to get from IdP and to include in JWT identity and DB. Array of strings. No default.
+  # userInfoFields:
+
+authDb:
+  image:
+    repository: sourcepole/qwc-db-auth
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: latest-2026-lts
+
+  db: {}
+    # hostname: qwcdb
+    # port: 5432
 
 imagePullSecrets: []
 nameOverride: ""

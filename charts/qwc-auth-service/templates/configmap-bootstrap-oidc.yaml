@@ -1,0 +1,13 @@
+{{- if or (eq .Values.mode "oidc") (eq .Values.mode "oidc-db") }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "qwcAuthService.fullname" . }}-oidc
+  labels:
+    {{- include "qwcAuthService.labels" . | nindent 4 }}
+data:
+  {{ $root := . }}
+  {{ range $path, $bytes := .Files.Glob "bootstrap/*" }}
+  {{ $path | trimPrefix "bootstrap/" | replace "/" "--" }}: '{{ $root.Files.Get $path | tpl | b64enc }}'
+  {{ end }}
+{{- end }}

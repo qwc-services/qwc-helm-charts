@@ -1,0 +1,14 @@
+{
+  "$schema": "https://github.com/qwc-services/qwc-oidc-auth/raw/main/schemas/qwc-oidc-auth.json",
+  "service": "oidc-auth",
+  "config": {
+    "issuer_url": "{{ .Values.authOidc.issuerUrl }}",
+    "client_id": "{{ .Values.authOidc.clientId }}",
+    "client_secret": "{{ .Values.authOidc.clientSecret }}",
+    "openid_scopes": "{{ .Values.authOidc.openidScopes }}",
+    "username": "{{ .Values.authOidc.username }}",
+    "db_url": "{{ .Values.authOidc.dbUrl }}",
+    "user_info_fields": "{{ .Values.authOidc.userInfoFields }}",
+    "groupinfo": "{{ .Values.authOidc.groupinfo }}"
+  }
+}

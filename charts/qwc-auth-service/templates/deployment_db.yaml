@@ -1,10 +1,11 @@
-{{ $dbHostname := (default (printf "%s-qwcdb" .Release.Name) (default .Values.global.db.hostname .Values.db.hostname)) }}
-{{ $dbPort := (default .Values.global.db.port .Values.db.port) }}
+{{- if or (eq .Values.mode "db") (eq .Values.mode "oidc-db") }}
+{{ $dbHostname := (default (printf "%s-qwcdb" .Release.Name) (default .Values.global.db.hostname .Values.authDb.db.hostname)) }}
+{{ $dbPort := (default .Values.global.db.port .Values.authDb.db.port) }}
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "qwcAuthService.fullname" . }}
+  name: {{ include "qwcAuthService.fullname" . }}-db
   labels:
     {{- include "qwcAuthService.labels" . | nindent 4 }}
 spec:
@@ -38,8 +39,8 @@ spec:
         - name: {{ .Chart.Name | lower }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.authDb.image.repository }}:{{ .Values.authDb.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.authDb.image.pullPolicy }}
           ports:
             - name: http-9090
               containerPort: 9090
@@ -134,3 +135,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}
