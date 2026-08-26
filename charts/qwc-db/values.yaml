@@ -73,12 +73,10 @@ serviceAccount:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext:
-  fsGroup: 999
+podSecurityContext: {}
   # runAsUser: 999  # Uncomment if needed
 
-securityContext:
-  fsGroup: 999
+securityContext: {}
   # capabilities:
   #   drop:
   #   - ALL
