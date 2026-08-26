@@ -441,10 +441,12 @@ echo "$SERVICES_LIST" | while IFS='|' read -r service_short description containe
             fi
           fi
         else
-          log_warning "Endpoint returned HTTP $http_code"
           # Don't fail service for non-2xx on test endpoints (might need auth)
           if [ "$http_code" = "401" ] || [ "$http_code" = "403" ]; then
-            log_info "  (This endpoint may require authentication)"
+            log_warning "Endpoint returned HTTP $http_code (This endpoint may require authentication)"
+          else
+            log_error "Endpoint returned HTTP $http_code"
+            service_passed=false
           fi
         fi
       done
