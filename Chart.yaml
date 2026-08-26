@@ -24,7 +24,7 @@ version: 3.0.1
 #
 # Last image tag bump date for all subcharts:
 appVersion:
-  "v2026.06.24"
+  "latest-2026-lts"
 
   # Aliases are needed to call chart functions from root chart and match internal chart function names in '_helpers.tpl'.
 dependencies:
