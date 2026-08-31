@@ -8,6 +8,6 @@ metadata:
 data:
   {{ $root := . }}
   {{ range $path, $bytes := .Files.Glob "bootstrap/*" }}
-  {{ $path | trimPrefix "bootstrap/" | replace "/" "--" }}: '{{ $root.Files.Get $path | tpl | b64enc }}'
+  {{ $path | trimPrefix "bootstrap/" | replace "/" "--" }}: '{{ tpl ($root.Files.Get $path) $root | b64enc }}'
   {{ end }}
 {{- end }}
