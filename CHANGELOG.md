@@ -2,6 +2,21 @@
 
 All notable changes to this chart and subcharts will be documented in this file.
 
+## **3.1.0** - 2026-08-31
+
+### Added
+
+- Split auth service in 2: old db and new oidc
+
+### Fixed
+
+- Improve log format in common.sh
+- Remove useless secret functions from helper
+- Improve test-services.sh and try to fix test-qwc.sh
+- Test failed when endpoint failed
+- FsGroup field does not exist anymore
+- Wrong usage of tpl function
+
 ## **3.0.1** - 2026-06-22
 
 bump to tag latest-2026-lts and chart 3.0.1
