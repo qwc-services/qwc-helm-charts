@@ -52,7 +52,7 @@ BOLD='\033[1m'
 # Format: service_short|description|container_port|health_endpoint|test_endpoints (separated by ,)
 SERVICES_LIST="
 qwcconfigservice|Config Generator Service|9090|/maps?tenant=default|/maps?tenant=default
-qwcqgisserver|QGIS Server (WMS/WFS)|1080|/|/ows/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&MAP=/data/demo.qgs
+qwcqgisserver|QGIS Server (WMS/WFS)|1080|/|/ows/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&MAP=/data/PROJECT_NAME.qgs
 qwcmapviewer|Map Viewer Frontend|9090|/healthz|/healthz,/ready,/
 qwcogcservice|OGC Service Proxy|9090|/healthz|/healthz,/ready,/ows/
 qwcdataservice|Data REST API|9090|/healthz|/healthz,/ready
@@ -388,7 +388,7 @@ echo "$SERVICES_LIST" | while IFS='|' read -r service_short description containe
 
   # force the use of the previously extracted project name
   if [ "$service_short" == "qwcqgisserver" ]; then
-    test_endpoints="/ows/?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&MAP=/data/$QGIS_PROJECT.qgs"
+    test_endpoints=${test_endpoints//PROJECT_NAME/$QGIS_PROJECT}
   fi
 
   service_passed=true
