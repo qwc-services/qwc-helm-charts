@@ -265,9 +265,12 @@ test_http_endpoint() {
   local url="http://127.0.0.1:${port}${endpoint}"
   verbose_log "Testing: $url"
 
-  local response=$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout "$timeout_sec" --max-time $((timeout_sec * 2)) "$url" 2>/dev/null)
+  if ! curl -s -o /dev/null -w "%{http_code}" --connect-timeout "$timeout_sec" --max-time $((timeout_sec * 2)) "$url" >/tmp/curl_response; then
+    log_error "Request '$url' failed!"
+    echo 0 >/tmp/curl_response
+  fi
 
-  echo "$response"
+  cat /tmp/curl_response
 }
 
 # Test HTTP endpoint and get response body
