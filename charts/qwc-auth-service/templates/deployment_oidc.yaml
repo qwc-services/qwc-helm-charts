@@ -48,6 +48,9 @@ spec:
               protocol: TCP
 
           env:
+          {{- with .Values.env.extra }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
             - name: PGSERVICEFILE
               value: /qwc_cfg/pg_service.conf
             - name: CONFIG_PATH

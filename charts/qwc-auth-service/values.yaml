@@ -76,6 +76,16 @@ pgServiceConfSecret:
 
 # ====== Chart env variables defined in global or overriden here
 env:
+  # === Extra env vars (as yaml)
+  extra: {}
+  # envExtra:
+  #   - name: GROUP_MAPPINGS
+  #     # In the special case a user have to many groups, the generated cookie exceed the browser limit (4Kb) and got truncated. The user will be redirected many times before failing.
+  #     # We define two rules to remove useless group:
+  #     # 1. replace admin group name by itself
+  #     # 2. replace any other group by ' '
+  #     value: "MY_ADMIN_GROUP~MY_ADMIN_GROUP#.*~ "
+
   # === CSRF protection
   # jwtCookieCSRFProtect: true
   # === uwsgi parameters
