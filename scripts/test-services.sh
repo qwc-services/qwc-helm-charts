@@ -265,9 +265,33 @@ test_http_endpoint() {
   local url="http://127.0.0.1:${port}${endpoint}"
   verbose_log "Testing: $url"
 
-  if ! curl -s -o /dev/null -w "%{http_code}" --connect-timeout "$timeout_sec" --max-time $((timeout_sec * 2)) "$url" >/tmp/curl_response; then
-    log_error "Request '$url' failed!"
-    echo 0 >/tmp/curl_response
+  curl -s -o /dev/null -w "%{http_code}" --connect-timeout "$timeout_sec" --max-time $((timeout_sec * 2)) "$url" >/tmp/curl_response
+  curl_exit=$?
+  error_msg=""
+  case $curl_exit in
+    0)
+      error_msg=""
+      ;;
+    6)
+      error_msg="DNS resolution failed"
+      ;;
+    7)
+      error_msg="Failed to connect"
+      ;;
+    28)
+      error_msg="Request timed out"
+      ;;
+    22)
+      error_msg="HTTP error ($http_code)"
+      ;;
+    *)
+      error_msg="curl failed with code $curl_exit"
+      ;;
+  esac
+
+  if [ $curl_exit -gt 0 ]; then
+    log_error "Request '$url' failed with error: '$error_msg'!"
+    echo -999 >/tmp/curl_response
   fi
 
   cat /tmp/curl_response
