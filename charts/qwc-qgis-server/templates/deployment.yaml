@@ -165,15 +165,12 @@ spec:
             {{- end }}
 
             # Extra secret ENV vars:
-            {{- with .Values.envExtraSecret }}
-              {{ $secretName := .secretName }}
-              {{- range .keys }}
-            - name: {{ . }}
+            {{- range .Values.envExtraSecret }}
+            - name: {{ .name }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ $secretName }}
-                  key: {{ . }}
-              {{- end }}
+                  name: {{ .secretName }}
+                  key: {{ .key }}
             {{- end }}
 
           livenessProbe:
