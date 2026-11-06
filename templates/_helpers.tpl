@@ -204,3 +204,21 @@ Claim name for config output volume
 {{- printf "%s-%s-claim" .Release.Name "config-output" }}
 {{- end }}
 {{- end }}
+
+{{/*
+Mustache subsitution from file data
+*/}}
+{{- define "qwc.parse_pg_service" -}}
+{{- $top := index . "top" -}}
+{{- $data := index . "data" -}}
+{{- $data = $data | replace "{{ qwc_db_host }}" (default (printf "%s-qwcdb" $top.Release.Name) $top.Values.global.db.hostname) -}}
+{{- $data = $data | replace "{{ qwc_db_port }}" (printf "%v" $top.Values.global.db.port) -}}
+
+{{- range  $k, $v := $top.Values.global.db.secrets -}}
+{{- $var_snake := regexReplaceAll "([a-z0-9])([A-Z])" $k "${1}_${2}" | lower -}}
+{{- $data = $data | replace (printf "{{ %s_user }}" $var_snake) $v.user -}}
+{{- $data = $data | replace (printf "{{ %s_pwd }}" $var_snake) $v.password -}}
+{{- end -}}
+
+{{- printf "%v" $data -}}
+{{- end }}

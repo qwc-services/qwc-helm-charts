@@ -2,8 +2,9 @@
 global:
   db:
     secrets:
-      mainPassword: blah
-      mainUser: blah
+      main:
+        password: blah
+        user: blah
 
   persistence:
     createVolumes: false

@@ -791,10 +791,21 @@ global:
   # Database credentials (CHANGE FOR PRODUCTION!)
   db:
     secrets:
-      qwcAdminPassword: "your-secure-admin-password"
-      qwcServicePassword: "your-secure-service-password"
-      qwcServiceWritePassword: "your-secure-write-password"
-      postgresPassword: "your-secure-postgres-password"
+      main:
+        user: postgres
+        password: "YOUR_POSTGRES_PASSWORD"
+      qwcAdmin:
+        user: qwc_admin
+        password: "YOUR_SECURE_PASSWORD"
+      qwcDemoRead:
+        user: qwc_service
+        password: "YOUR_SECURE_PASSWORD"
+      qwcDemoWrite:
+        user: qwc_service_write
+        password: "YOUR_SECURE_PASSWORD"
+      myUser:
+        user: user
+        password: "THE_PASSWORD"
 
   # JWT Secret for authentication (CHANGE FOR PRODUCTION!)
   # Must be at least 32 characters
@@ -941,8 +952,8 @@ qwcAuthService:
 
 | Setting | Demo Value | Production Action |
 | --------- | ------------ | ------------------- |
-| `db.secrets.qwcAdminPassword` | `qwc_admin` | Generate strong password |
-| `db.secrets.postgresPassword` | `postgres` | Generate strong password |
+| `db.secrets.qwcAdmin.password` | `qwc_admin` | Generate strong password |
+| `db.secrets.main.password` | `postgres` | Generate strong password |
 | `jwtSecret` | `changeme...` | `openssl rand -base64 32` |
 | Admin user password | `demo` | Change via Admin GUI or SQL |
 | `JWT_COOKIE_SECURE` | `false` | Set to `true` (requires HTTPS) |
@@ -1039,8 +1050,21 @@ global:
 
   db:
     secrets:
-      qwcAdminPassword: "YOUR_SECURE_PASSWORD"
-      postgresPassword: "YOUR_POSTGRES_PASSWORD"
+      main:
+        user: postgres
+        password: "YOUR_POSTGRES_PASSWORD"
+      qwcAdmin:
+        user: qwc_admin
+        password: "YOUR_SECURE_PASSWORD"
+      qwcDemoRead:
+        user: qwc_service
+        password: "YOUR_SECURE_PASSWORD"
+      qwcDemoWrite:
+        user: qwc_service_write
+        password: "YOUR_SECURE_PASSWORD"
+      myUser:
+        user: user
+        password: "THE_PASSWORD"
 
   jwtSecret: "YOUR_32_CHAR_JWT_SECRET"
 ```

@@ -24,10 +24,10 @@ createDb: true
 dbSecret:
   user:
     # name: secret config name. If empty, will use the one included in this chart.
-    key: postgresUser
+    key: mainUser
   password:
     # name: secret config name. If empty, will use the one included in this chart.
-    key: postgresPassword
+    key: mainPassword
 
 # ====== Access to pg_service.conf secret (used by db migration job)
 pgServiceConfSecret:

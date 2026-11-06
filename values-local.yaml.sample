@@ -30,11 +30,18 @@ global:
     # SECRETS
     # Can also be set via --set or separate values file
     secrets:
-      mainUser: postgres
-      mainPassword: postgres
-      qwcAdminPassword: qwc_admin
-      qwcServiceReadPassword: qwc_service
-      qwcServiceWritePassword: qwc_service_write
+      main:
+        user: postgres
+        password: postgres
+      qwcAdmin:
+        user: qwc_admin
+        password: qwc_admin
+      qwcDemoRead:
+        user: qwc_service
+        password: qwc_service
+      qwcDemoWrite:
+        user: qwc_service_write
+        password: qwc_service_write
 
   # jwt secret to be saved in default Secret storage 'RELEASE-global-secret'
   jsonWebToken: the_secret_key
