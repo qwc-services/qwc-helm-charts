@@ -6,6 +6,10 @@ metadata:
   name: {{ include "qwc.qgisResourcesVolumeClaim" . }}
   labels:
     {{- include "qwc.labels" . | nindent 4 }}
+  annotations:
+    # Helm keeps this claim on uninstall, on rollback and when it leaves the chart,
+    # so the volume and its data stay in place.
+    helm.sh/resource-policy: keep
 spec:
   accessModes:
     - ReadOnlyMany
