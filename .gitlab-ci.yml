@@ -1,63 +1,77 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/user/application_security/sast/#available-cicd-variables
+# Secret Detection customization: https://docs.gitlab.com/user/application_security/secret_detection/pipeline/configure/
+# Dependency Scanning customization: https://docs.gitlab.com/user/application_security/dependency_scanning/dependency_scanning_sbom/#customizing-analyzer-behavior
+# Container Scanning customization: https://docs.gitlab.com/user/application_security/container_scanning/#customizing-analyzer-behavior
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ci/variables/#cicd-variable-precedence
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
 variables:
-  LOCAL_GIT_URL: "https://gitlab-ci-token:${LOCAL_GIT_TOKEN}@forge.grandlyon.com/systemes-dinformation/geonet/qwc-helm.git"
-  REMOTE_GIT_URL: "https://${REM_GIT_USER}:${REM_GIT_TOKEN}@git.oslandia.net/Oslandia/technique/qgis-web-client/qwc-helm.git"
-  TMP_DIR: "qwc-helm"
   GITLAB_ENV: $CI_COMMIT_REF_NAME
-  HELM_CHART: "./"
+  PROJECT_ID: 89048340
 
 stages:
-  - base
+  - lint
+  - test
   - build
 
-##### JOBS #####
-base:mirror_from_github:
-  stage: base
-  image: debian:sid-slim
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-  before_script:
-    - apt update -qq && apt install -y -qq git
-    - git config --global user.name "${GITLAB_USER_NAME}"
-    - git config --global user.email "${GITLAB_USER_EMAIL}"
-    # create dedicated directory to clone as we may have gitlab cache (via docker volumes)
-    - rm -rf /tmp/$TMP_DIR
-    - mkdir -p /tmp/
-    - cd /tmp/
-    - git clone "$LOCAL_GIT_URL"
-    - cd $TMP_DIR
-  script:
-    # MASTER
-    - git branch
-    - git remote -v
-    - git remote add upstream "$REMOTE_GIT_URL"
-    - git fetch upstream
-    - git fetch origin
-    - git checkout main
-    - git rebase upstream/main
-    - git push -f "$LOCAL_GIT_URL" HEAD:main
-    - git push -f --tags "$LOCAL_GIT_URL" HEAD:main
+secret_detection:
+  stage: lint
 
-# remove dedicated directory
-after_script:
-  - rm -rf /tmp/$TMP_DIR
+helm-pre-commit:
+  stage: lint
+  image: jfxs/pre-commit:4
+  variables:
+    PRE_COMMIT_HOME: "$CI_PROJECT_DIR/.cache/pre-commit"
+  cache:
+    - key:
+        files: [.pre-commit-config.yaml]
+      paths:
+        - .cache/pre-commit/
+  before_script:
+    - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4 | bash
+    - apt update && apt install -y shellcheck
+    - ln -s values-local.yaml.sample values.yaml
+  script:
+    - pre-commit run --all-files
+
+sast:
+  stage: test
 
 build:build_helm:
   stage: build
-  image: debian:sid-slim
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-  before_script:
-    - apt update && apt install -y gpg curl apt-transport-https
-    - curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null
-    - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list
-    - apt update && apt install -y helm
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_TAG
+  image:
+    name: alpine/helm:4
+    entrypoint: [""]
+  parallel:
+    matrix:
+      - HELM_PATH:
+          - "./"
+          - "./charts/qwc-admin-gui"
+          - "./charts/qwc-auth-service"
+          - "./charts/qwc-config-service"
+          - "./charts/qwc-data-service"
+          - "./charts/qwc-db"
+          - "./charts/qwc-ogc-service"
+          - "./charts/qwc-permalink-service"
+          - "./charts/qwc-map-viewer"
   script:
-    - helm package -u $HELM_CHART
+    - helm package -u $HELM_PATH
     - |
-      export VERSION=$(egrep 'version: [0-9]' Chart.yaml | cut -d ' ' -f 2)
-    - curl --request POST --form "chart=@qwc-$VERSION.tgz" --user gitlab-ci-token:$CI_JOB_TOKEN ${CI_API_V4_URL}/projects/1275/packages/helm/api/stable/charts
+      export NAME=$(egrep '^name: \w*' $HELM_PATH/Chart.yaml | sed -E 's/^name: ((\w|-)*).*$/\1/g')
+    - |
+      export VERSION=$(egrep '^version: [0-9]+' $HELM_PATH/Chart.yaml | sed -E 's/^version: (([0-9]|\.)+).*$/\1/g')
+    - |
+      export CHANNEL=dev
+      [ -n "$CI_COMMIT_TAG" ] && export CHANNEL=stable
+    - curl --request POST --form "chart=@$NAME-$VERSION.tgz" --user gitlab-ci-token:$CI_JOB_TOKEN ${CI_API_V4_URL}/projects/${PROJECT_ID}/packages/helm/api/${CHANNEL}/charts
 
   environment:
     name: $GITLAB_ENV
-  tags:
-    - build-push-to-registry
