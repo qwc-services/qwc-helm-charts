@@ -48,4 +48,4 @@ The chart deploys multiple interconnected services:
 
 ## License
 
-See LICENSE file.
+See [LICENSE](LICENSE) file.
