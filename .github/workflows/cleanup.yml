@@ -1,0 +1,41 @@
+name: Cleanup PR Packages
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find and Delete PR Tags
+        run: |
+          # Dynamically find all directories containing Chart.yaml
+          CHARTS_PATHS=$(find . -name "Chart.yaml" -exec dirname {} \; )
+
+          for path in $CHARTS_PATHS; do
+            if [ -f "$path/Chart.yaml" ]; then
+              NAME=$(grep '^name: ' "$path/Chart.yaml" | awk '{print $2}')
+              VERSION=$(grep '^version: ' "$path/Chart.yaml" | awk '{print $2}')
+              TAG="pr-${{ github.event.pull_request.number }}-$VERSION"
+
+              echo "Deleting tag $TAG for chart $NAME..."
+
+              PACKAGE_ID=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                "https://api.github.com/orgs/${{ github.repository_owner }}/packages/container/$NAME" | jq '.id')
+
+              if [ "$PACKAGE_ID" == "null" ]; then
+                PACKAGE_ID=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                  "https://api.github.com/users/${{ github.actor }}/packages/container/$NAME" | jq '.id')
+              fi
+
+              curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+                "https://api.github.com/orgs/${{ github.repository_owner }}/packages/container/$NAME/versions/${TAG}" || true
+            fi
+          done
