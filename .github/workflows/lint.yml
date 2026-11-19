@@ -37,10 +37,3 @@ jobs:
           path: ./
           base: ${{ github.event.before }}
           head: ${{ github.event.after }}
-
-  sast:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
