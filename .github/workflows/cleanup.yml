@@ -27,7 +27,7 @@ jobs:
 
               VERSION_ID=$(curl -L -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                 -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2026-03-10" \
-                "https://api.github.com/orgs/${{ github.repository_owner }}/packages/container/charts%2F${NAME}/versions" | jq "".[] | select(.metadata.container.tags[0]==\"${TAG}\") | .id")
+                "https://api.github.com/orgs/${{ github.repository_owner }}/packages/container/charts%2F${NAME}/versions" | jq ".[] | select(.metadata.container.tags[0]==\"${TAG}\") | .id")
 
               echo "Deleting tag $TAG for chart $NAME..."
               curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
