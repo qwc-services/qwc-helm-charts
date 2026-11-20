@@ -2,6 +2,48 @@
 
 All notable changes to this chart and subcharts will be documented in this file.
 
+## **3.2.0** - 2026-11-20
+
+### Added
+
+- *Auth*:
+  - Add extra env var support
+
+### Documentation
+
+- *no scope*:
+  - Add LICENSE file
+
+### Fixed
+
+- *Qgis-server*:
+  - Correct bad template for envExtraSecret
+
+- *Qwc-db*:
+  - Improve db password storage
+    **BREAKING**
+  - Change chart appVersion to latest qwc-base-db tag. See README
+    **BREAKING**: umbrella chart MUST fix it DB tag. See README.md
+
+- *Script*:
+  - Catch curl error instead of just returning 000
+  - Use regexp to change project name
+  - Improve catch curl error
+
+- *no scope*:
+  - Add annotation to PVC to tell Helm we do not want PV to be deleted
+
+### Ci
+
+- *no scope*:
+  - Add chart build
+  - Add github jobs
+  - Remove sast job as already defined in GitHub settings
+  - Remove bad version flag
+  - Fix package path to cleanup
+  - Fix cleanup by selecting the version to delete
+  - Add tgz releases
+
 ## **3.1.0** - 2026-08-31
 
 ### Added
