@@ -6,7 +6,7 @@ image:
   repository: sourcepole/qwc-base-db
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "16"
+  tag: "18"
 
 migrateImage:
   repository: sourcepole/qwc-base-db-migrate
