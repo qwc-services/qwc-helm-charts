@@ -8,14 +8,29 @@ This guide will get you up and running with QWC2 in minutes.
 - Helm 3.x installed
 - Gateway API configured (for external access)
 
-## Installation
+### Installation from GitHub Container Registry
 
-### Clone the Repository
+```bash
+helm install my-qwc-chart oci://ghcr.io/qwc-services/charts/qwc --version VERSION -n my-namespace --create-namespace
+```
+
+### Installation from packaged chart
+
+```bash
+wget https://github.com/qwc-services/qwc-helm-charts/releases/download/main/qwc-VERSION.tgz
+helm install my-qwc-chart qwc-VERSION.tgz -n my-namespace --create-namespace
+```
+
+### Installation from repository
 
 ```bash
 git clone <repository-url> qwc-helm-main
 cd qwc-helm-main
 ```
+
+### Installation using umbrella chart
+
+This is the preferred installation method: see [umbrella chart](UMBRELLA_CHART.md).
 
 ### Configure Values
 
