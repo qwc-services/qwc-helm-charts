@@ -20,7 +20,7 @@ jobs:
           CHARTS=$(find . -name "Chart.yaml" -exec dirname {} \; | jq -R . | jq -s -c .)
           echo "matrix=$CHARTS" >> $GITHUB_OUTPUT
 
-  build:
+  release_oci:
     needs: setup
     runs-on: ubuntu-latest
     permissions:
@@ -64,3 +64,81 @@ jobs:
 
           CHART_FILE=$(ls *.tgz | head -n 1)
           helm push $CHART_FILE oci://ghcr.io/${{ github.repository_owner }}/charts
+
+  release_tgz:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Package and Push to GHCR
+        id: names
+        run: |
+          CHARTS_PATHS=$(find . -name "Chart.yaml" -exec dirname {} \; )
+
+          for path in $CHARTS_PATHS; do
+            if [ -f "$path/Chart.yaml" ]; then
+              helm package -u --version "${{ github.ref_name }}" $path
+
+              DESCRIPTION=$(grep '^description: ' $path/Chart.yaml | cut -d " " -f 2-)
+              NAME=$(grep '^name: ' $path/Chart.yaml | awk '{print $2}')
+              VERSION=$(grep '^version: ' $path/Chart.yaml | awk '{print $2}')
+              APPVERSION=$(grep '^appVersion: ' $path/Chart.yaml | awk '{print $2}')
+
+              echo "- $NAME \"$DESCRIPTION\", version:${VERSION}, appVersion:${APPVERSION}" >> /tmp/names.txt
+
+              cat <<EOF >> /tmp/ocis.txt
+          - $NAME:
+            \`\`\`bash
+            helm install $NAME oci://ghcr.io/${{ github.repository_owner }}/charts --version $VERSION
+            \`\`\`
+          EOF
+
+              cat <<EOF >> /tmp/tgzs.txt
+          - $NAME:
+            \`\`\`bash
+            wget https://github.com/qwc-services/qwc-helm-charts/releases/download/main/$NAME-$VERSION.tgz
+            helm install $NAME $NAME-$VERSION.tgz
+            \`\`\`
+          EOF
+
+            fi
+          done
+
+          cat <<EOF > /tmp/body.txt
+          ## Helm Charts Release
+
+          This release contains the following charts:
+          EOF
+
+          cat /tmp/names.txt >> /tmp/body.txt
+
+          cat <<EOF >> /tmp/body.txt
+          ### Installation
+
+          #### From GitHub Container Registry:
+          EOF
+
+          cat /tmp/ocis.txt >> /tmp/body.txt
+
+          cat <<EOF >> /tmp/body.txt
+
+          #### From packaged chart (attached to this release):
+          EOF
+
+          cat /tmp/tgzs.txt >> /tmp/body.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            *.tgz
+          generate_release_notes: true
+          body_path: /tmp/body.txt

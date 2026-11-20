@@ -23,10 +23,9 @@ version: 3.1.0
 # It is recommended to use it with quotes.
 #
 # Last image tag bump date for all subcharts:
-appVersion:
-  "latest-2026-lts"
+appVersion: "latest-2026-lts"
 
-  # Aliases are needed to call chart functions from root chart and match internal chart function names in '_helpers.tpl'.
+# Aliases are needed to call chart functions from root chart and match internal chart function names in '_helpers.tpl'.
 dependencies:
   - name: qwc-db
     version: "*"
