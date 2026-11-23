@@ -88,7 +88,7 @@ The application follows a microservices architecture where each service handles 
                     │   (Config Generator)          │                   │                               │
                     │                               │                   │  • qgs-resources (QGIS files) │
                     │  Reads: config-in, qgs files  │                   │  • config-out                 │
-                    │  Writes: config-out           │                   │  • qwc2 (frontend assets)     │
+                    │  Writes: config-out           │                   │  • qwc (frontend assets)      │
                     └───────────────────────────────┘                   │  • attachments                │
                                                                         │  • info-templates             │
                                                                         └───────────────────────────────┘
@@ -166,7 +166,7 @@ The application follows a microservices architecture where each service handles 
 - `qgs-resources` (read-only) - QGIS project files
 - `config-in` (read-write) - Input configuration templates
 - `config-out` (read-write) - Output generated configurations
-- `qwc2` (read-write) - Frontend application files
+- `qwc` (read-write) - Frontend application files
 
 **Critical:** This service must be able to communicate with QGIS Server to read project capabilities.
 
@@ -199,7 +199,7 @@ The application follows a microservices architecture where each service handles 
 **Required Volumes:**
 
 - `config-out` (read-only) - Runtime configuration
-- `qwc2/assets` (read-only) - Static assets (logos, custom styles)
+- `qwc/assets` (read-only) - Static assets (logos, custom styles)
 
 ---
 
@@ -323,7 +323,7 @@ The application follows a microservices architecture where each service handles 
 
 - `config-out` (read-only)
 - `config-in` (read-write) - For configuration editing
-- `qwc2` (read-write) - For theme editing
+- `qwc` (read-write) - For theme editing
 - `qgs-resources` (read-write) - For project management
 - `info-templates` (read-write) - For template editing
 
@@ -547,12 +547,12 @@ Response with JWT cookie
 
 #### QWC Frontend Assets (`vol-qwc-app-ro`)
 
-**Path:** `/qwc2`
+**Path:** `/qwc`
 
 **Contents:**
 
 ```raw
-/qwc2/
+/qwc/
 ├── assets/
 │   ├── img/             # Custom images
 │   ├── css/             # Custom styles

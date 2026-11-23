@@ -100,7 +100,7 @@ global:
       # === Size for PVC
       size: 10Gi
       # === Local paths for PVs when storageClassName is local-storage, ie. dev mode
-      volumePath: /data/qwc2/
+      volumePath: /data/qwc/
       # === Overrides claim name.
       # claimOverride: claim-01
 

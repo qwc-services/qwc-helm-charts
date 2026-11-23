@@ -87,7 +87,7 @@ spec:
               readOnly: true
 
             - name: vol-qwc-app
-              mountPath: /qwc2/assets
+              mountPath: /qwc/assets
               readOnly: true
               subPath: assets
 
@@ -118,8 +118,8 @@ spec:
             - |
               base64 -d /bootstrap/scripts/common.sh > /tmp/common.sh
               source /tmp/common.sh
-              configmap_to_files /bootstrap/assets /qwc2/assets/ $BOOTSTRAP_WATCHDOG_FILE
-              sed -i 's|Build $VERSION$.*</p>|Build $VERSION${{ tpl .Values.aboutVersionTemplate . }}</p>|g' /qwc2/assets/help.html
+              configmap_to_files /bootstrap/assets /qwc/assets/ $BOOTSTRAP_WATCHDOG_FILE
+              sed -i 's|Build $VERSION$.*</p>|Build $VERSION${{ tpl .Values.aboutVersionTemplate . }}</p>|g' /qwc/assets/help.html
 
           env:
             - name: BOOTSTRAP_WATCHDOG_FILE
@@ -134,7 +134,7 @@ spec:
               readOnly: true
 
             - name: vol-qwc-app
-              mountPath: /qwc2
+              mountPath: /qwc
               readOnly: false
 
       volumes:

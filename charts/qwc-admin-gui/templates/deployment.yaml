@@ -103,7 +103,7 @@ spec:
               mountPath: /qgs-resources/
               readOnly: false
             - name: vol-qwc-app-ro
-              mountPath: /qwc2/
+              mountPath: /qwc/
               readOnly: false
             - name: vol-info-templates-rw
               mountPath: /info_templates/
