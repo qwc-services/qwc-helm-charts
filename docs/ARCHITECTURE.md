@@ -1,6 +1,6 @@
-# QWC2 Helm Chart Architecture Documentation
+# QWC Helm Chart Architecture Documentation
 
-This document provides comprehensive documentation of the QWC2 (QGIS Web Client 2) application architecture deployed by this Helm chart, including component relationships, interactions, volumes, database requirements, and troubleshooting guidance.
+This document provides comprehensive documentation of the QWC (QGIS Web Client) application architecture deployed by this Helm chart, including component relationships, interactions, volumes, database requirements, and troubleshooting guidance.
 
 ## Table of Contents
 
@@ -19,7 +19,7 @@ This document provides comprehensive documentation of the QWC2 (QGIS Web Client 
 
 ## Overview
 
-QWC2 (QGIS Web Client 2) is a modular web mapping application built on top of QGIS Server. It provides a modern, responsive web interface for viewing and interacting with geospatial data served by QGIS Server through OGC-compliant services (WMS, WFS, WCS, etc.).
+QWC (QGIS Web Client) is a modular web mapping application built on top of QGIS Server. It provides a modern, responsive web interface for viewing and interacting with geospatial data served by QGIS Server through OGC-compliant services (WMS, WFS, WCS, etc.).
 
 The application follows a microservices architecture where each service handles a specific functionality. All services share:
 
@@ -88,7 +88,7 @@ The application follows a microservices architecture where each service handles 
                     │   (Config Generator)          │                   │                               │
                     │                               │                   │  • qgs-resources (QGIS files) │
                     │  Reads: config-in, qgs files  │                   │  • config-out                 │
-                    │  Writes: config-out           │                   │  • qwc2 (frontend assets)     │
+                    │  Writes: config-out           │                   │  • qwc (frontend assets)      │
                     └───────────────────────────────┘                   │  • attachments                │
                                                                         │  • info-templates             │
                                                                         └───────────────────────────────┘
@@ -166,7 +166,7 @@ The application follows a microservices architecture where each service handles 
 - `qgs-resources` (read-only) - QGIS project files
 - `config-in` (read-write) - Input configuration templates
 - `config-out` (read-write) - Output generated configurations
-- `qwc2` (read-write) - Frontend application files
+- `qwc` (read-write) - Frontend application files
 
 **Critical:** This service must be able to communicate with QGIS Server to read project capabilities.
 
@@ -199,7 +199,7 @@ The application follows a microservices architecture where each service handles 
 **Required Volumes:**
 
 - `config-out` (read-only) - Runtime configuration
-- `qwc2/assets` (read-only) - Static assets (logos, custom styles)
+- `qwc/assets` (read-only) - Static assets (logos, custom styles)
 
 ---
 
@@ -323,7 +323,7 @@ The application follows a microservices architecture where each service handles 
 
 - `config-out` (read-only)
 - `config-in` (read-write) - For configuration editing
-- `qwc2` (read-write) - For theme editing
+- `qwc` (read-write) - For theme editing
 - `qgs-resources` (read-write) - For project management
 - `info-templates` (read-write) - For template editing
 
@@ -545,14 +545,14 @@ Response with JWT cookie
 
 **Consumed by:** All QWC services
 
-#### QWC2 Frontend Assets (`vol-qwc-app-ro`)
+#### QWC Frontend Assets (`vol-qwc-app-ro`)
 
-**Path:** `/qwc2`
+**Path:** `/qwc`
 
 **Contents:**
 
 ```raw
-/qwc2/
+/qwc/
 ├── assets/
 │   ├── img/             # Custom images
 │   ├── css/             # Custom styles

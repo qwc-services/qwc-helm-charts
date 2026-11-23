@@ -1,4 +1,4 @@
-# QWC2 Admin GUI - Credentials and User Management
+# QWC Admin GUI - Credentials and User Management
 
 This document explains how to access the Admin GUI, what the default credentials are, and how to configure or change them.
 

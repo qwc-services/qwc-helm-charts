@@ -1,4 +1,4 @@
-# QWC2 - QGIS Web Client 2
+# QWC - QGIS Web Client
 
 ## Complete Technical Documentation for Kubernetes Deployment
 
@@ -19,9 +19,9 @@
 
 ## Product Overview
 
-### What is QWC2?
+### What is QWC?
 
-**QWC2 (QGIS Web Client 2)** is a modern, modular web mapping application built on top of QGIS Server. It provides a responsive, feature-rich web interface for viewing and interacting with geospatial data served through OGC-compliant services (WMS, WFS, WCS, WMTS).
+**QWC (QGIS Web Client)** is a modern, modular web mapping application built on top of QGIS Server. It provides a responsive, feature-rich web interface for viewing and interacting with geospatial data served through OGC-compliant services (WMS, WFS, WCS, WMTS).
 
 The application follows a **microservices architecture** where each service handles a specific functionality, all orchestrated within a Kubernetes cluster using Helm charts.
 
@@ -568,7 +568,7 @@ This section provides a consolidated view of all publicly exposed endpoints, the
 
 #### Direct QGIS Server Access (Optional)
 
-If configured, QGIS Server can be exposed directly, bypassing the OGC proxy. This is useful for debugging or internal use but bypasses QWC2 permission checks.
+If configured, QGIS Server can be exposed directly, bypassing the OGC proxy. This is useful for debugging or internal use but bypasses QWC permission checks.
 
 | Path | Service | Function | Auth Required |
 | ------ | --------- | ---------- | --------------- |
@@ -1428,7 +1428,7 @@ echo "Backup completed: $BACKUP_DIR/db_$DATE.sql.gz"
 
 ### References
 
-- [QWC2 Official Documentation](https://github.com/qgis/qwc2)
+- [QWC Official Documentation](https://github.com/qgis/qwc2)
 - [QGIS Server Manual](https://docs.qgis.org/latest/en/docs/server_manual/)
 - [PostGIS Documentation](https://postgis.net/documentation/)
 - [Kubernetes Documentation](https://kubernetes.io/docs/)

@@ -1,6 +1,6 @@
-# QWC2 Helm Chart - Volumes Documentation
+# QWC Helm Chart - Volumes Documentation
 
-This document provides comprehensive documentation of all persistent volumes used by the QWC2 Helm chart, including their purpose, access modes, and which services use them.
+This document provides comprehensive documentation of all persistent volumes used by the QWC Helm chart, including their purpose, access modes, and which services use them.
 
 ## Table of Contents
 
@@ -110,7 +110,7 @@ This document provides comprehensive documentation of all persistent volumes use
 
 ## Volume Overview
 
-The QWC2 application uses the following persistent volumes:
+The QWC application uses the following persistent volumes:
 
 | Volume Name | Kubernetes Resource | Access Mode | Default Size | Used By |
 |-------------|---------------------|-------------|--------------|---------|
@@ -335,7 +335,7 @@ In a `.qgs` file, database connections should reference `pg_service.conf` servic
 
 ---
 
-### 5. QWC2 Frontend Assets Volume (`vol-qwc-app-ro`)
+### 5. QWC Frontend Assets Volume (`vol-qwc-app-ro`)
 
 **Purpose:** Stores frontend application assets, custom images, styles, translations, and static files.
 
@@ -346,13 +346,13 @@ In a `.qgs` file, database connections should reference `pg_service.conf` servic
 
 **Physical Paths:**
 
-- `/qwc2/` (in qwc-config-service, qwc-admin-gui)
-- `/qwc2/assets/` (in qwc-map-viewer - subPath mount)
+- `/qwc/` (in qwc-config-service, qwc-admin-gui)
+- `/qwc/assets/` (in qwc-map-viewer - subPath mount)
 
 **Contents:**
 
 ```raw
-/qwc2/
+/qwc/
 ├── assets/
 │   ├── img/
 │   │   ├── logo.png              # Application logo
@@ -376,7 +376,7 @@ In a `.qgs` file, database connections should reference `pg_service.conf` servic
 
 - **qwc-map-viewer** - Read-only access
   - Serves static assets via HTTP
-  - Mounts only `/qwc2/assets/` subdirectory
+  - Mounts only `/qwc/assets/` subdirectory
 
 - **qwc-admin-gui** - Read-write access
   - Allows asset management via web UI
@@ -521,9 +521,9 @@ In a `.qgs` file, database connections should reference `pg_service.conf` servic
 | **qwc-config-service** | vol-qgis-resources-ro | `/data/` | RO |
 | **qwc-config-service** | vol-config-input | `/qwc_cfg/config-in/` | RW |
 | **qwc-config-service** | vol-config-out | `/qwc_cfg/config-out/` | RW |
-| **qwc-config-service** | vol-qwc-app-ro | `/qwc2/` | RW |
+| **qwc-config-service** | vol-qwc-app-ro | `/qwc/` | RW |
 | **qwc-map-viewer** | vol-config-out | `/qwc_cfg/config/` | RO |
-| **qwc-map-viewer** | vol-qwc-app-ro | `/qwc2/assets/` | RO |
+| **qwc-map-viewer** | vol-qwc-app-ro | `/qwc/assets/` | RO |
 | **qwc-ogc-service** | vol-config-out | `/qwc_cfg/config/` | RO |
 | **qwc-data-service** | vol-config-out | `/qwc_cfg/config/` | RO |
 | **qwc-data-service** | vol-attachments-rw | `/attachments/` | RW |
@@ -531,7 +531,7 @@ In a `.qgs` file, database connections should reference `pg_service.conf` servic
 | **qwc-admin-gui** | vol-qgis-resources-ro | `/qgs-resources/` | RW |
 | **qwc-admin-gui** | vol-config-out | `/qwc_cfg/config/` | RO |
 | **qwc-admin-gui** | vol-config-input | `/srv/qwc_service/config-in/` | RW |
-| **qwc-admin-gui** | vol-qwc-app-ro | `/qwc2/` | RW |
+| **qwc-admin-gui** | vol-qwc-app-ro | `/qwc/` | RW |
 | **qwc-admin-gui** | vol-info-templates | `/info_templates/` | RW |
 | **qwc-permalink-service** | vol-config-out | `/qwc_cfg/config/` | RO |
 
@@ -555,7 +555,7 @@ volumePaths:
   - name: vol-config-input
     path: /data/config-in/
   - name: vol-qwc-app-ro
-    path: /data/qwc2/
+    path: /data/qwc/
   - name: vol-attachments-rw
     path: /data/attachments/
   - name: vol-info-templates

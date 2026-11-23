@@ -1,6 +1,6 @@
-# QWC2 Helm Chart - Services and Endpoints Documentation
+# QWC Helm Chart - Services and Endpoints Documentation
 
-This document provides comprehensive documentation of all Kubernetes services and HTTP endpoints exposed by the QWC2 application.
+This document provides comprehensive documentation of all Kubernetes services and HTTP endpoints exposed by the QWC application.
 
 ## Table of Contents
 
@@ -16,7 +16,7 @@ This document provides comprehensive documentation of all Kubernetes services an
 
 ## Services Overview
 
-The QWC2 Helm chart creates the following Kubernetes services:
+The QWC Helm chart creates the following Kubernetes services:
 
 | Service Name | Type | Port | Purpose |
 | -------------- | ------ | ------ | --------- |

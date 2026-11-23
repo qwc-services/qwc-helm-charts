@@ -10,7 +10,7 @@
     "qgis_projects_base_dir": "/data",
     "qgis_projects_scan_base_dir": "/data/scan",
     "qgis_projects_gen_base_dir": "/data/gen",
-    "qwc2_base_dir": "/qwc2",
+    "qwc2_base_dir": "/qwc",
     "autogen_keyvaltable_datasets": false
   },
   "themesConfig": "themes/config.json",
@@ -29,7 +29,7 @@
           "config_editor"
         ],
         "input_config_path": "{{INPUT_CONFIG_PATH}}",
-        "qwc2_path": "/qwc2",
+        "qwc2_path": "/qwc",
         "qgs_resources_path": "/qgs-resources",
         "ogc_service_url": "http://{{QGIS_SERVER_HOST}}/ows/",
         "info_templates_path": "/info_templates",
@@ -58,7 +58,7 @@
         }
       },
       "config": {
-        "qwc2_path": "/qwc2/",
+        "qwc2_path": "/qwc/",
         "auth_service_url": "/auth/",
         "data_service_url": "/api/v1/data/",
         "ogc_service_url": "/ows/",
