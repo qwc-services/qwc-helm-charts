@@ -1,6 +1,6 @@
-# QWC2 Helm Chart - Volumes Documentation
+# QWC Helm Chart - Volumes Documentation
 
-This document provides comprehensive documentation of all persistent volumes used by the QWC2 Helm chart, including their purpose, access modes, and which services use them.
+This document provides comprehensive documentation of all persistent volumes used by the QWC Helm chart, including their purpose, access modes, and which services use them.
 
 ## Table of Contents
 
@@ -110,7 +110,7 @@ This document provides comprehensive documentation of all persistent volumes use
 
 ## Volume Overview
 
-The QWC2 application uses the following persistent volumes:
+The QWC application uses the following persistent volumes:
 
 | Volume Name | Kubernetes Resource | Access Mode | Default Size | Used By |
 |-------------|---------------------|-------------|--------------|---------|
@@ -335,7 +335,7 @@ In a `.qgs` file, database connections should reference `pg_service.conf` servic
 
 ---
 
-### 5. QWC2 Frontend Assets Volume (`vol-qwc-app-ro`)
+### 5. QWC Frontend Assets Volume (`vol-qwc-app-ro`)
 
 **Purpose:** Stores frontend application assets, custom images, styles, translations, and static files.
 

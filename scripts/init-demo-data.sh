@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# QWC2 Demo Data Initialization Script
-# This script initializes the QWC2 database with demo data for testing purposes.
+# QWC Demo Data Initialization Script
+# This script initializes the QWC database with demo data for testing purposes.
 #
 # Usage:
 #   ./init-demo-data.sh [OPTIONS]
@@ -80,7 +80,7 @@ while [[ $# -gt 0 ]]; do
     --help)
       echo "Usage: ./init-demo-data.sh [OPTIONS]"
       echo ""
-      echo "This script initializes QWC2 with demo data including:"
+      echo "This script initializes QWC with demo data including:"
       echo "  - Demo users (admin/demo, demo/demo)"
       echo "  - Demo geospatial data (cities, roads, regions)"
       echo "  - Demo QGIS project"
@@ -107,9 +107,9 @@ done
 # Interactive namespace prompt
 if [ -z "$NAMESPACE" ]; then
   if [ "$INTERACTIVE" = true ]; then
-    echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}║         QWC2 Demo Data Initialization Script               ║${NC}"
-    echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
+    echo -e "${CYAN}╔═══════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${CYAN}║         QWC Demo Data Initialization Script               ║${NC}"
+    echo -e "${CYAN}╚═══════════════════════════════════════════════════════════╝${NC}"
     echo ""
     read -r -p "Enter Kubernetes namespace [${DEFAULT_NAMESPACE}]: " INPUT_NAMESPACE
     NAMESPACE="${INPUT_NAMESPACE:-$DEFAULT_NAMESPACE}"
@@ -159,7 +159,7 @@ execute_sql_file() {
   kubectl exec -i -n "$NAMESPACE" "$DB_POD" -- psql -U postgres -d "$DB_NAME" <"$file" 2>/dev/null
 }
 
-echo -e "${GREEN}=== QWC2 Demo Data Initialization ===${NC}"
+echo -e "${GREEN}=== QWC Demo Data Initialization ===${NC}"
 echo "Database: $DB_POD:5432/$DB_NAME (via kubectl exec)"
 echo "User: postgres (superuser)"
 echo ""
@@ -403,9 +403,9 @@ if [ "$SKIP_GEODATA" = false ]; then
 
     # Add comments to tables
     execute_sql "
-        COMMENT ON TABLE demo.cities IS 'Demo cities point layer for QWC2 testing';
-        COMMENT ON TABLE demo.roads IS 'Demo roads line layer for QWC2 testing';
-        COMMENT ON TABLE demo.regions IS 'Demo regions polygon layer for QWC2 testing';
+        COMMENT ON TABLE demo.cities IS 'Demo cities point layer for QWC testing';
+        COMMENT ON TABLE demo.roads IS 'Demo roads line layer for QWC testing';
+        COMMENT ON TABLE demo.regions IS 'Demo regions polygon layer for QWC testing';
 
         COMMENT ON COLUMN demo.cities.geom IS 'City location in Web Mercator (EPSG:3857)';
         COMMENT ON COLUMN demo.roads.geom IS 'Road geometry in Web Mercator (EPSG:3857)';
@@ -566,7 +566,7 @@ if [ "$SKIP_GEODATA" = false ]; then
   </projectlayers>
   <properties>
     <WMSServiceTitle type="QString">Demo European Cities</WMSServiceTitle>
-    <WMSServiceAbstract type="QString">Demo map showing European cities, roads and regions for QWC2 testing</WMSServiceAbstract>
+    <WMSServiceAbstract type="QString">Demo map showing European cities, roads and regions for QWC testing</WMSServiceAbstract>
     <WMSContactOrganization type="QString">QWC Demo</WMSContactOrganization>
     <WMSOnlineResource type="QString"></WMSOnlineResource>
     <WMSExtent type="QStringList">

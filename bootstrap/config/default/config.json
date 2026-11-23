@@ -174,7 +174,7 @@
       {
         "name": "LayerCatalog",
         "cfg": {
-          "catalogUrl": "https://qwc2.sourcepole.ch/assets/catalog.json"
+          "catalogUrl": "https://qwc.sourcepole.ch/assets/catalog.json"
         }
       },
       {
@@ -316,7 +316,7 @@
           "menuItems": [
               {"title": "Homepage", "icon": "info", "url": "https://qwc-services.github.io/", "target": "iframe"},
               {"key": "Tools", "icon": "tools", "title": "Links", "subitems": [
-                {"icon": "link", "title": "qwc2", "url": "https://github.com/qgis/qwc2/"},
+                {"icon": "link", "title": "qwc", "url": "https://github.com/qgis/qwc2/"},
                 {"icon": "link", "title": "qwc-docker", "url": "https://github.com/qwc-services/qwc-docker"},
                 {"icon": "link", "title": "qgis.org", "url": "https://qgis.org"}
               ]}

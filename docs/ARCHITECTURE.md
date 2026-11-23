@@ -1,6 +1,6 @@
-# QWC2 Helm Chart Architecture Documentation
+# QWC Helm Chart Architecture Documentation
 
-This document provides comprehensive documentation of the QWC2 (QGIS Web Client 2) application architecture deployed by this Helm chart, including component relationships, interactions, volumes, database requirements, and troubleshooting guidance.
+This document provides comprehensive documentation of the QWC (QGIS Web Client) application architecture deployed by this Helm chart, including component relationships, interactions, volumes, database requirements, and troubleshooting guidance.
 
 ## Table of Contents
 
@@ -19,7 +19,7 @@ This document provides comprehensive documentation of the QWC2 (QGIS Web Client 
 
 ## Overview
 
-QWC2 (QGIS Web Client 2) is a modular web mapping application built on top of QGIS Server. It provides a modern, responsive web interface for viewing and interacting with geospatial data served by QGIS Server through OGC-compliant services (WMS, WFS, WCS, etc.).
+QWC (QGIS Web Client) is a modular web mapping application built on top of QGIS Server. It provides a modern, responsive web interface for viewing and interacting with geospatial data served by QGIS Server through OGC-compliant services (WMS, WFS, WCS, etc.).
 
 The application follows a microservices architecture where each service handles a specific functionality. All services share:
 
@@ -545,7 +545,7 @@ Response with JWT cookie
 
 **Consumed by:** All QWC services
 
-#### QWC2 Frontend Assets (`vol-qwc-app-ro`)
+#### QWC Frontend Assets (`vol-qwc-app-ro`)
 
 **Path:** `/qwc2`
 

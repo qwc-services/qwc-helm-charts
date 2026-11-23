@@ -1,8 +1,8 @@
 #!/bin/bash
 # shellcheck disable=SC2155,SC2002
 
-# QWC2 Functional Test Script
-# Comprehensive end-to-end testing of QWC2 application
+# QWC Functional Test Script
+# Comprehensive end-to-end testing of QWC application
 
 set -euo pipefail
 
@@ -97,7 +97,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-echo -e "${BLUE}=== QWC2 Comprehensive Test Suite ===${NC}"
+echo -e "${BLUE}=== QWC Comprehensive Test Suite ===${NC}"
 echo "Namespace: $NAMESPACE"
 echo "Release: $RELEASE"
 echo "Base URL: $BASE_URL"

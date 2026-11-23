@@ -1,6 +1,6 @@
-# QWC2 Quick Start Guide
+# QWC Quick Start Guide
 
-This guide will get you up and running with QWC2 in minutes.
+This guide will get you up and running with QWC in minutes.
 
 ## Prerequisites
 
@@ -100,7 +100,7 @@ curl "https://myhostname.com/ows/demo?SERVICE=WMS&REQUEST=GetCapabilities"
 
 ## Troubleshooting
 
-See [the architecture document](ARCHITECTURE.md#troubleshooting-guide) or [the complete guide](QWC2_COMPLETE_GUIDE.md#troubleshooting)
+See [the architecture document](ARCHITECTURE.md#troubleshooting-guide) or [the complete guide](QWC_COMPLETE_GUIDE.md#troubleshooting)
 
 ## Next Steps
 
