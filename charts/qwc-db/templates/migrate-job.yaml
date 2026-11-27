@@ -1,4 +1,6 @@
 {{ $dbHostname := (default (printf "%s-qwcdb" .Release.Name) .Values.global.db.hostname) }}
+{{ $dbPort := .Values.global.db.port }}
+
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -33,7 +35,7 @@ spec:
           command:
             - 'sh'
             - '-c'
-            - "until nc -z {{ $dbHostname }} 5432 >/dev/null 2>&1; do echo waiting for qwcDb; sleep 2; done"
+            - "until nc -z {{ $dbHostname }} {{ $dbPort }} >/dev/null 2>&1; do echo waiting for qwcDb; sleep 2; done"
 
       volumes:
         - name: vol-pg-service-conf-ro

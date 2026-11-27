@@ -1,6 +1,7 @@
 ### Default values for linter:
 global:
   db:
+    port: 1234
     secrets:
       main:
         password: blah
