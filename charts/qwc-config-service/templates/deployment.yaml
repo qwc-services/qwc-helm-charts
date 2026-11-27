@@ -135,7 +135,7 @@ spec:
               apk fetch --allow-untrusted --no-cache readline libncursesw bash libintl gettext-envsubst
               for f in *.apk; do tar xvzf "$f"; done
               ls -alF $INPUT_CONFIG_PATH/
-              LD_LIBRARY_PATH=/tmp/usr/lib /tmp/bin/bash -c $INPUT_CONFIG_PATH/entrypoint.sh
+              PATH=$PATH:/tmp/bin:/tmp/usr/bin LD_LIBRARY_PATH=/tmp/usr/lib bash -c $INPUT_CONFIG_PATH/entrypoint.sh
 
       initContainers:
       {{- with .Values.initContainers }}
