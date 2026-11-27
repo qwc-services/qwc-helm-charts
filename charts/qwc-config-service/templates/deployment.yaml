@@ -126,7 +126,7 @@ spec:
             - '-c'
             - |
               cd /tmp
-              apk fetch readline libncursesw bash libintl envsubst
+              apk fetch --allow-untrusted --no-cache readline libncursesw bash libintl envsubst
               for f in *.apk; do tar xvzf "$f"; done
               ls -alF $INPUT_CONFIG_PATH/
               LD_LIBRARY_PATH=/tmp/usr/lib /tmp/bin/bash -c $INPUT_CONFIG_PATH/entrypoint.sh
