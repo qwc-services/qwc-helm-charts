@@ -89,6 +89,12 @@ spec:
               value: {{ .Values.global.env.serviceGID | default 1000 | quote }}
             - name: JWT_COOKIE_CSRF_PROTECT
               value: {{ .Values.env.jwtCookieCSRFProtect | default .Values.global.env.jwtCookieCSRFProtect | default true | quote }}
+            # Extra ENV vars:
+            {{- range .Values.envExtra }}
+            - name: {{ .name }}
+              value: {{ .value }}
+            {{- end }}
+
 
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
