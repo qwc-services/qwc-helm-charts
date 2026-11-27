@@ -89,6 +89,12 @@ spec:
               value: {{ .Values.global.env.serviceGID | default 1000 | quote }}
             - name: JWT_COOKIE_CSRF_PROTECT
               value: {{ .Values.env.jwtCookieCSRFProtect | default .Values.global.env.jwtCookieCSRFProtect | default true | quote }}
+            # Extra ENV vars:
+            {{- range .Values.envExtra }}
+            - name: {{ .name }}
+              value: {{ .value }}
+            {{- end }}
+
 
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
@@ -125,9 +131,11 @@ spec:
             - 'sh'
             - '-c'
             - |
-              apk add bash envsubst
+              cd /tmp
+              apk fetch --allow-untrusted --no-cache readline libncursesw bash libintl gettext-envsubst
+              for f in *.apk; do tar xvzf "$f"; done
               ls -alF $INPUT_CONFIG_PATH/
-              bash -c $INPUT_CONFIG_PATH/entrypoint.sh
+              PATH=$PATH:/tmp/bin:/tmp/usr/bin LD_LIBRARY_PATH=/tmp/usr/lib bash -c $INPUT_CONFIG_PATH/entrypoint.sh
 
       initContainers:
       {{- with .Values.initContainers }}
